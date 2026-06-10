@@ -1,6 +1,6 @@
 {
   "name": "claude-usage-widget",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Always-on-top Claude.ai plan usage widget for Windows. Lessons baked in from jens-duttke, niccolo-sabato, SlavomirDurej, thanoban, eddmann/ClaudeMeter, f-is-h/Usage4Claude.",
   "main": "src/main.js",
   "scripts": {
