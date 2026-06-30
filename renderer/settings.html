@@ -8,145 +8,155 @@
 </head>
 <body>
   <main>
-    <h1>Claude Usage Widget</h1>
-    <p class="subtitle">Cosmetic and behavior options. Changes apply live.</p>
+    <h1 data-i18n="settings.title">Claude Usage Widget</h1>
+    <p class="subtitle" data-i18n="settings.subtitle">Cosmetic and behavior options. Changes apply live.</p>
 
     <section>
-      <h2>Layout</h2>
+      <h2 data-i18n="settings.section.language">Language</h2>
       <div class="row">
-        <label for="layout">Density</label>
-        <select id="layout">
-          <option value="expanded">Expanded (header + countdowns)</option>
-          <option value="compact">Compact (header only)</option>
-          <option value="essential">Essential (bars only)</option>
-          <option value="minimal">Minimal (pill — worst limit only)</option>
-        </select>
+        <label for="language" data-i18n="settings.language">Language</label>
+        <select id="language"></select>
       </div>
-      <div class="row toggle"><label for="alwaysOnTop">Always on top</label><input type="checkbox" id="alwaysOnTop"></div>
-      <div class="row toggle"><label for="clickThrough">Click-through</label><input type="checkbox" id="clickThrough"></div>
-      <div class="row toggle"><label for="showHeader">Show header</label><input type="checkbox" id="showHeader"></div>
-      <div class="row toggle"><label for="showResetCountdown">Show reset countdown</label><input type="checkbox" id="showResetCountdown"></div>
-      <div class="row toggle"><label for="showPaceMarker">Show pace marker</label><input type="checkbox" id="showPaceMarker"></div>
-      <div class="row toggle"><label for="showStaleIndicator">Show stale-data badge</label><input type="checkbox" id="showStaleIndicator"></div>
-      <div class="row toggle"><label for="showMascot">Show Claw'd (the crab mascot)</label><input type="checkbox" id="showMascot"></div>
+      <p class="muted" data-i18n="settings.language.note">Translations marked with * are machine-assisted. Native-speaker PRs welcome.</p>
     </section>
 
     <section>
-      <h2>Look</h2>
+      <h2 data-i18n="settings.section.layout">Layout</h2>
       <div class="row">
-        <label for="theme">Theme</label>
-        <select id="theme">
-          <option value="system">Follow system</option>
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
+        <label for="layout" data-i18n="settings.density">Density</label>
+        <select id="layout">
+          <option value="expanded" data-i18n="settings.density.expanded">Expanded (header + countdowns)</option>
+          <option value="compact" data-i18n="settings.density.compact">Compact (header only)</option>
+          <option value="essential" data-i18n="settings.density.essential">Essential (bars only)</option>
+          <option value="minimal" data-i18n="settings.density.minimal">Minimal (pill — worst limit only)</option>
         </select>
       </div>
-      <div class="row"><label for="accentColor">Accent</label><input type="color" id="accentColor"></div>
+      <div class="row toggle"><label for="alwaysOnTop" data-i18n="settings.alwaysOnTop">Always on top</label><input type="checkbox" id="alwaysOnTop"></div>
+      <div class="row toggle"><label for="clickThrough" data-i18n="settings.clickThrough">Click-through</label><input type="checkbox" id="clickThrough"></div>
+      <div class="row toggle"><label for="showHeader" data-i18n="settings.showHeader">Show header</label><input type="checkbox" id="showHeader"></div>
+      <div class="row toggle"><label for="showResetCountdown" data-i18n="settings.showResetCountdown">Show reset countdown</label><input type="checkbox" id="showResetCountdown"></div>
+      <div class="row toggle"><label for="showPaceMarker" data-i18n="settings.showPaceMarker">Show pace marker</label><input type="checkbox" id="showPaceMarker"></div>
+      <div class="row toggle"><label for="showStaleIndicator" data-i18n="settings.showStaleIndicator">Show stale-data badge</label><input type="checkbox" id="showStaleIndicator"></div>
+      <div class="row toggle"><label for="showMascot" data-i18n="settings.showMascot">Show Claw'd (the crab mascot)</label><input type="checkbox" id="showMascot"></div>
+    </section>
+
+    <section>
+      <h2 data-i18n="settings.section.look">Look</h2>
       <div class="row">
-        <label for="opacity">Opacity</label>
+        <label for="theme" data-i18n="settings.theme">Theme</label>
+        <select id="theme">
+          <option value="system" data-i18n="settings.theme.system">Follow system</option>
+          <option value="dark" data-i18n="settings.theme.dark">Dark</option>
+          <option value="light" data-i18n="settings.theme.light">Light</option>
+        </select>
+      </div>
+      <div class="row"><label for="accentColor" data-i18n="settings.accent">Accent</label><input type="color" id="accentColor"></div>
+      <div class="row">
+        <label for="opacity" data-i18n="settings.opacity">Opacity</label>
         <input type="range" id="opacity" min="0.4" max="1" step="0.02">
         <span class="val" id="opacityVal"></span>
       </div>
       <div class="row">
-        <label for="cornerRadius">Corner radius</label>
+        <label for="cornerRadius" data-i18n="settings.cornerRadius">Corner radius</label>
         <input type="range" id="cornerRadius" min="0" max="28" step="1">
         <span class="val" id="cornerRadiusVal"></span>
       </div>
       <div class="row">
-        <label for="fontScale">Font size</label>
+        <label for="fontScale" data-i18n="settings.fontSize">Font size</label>
         <input type="range" id="fontScale" min="0.85" max="1.6" step="0.05">
         <span class="val" id="fontScaleVal"></span>
       </div>
       <div class="row">
-        <label for="fontFamily">Font family</label>
+        <label for="fontFamily" data-i18n="settings.fontFamily">Font family</label>
         <select id="fontFamily">
-          <option value="system">System default</option>
+          <option value="system" data-i18n="settings.fontFamily.system">System default</option>
           <option value="'Segoe UI', sans-serif">Segoe UI</option>
           <option value="'Inter', sans-serif">Inter</option>
           <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
           <option value="'Cascadia Code', monospace">Cascadia Code</option>
         </select>
       </div>
-      <div class="row toggle"><label for="blur">Background blur</label><input type="checkbox" id="blur"></div>
+      <div class="row toggle"><label for="blur" data-i18n="settings.blur">Background blur</label><input type="checkbox" id="blur"></div>
     </section>
 
     <section>
-      <h2>Tray icon</h2>
+      <h2 data-i18n="settings.section.trayIcon">Tray icon</h2>
       <div class="row">
-        <label for="trayIconStyle">Style</label>
+        <label for="trayIconStyle" data-i18n="settings.trayStyle">Style</label>
         <select id="trayIconStyle">
-          <option value="bars">Bars (decoration only)</option>
-          <option value="battery">Battery (fills with worst limit)</option>
-          <option value="gauge">Gauge (fills with worst limit)</option>
-          <option value="minimal">Minimal dot (tinted by severity)</option>
-          <option value="dynamic">Dynamic gauge (fills + tints by worst limit)</option>
+          <option value="bars" data-i18n="settings.trayStyle.bars">Bars (decoration only)</option>
+          <option value="battery" data-i18n="settings.trayStyle.battery">Battery (fills with worst limit)</option>
+          <option value="gauge" data-i18n="settings.trayStyle.gauge">Gauge (fills with worst limit)</option>
+          <option value="minimal" data-i18n="settings.trayStyle.minimalDot">Minimal dot (tinted by severity)</option>
+          <option value="dynamic" data-i18n="settings.trayStyle.dynamic">Dynamic gauge (fills + tints by worst limit)</option>
         </select>
       </div>
     </section>
 
     <section>
-      <h2>History graph</h2>
-      <div class="row toggle"><label for="showHistoryGraph">Show 7-day graph</label><input type="checkbox" id="showHistoryGraph"></div>
+      <h2 data-i18n="settings.section.historyGraph">History graph</h2>
+      <div class="row toggle"><label for="showHistoryGraph" data-i18n="settings.show7DayGraph">Show 7-day graph</label><input type="checkbox" id="showHistoryGraph"></div>
       <div class="row">
-        <label for="historyLimitId">Series</label>
+        <label for="historyLimitId" data-i18n="settings.series">Series</label>
         <select id="historyLimitId">
-          <option value="seven_day">Weekly · all models</option>
-          <option value="seven_day_sonnet">Weekly · Sonnet</option>
-          <option value="seven_day_opus">Weekly · Opus</option>
-          <option value="five_hour">Current session</option>
-          <option value="extra_usage">Extra usage</option>
+          <option value="seven_day" data-i18n="limit.seven_day">Weekly · all models</option>
+          <option value="seven_day_sonnet" data-i18n="limit.seven_day_sonnet">Weekly · Sonnet</option>
+          <option value="seven_day_opus" data-i18n="limit.seven_day_opus">Weekly · Opus</option>
+          <option value="five_hour" data-i18n="limit.five_hour">Current session</option>
+          <option value="extra_usage" data-i18n="limit.extra_usage">Extra usage</option>
         </select>
       </div>
     </section>
 
     <section>
-      <h2>Thresholds</h2>
-      <div class="row"><label for="warn">Warn at %</label><input type="number" id="warn" min="0" max="100" step="1"></div>
-      <div class="row"><label for="critical">Critical at %</label><input type="number" id="critical" min="0" max="100" step="1"></div>
-      <div class="row"><label for="okColor">OK color</label><input type="color" id="okColor"></div>
-      <div class="row"><label for="warnColor">Warn color</label><input type="color" id="warnColor"></div>
-      <div class="row"><label for="criticalColor">Critical color</label><input type="color" id="criticalColor"></div>
+      <h2 data-i18n="settings.section.thresholds">Thresholds</h2>
+      <div class="row"><label for="warn" data-i18n="settings.warnAt">Warn at %</label><input type="number" id="warn" min="0" max="100" step="1"></div>
+      <div class="row"><label for="critical" data-i18n="settings.criticalAt">Critical at %</label><input type="number" id="critical" min="0" max="100" step="1"></div>
+      <div class="row"><label for="okColor" data-i18n="settings.okColor">OK color</label><input type="color" id="okColor"></div>
+      <div class="row"><label for="warnColor" data-i18n="settings.warnColor">Warn color</label><input type="color" id="warnColor"></div>
+      <div class="row"><label for="criticalColor" data-i18n="settings.criticalColor">Critical color</label><input type="color" id="criticalColor"></div>
     </section>
 
     <section>
-      <h2>Notifications</h2>
-      <div class="row toggle"><label for="notifyAtWarn">Notify at warn threshold</label><input type="checkbox" id="notifyAtWarn"></div>
-      <div class="row toggle"><label for="notifyAtCritical">Notify at critical threshold</label><input type="checkbox" id="notifyAtCritical"></div>
+      <h2 data-i18n="settings.section.notifications">Notifications</h2>
+      <div class="row toggle"><label for="notifyAtWarn" data-i18n="settings.notifyAtWarn">Notify at warn threshold</label><input type="checkbox" id="notifyAtWarn"></div>
+      <div class="row toggle"><label for="notifyAtCritical" data-i18n="settings.notifyAtCritical">Notify at critical threshold</label><input type="checkbox" id="notifyAtCritical"></div>
     </section>
 
     <section>
-      <h2>Reset hooks</h2>
-      <p class="muted">Shell commands run when a quota resets. Env vars set: <code>CLAUDE_RESET_ID</code>, <code>CLAUDE_RESET_LABEL</code>, <code>CLAUDE_RESET_AT</code>.</p>
-      <div class="row stretch"><label for="onReset_five_hour">5-hour session</label><input type="text" id="onReset_five_hour" placeholder="e.g. powershell -c \"New-BurntToastNotification -Text 'Session reset'\""></div>
-      <div class="row stretch"><label for="onReset_seven_day">Weekly all-models</label><input type="text" id="onReset_seven_day" placeholder=""></div>
-      <div class="row stretch"><label for="onReset_seven_day_sonnet">Weekly Sonnet</label><input type="text" id="onReset_seven_day_sonnet" placeholder=""></div>
-      <div class="row stretch"><label for="onReset_seven_day_opus">Weekly Opus</label><input type="text" id="onReset_seven_day_opus" placeholder=""></div>
+      <h2 data-i18n="settings.section.resetHooks">Reset hooks</h2>
+      <p class="muted" data-i18n-html="settings.resetHooks.desc">Shell commands run when a quota resets. Env vars set: <code>CLAUDE_RESET_ID</code>, <code>CLAUDE_RESET_LABEL</code>, <code>CLAUDE_RESET_AT</code>.</p>
+      <div class="row stretch"><label for="onReset_five_hour" data-i18n="settings.resetHook.fiveHour">5-hour session</label><input type="text" id="onReset_five_hour" data-i18n-attr="placeholder:settings.resetHook.fiveHour.placeholder"></div>
+      <div class="row stretch"><label for="onReset_seven_day" data-i18n="settings.resetHook.weeklyAll">Weekly all-models</label><input type="text" id="onReset_seven_day" placeholder=""></div>
+      <div class="row stretch"><label for="onReset_seven_day_sonnet" data-i18n="settings.resetHook.weeklySonnet">Weekly Sonnet</label><input type="text" id="onReset_seven_day_sonnet" placeholder=""></div>
+      <div class="row stretch"><label for="onReset_seven_day_opus" data-i18n="settings.resetHook.weeklyOpus">Weekly Opus</label><input type="text" id="onReset_seven_day_opus" placeholder=""></div>
     </section>
 
     <section>
-      <h2>Startup</h2>
-      <div class="row toggle"><label for="openAtLogin">Start with Windows</label><input type="checkbox" id="openAtLogin"></div>
-      <div class="row toggle"><label for="openMinimized">Open hidden (tray only)</label><input type="checkbox" id="openMinimized"></div>
+      <h2 data-i18n="settings.section.startup">Startup</h2>
+      <div class="row toggle"><label for="openAtLogin" data-i18n="settings.openAtLogin">Start with Windows</label><input type="checkbox" id="openAtLogin"></div>
+      <div class="row toggle"><label for="openMinimized" data-i18n="settings.openMinimized">Open hidden (tray only)</label><input type="checkbox" id="openMinimized"></div>
     </section>
 
     <section>
-      <h2>Updates</h2>
-      <div class="row toggle"><label for="checkForUpdates">Check GitHub for new releases (once a day)</label><input type="checkbox" id="checkForUpdates"></div>
+      <h2 data-i18n="settings.section.updates">Updates</h2>
+      <div class="row toggle"><label for="checkForUpdates" data-i18n="settings.checkForUpdates">Check GitHub for new releases (once a day)</label><input type="checkbox" id="checkForUpdates"></div>
       <div class="actions-row">
-        <button id="checkUpdateNow">Check now</button>
+        <button id="checkUpdateNow" data-i18n="settings.checkNow">Check now</button>
         <span class="muted" id="updateStatus"></span>
       </div>
     </section>
 
     <section>
-      <h2>About</h2>
-      <p class="muted">Reads OAuth token from <code>~/.claude/.credentials.json</code>. Token refresh is picked up automatically on the next poll.</p>
+      <h2 data-i18n="settings.section.about">About</h2>
+      <p class="muted" data-i18n-html="settings.about.desc">Reads OAuth token from <code>~/.claude/.credentials.json</code>. Token refresh is picked up automatically on the next poll.</p>
       <div class="actions-row">
-        <button id="openCreds">Open credentials file</button>
-        <button id="quit" class="danger">Quit widget</button>
+        <button id="openCreds" data-i18n="settings.openCreds">Open credentials file</button>
+        <button id="quit" class="danger" data-i18n="settings.quit">Quit widget</button>
       </div>
     </section>
   </main>
+  <script src="i18n.js"></script>
   <script src="settings.js"></script>
 </body>
 </html>

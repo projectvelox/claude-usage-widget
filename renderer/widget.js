@@ -101,6 +101,25 @@ function paceFraction(limit) {
 // `used_credits`, `monthly_limit`, `currency` for the extra_usage entry).
 // Returns empty string if the limit doesn't carry credit data, so the caller
 // can decide whether the meta row even needs to render.
+const t = (key, params) => (window.i18n ? window.i18n.t(key, params) : key);
+const tLang = () => (window.i18n ? window.i18n.lang() : 'en');
+
+// Map locale codes to BCP 47 tags so Intl.NumberFormat picks the right
+// thousands-separator / decimal-mark for the currency. Most codes are
+// already valid (en, fr, ja, ko, etc.); only pt-BR and zh-CN need touchups
+// and even those round-trip fine — kept explicit here for clarity.
+function bcp47(code) { return code === 'zh-CN' ? 'zh-Hans-CN' : code; }
+
+function localizedLimitLabel(limit) {
+  if (!limit) return '';
+  const key = `limit.${limit.id}`;
+  const translated = t(key);
+  // t() returns the key itself when neither the active locale nor the
+  // English fallback has the entry. Detect that and fall back to whatever
+  // label the server / normalizer assigned for unknown limit ids.
+  return translated && translated !== key ? translated : (limit.label || limit.id || '');
+}
+
 function fmtMoney(limit) {
   if (limit.usedCredits == null || limit.monthlyLimit == null) return '';
   // Default to USD if the API didn't tag a currency — most accounts are USD
@@ -110,36 +129,36 @@ function fmtMoney(limit) {
   try {
     // Show two decimals — Anthropic's own UI does, and rounding a $13.86 spend
     // to "$14" would conflict with the percentage shown next to the bar.
-    const nf = new Intl.NumberFormat(undefined, { style: 'currency', currency: code, minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    return `${nf.format(limit.usedCredits)} of ${nf.format(limit.monthlyLimit)} used`;
+    const nf = new Intl.NumberFormat(bcp47(tLang()), { style: 'currency', currency: code, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return t('money.used', { used: nf.format(limit.usedCredits), limit: nf.format(limit.monthlyLimit) });
   } catch {
     // Unknown currency code: fall back to a plain-number representation so we
     // still surface the numbers instead of dropping them.
-    return `${limit.usedCredits.toFixed(2)} of ${limit.monthlyLimit.toFixed(2)} ${code} used`;
+    return t('money.usedPlain', { used: limit.usedCredits.toFixed(2), limit: limit.monthlyLimit.toFixed(2), code });
   }
 }
 
 function fmtCountdown(resetsAt) {
   if (!resetsAt) return '';
   const ms = new Date(resetsAt).getTime() - Date.now();
-  if (ms <= 0) return 'resetting…';
+  if (ms <= 0) return t('time.resetting');
   const s = Math.floor(ms / 1000);
   const d = Math.floor(s / 86400);
   const h = Math.floor((s % 86400) / 3600);
   const m = Math.floor((s % 3600) / 60);
-  if (d > 0) return `resets in ${d}d ${h}h`;
-  if (h > 0) return `resets in ${h}h ${m}m`;
-  return `resets in ${m}m`;
+  if (d > 0) return t('time.resets.days', { d, h });
+  if (h > 0) return t('time.resets.hours', { h, m });
+  return t('time.resets.minutes', { m });
 }
 
 function fmtAge(ts) {
   const sec = Math.floor((Date.now() - ts) / 1000);
-  if (sec < 5) return 'just now';
-  if (sec < 60) return `${sec}s ago`;
+  if (sec < 5) return t('time.justNow');
+  if (sec < 60) return t('time.secondsAgo', { sec });
   const m = Math.floor(sec / 60);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return t('time.minutesAgo', { m });
   const h = Math.floor(m / 60);
-  return `${h}h ago`;
+  return t('time.hoursAgo', { h });
 }
 
 function render(payload) {
@@ -201,7 +220,7 @@ function render(payload) {
     const showMeta = moneyText || countdownText;
     row.innerHTML = `
       <div class="limit-head">
-        <span class="limit-label">${escapeHtml(limit.label)}</span>
+        <span class="limit-label">${escapeHtml(localizedLimitLabel(limit))}</span>
         <span class="limit-pct">${pct.toFixed(0)}%</span>
       </div>
       <div class="bar">
@@ -214,7 +233,7 @@ function render(payload) {
   }
 
   statusDot.className = `dot ${stale ? 'stale' : worstSeverity}`;
-  lastUpdatedEl.textContent = `Updated ${fmtAge(data.fetchedAt)}`;
+  lastUpdatedEl.textContent = t('widget.lastUpdated', { age: fmtAge(data.fetchedAt) });
   renderPill(data, stale, worstSeverity);
 
   // Claw'd's mood: throttled trumps everything (he naps), otherwise his
@@ -249,28 +268,28 @@ function renderEmptyState(error) {
   if (error && error.code === 'NO_CREDS') {
     return `
       <div class="empty-state">
-        <div class="empty-title">No Claude Code login found</div>
-        <div class="empty-body">Run <code>claude</code> in a terminal and sign in. The widget will pick up your usage automatically.</div>
+        <div class="empty-title">${escapeHtml(t('empty.noCreds.title'))}</div>
+        <div class="empty-body">${t('empty.noCreds.body')}</div>
       </div>
     `;
   }
   if (error && error.code === 'AUTH_EXPIRED') {
     return `
       <div class="empty-state">
-        <div class="empty-title">Sign-in expired</div>
-        <div class="empty-body">Run <code>claude</code> in a terminal once to refresh your token.</div>
+        <div class="empty-title">${escapeHtml(t('empty.authExpired.title'))}</div>
+        <div class="empty-body">${t('empty.authExpired.body')}</div>
       </div>
     `;
   }
   if (error) {
     return `
       <div class="empty-state">
-        <div class="empty-title">Can't reach Anthropic right now</div>
-        <div class="empty-body">${escapeHtml(error.message || 'Network error — the widget will retry shortly.')}</div>
+        <div class="empty-title">${escapeHtml(t('empty.generic.title'))}</div>
+        <div class="empty-body">${escapeHtml(error.message || t('empty.generic.fallback'))}</div>
       </div>
     `;
   }
-  return '<div class="limit-label" style="opacity:0.7">Waiting for first fetch…</div>';
+  return `<div class="limit-label" style="opacity:0.7">${escapeHtml(t('empty.firstFetch'))}</div>`;
 }
 
 // The error-badge label needs to tell the user what's actually going on.
@@ -280,47 +299,22 @@ function renderEmptyState(error) {
 function errorBadgeFor(error) {
   if (!error) return { hidden: true };
   if (error.code === 'NO_CREDS') {
-    return {
-      hidden: false,
-      label: 'sign in',
-      kind: 'warn',
-      title: 'No Claude Code login found. Run `claude` in a terminal and sign in — the widget will pick up your usage on the next poll.',
-    };
+    return { hidden: false, label: t('badge.signIn'), kind: 'warn', title: t('badge.signIn.tooltip') };
   }
   if (error.code === 'AUTH_EXPIRED') {
-    return {
-      hidden: false,
-      label: 'auth',
-      kind: 'error',
-      title: 'OAuth token expired. Run `claude` in a terminal once to refresh; the widget will pick up the new token on the next poll.',
-    };
+    return { hidden: false, label: t('badge.auth'), kind: 'error', title: t('badge.auth.tooltip') };
   }
   if (error.code === 'RATE_LIMITED') {
     // Stay silent for the first couple of minutes — most rate-limit windows
     // clear within ~60s and surfacing "throttled" would just panic the user.
     const throttledLong = throttledSince != null && (Date.now() - throttledSince) >= SOFT_THROTTLE_MS;
     if (!throttledLong) return { hidden: true };
-    return {
-      hidden: false,
-      label: 'paused',
-      kind: 'soft',
-      title: 'Pausing briefly — Anthropic asked us to wait. The widget will pick back up on its own.',
-    };
+    return { hidden: false, label: t('badge.paused'), kind: 'soft', title: t('badge.paused.tooltip') };
   }
   if (error.code === 'HTTP_ERROR') {
-    return {
-      hidden: false,
-      label: 'server',
-      kind: 'error',
-      title: error.message || 'Server returned an unexpected status.',
-    };
+    return { hidden: false, label: t('badge.server'), kind: 'error', title: error.message || t('badge.server.tooltip') };
   }
-  return {
-    hidden: false,
-    label: 'offline',
-    kind: 'error',
-    title: error.message || 'Network error — the widget will retry.',
-  };
+  return { hidden: false, label: t('badge.offline'), kind: 'error', title: error.message || t('badge.offline.tooltip') };
 }
 
 // Pill mode shows only the worst-utilized limit at a glance. The label is
@@ -345,11 +339,11 @@ function renderPill(data, stale, worstSeverity) {
 
 function shortLabel(limit) {
   const id = limit.id || '';
-  if (id.startsWith('seven_day')) return 'week';
-  if (id === 'five_hour') return '5h';
-  if (id === 'extra')      return 'extra';
-  // Fallback: first word of the label.
-  return (limit.label || '').split(/[\s·-]/)[0].toLowerCase();
+  if (id.startsWith('seven_day')) return t('pill.label.week');
+  if (id === 'five_hour') return t('pill.label.5h');
+  if (id === 'extra')      return t('pill.label.extra');
+  // Fallback: first word of the localized label.
+  return (localizedLimitLabel(limit) || '').split(/[\s·-]/)[0].toLowerCase();
 }
 
 function renderPace(limit, pct) {
@@ -367,8 +361,10 @@ function renderGraph() {
 
   const limitId = cfg.historyLimitId || 'seven_day';
   const limit = lastData?.limits?.find((l) => l.id === limitId);
-  graphTitle.textContent = limit ? `${limit.label} · 7-day history` : '7-day history';
-  graphSub.textContent = limit ? `${limit.utilization.toFixed(0)}% now` : '';
+  graphTitle.textContent = limit
+    ? t('graph.title.withLabel', { label: localizedLimitLabel(limit) })
+    : t('graph.title.default');
+  graphSub.textContent = limit ? t('graph.sub', { pct: limit.utilization.toFixed(0) }) : '';
 
   // Filter history samples to those with this limit
   const points = (history || [])
@@ -419,12 +415,23 @@ function renderUpdate(info) {
   if (!updateLink) return;
   if (!info || !info.available) { updateLink.hidden = true; updateLink.removeAttribute('href'); return; }
   updateLink.hidden = false;
-  updateLink.textContent = `↑ v${info.latestVersion}`;
-  updateLink.title = `New release available — click to open the GitHub release page for v${info.latestVersion}.`;
+  updateLink.textContent = t('update.available', { version: info.latestVersion });
+  updateLink.title = t('update.tooltip', { version: info.latestVersion });
   updateLink.dataset.url = info.releaseUrl || '';
 }
 
 async function init() {
+  // Fetch translations BEFORE the first render so the very first paint is in
+  // the user's language. Without this, the widget would flash English content
+  // and then re-render once i18n caught up.
+  await window.i18n.init();
+  // Re-render the dynamic body whenever the language changes — the static
+  // (data-i18n) elements are handled by i18n.applyDom() automatically; this
+  // covers the JS-rendered rows (limits, footer, graph head, etc.).
+  window.i18n.onChange(() => {
+    if (lastData) render({ data: lastData, stale: !!lastError, error: lastError });
+  });
+
   const cfg = await window.api.getConfig();
   applyTheme(cfg);
 
@@ -457,22 +464,26 @@ async function init() {
   // Claw'd: click to hop (or wake him up grumpy if paused), wave on reset.
   const mascotEl = $('mascot');
   const mascotMsgEl = $('mascotMsg');
-  const GRUMPY_LINES = [
-    "5 more minutes…",
-    "I was sleeping!",
-    "Hmph.",
-    "Don't.",
-    "Zzz… wha—",
-    "Go away.",
-    "Sleeping here.",
-    "Rude.",
-  ];
+  // Grumpy lines come from the locale as numbered keys (mascot.grumpy.0..N).
+  // Each locale can ship a different count if some quips don't translate well
+  // — we discover the length at runtime instead of hardcoding it.
+  function grumpyLines() {
+    const out = [];
+    for (let i = 0; i < 16; i++) {
+      const key = `mascot.grumpy.${i}`;
+      const value = t(key);
+      if (value === key) break; // out of entries for this locale
+      out.push(value);
+    }
+    return out.length ? out : ["Hmph."]; // last-resort fallback so the bubble isn't empty
+  }
   let grumpyTimer = null;
   function wakeGrumpy() {
     if (!mascotEl) return;
     if (grumpyTimer) clearTimeout(grumpyTimer);
     if (mascotMsgEl) {
-      mascotMsgEl.textContent = GRUMPY_LINES[Math.floor(Math.random() * GRUMPY_LINES.length)];
+      const lines = grumpyLines();
+      mascotMsgEl.textContent = lines[Math.floor(Math.random() * lines.length)];
       mascotMsgEl.hidden = false;
     }
     mascotEl.classList.add('grumpy');
@@ -514,11 +525,11 @@ async function init() {
       // that the click was acknowledged but skipped.
       if (result && result.debounced) {
         const waitSec = Math.max(1, Math.ceil(result.waitMs / 1000));
-        btn.title = `Just refreshed — try again in ${waitSec}s`;
+        btn.title = t('refresh.debounced', { sec: waitSec });
         btn.classList.add('debounced');
         setTimeout(() => {
           btn.classList.remove('debounced');
-          btn.title = 'Refresh';
+          btn.title = t('widget.refresh');
         }, 1200);
       }
     } catch (e) {

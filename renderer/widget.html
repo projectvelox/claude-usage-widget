@@ -8,11 +8,11 @@
 </head>
 <body>
   <div id="root" class="widget" data-theme="dark">
-    <div class="pill" id="pill" title="Drag to move · click chevron to expand">
+    <div class="pill" id="pill" data-i18n-attr="title:pill.tooltip">
       <span class="pill-dot" id="pillDot"></span>
       <span class="pill-pct" id="pillPct">—</span>
       <span class="pill-label" id="pillLabel"></span>
-      <button class="icon-btn no-drag" id="expandBtn" title="Expand">
+      <button class="icon-btn no-drag" id="expandBtn" data-i18n-attr="title:widget.expand">
         <svg viewBox="0 0 24 24" width="12" height="12"><path fill="currentColor" d="M7 14l5-5 5 5z"/></svg>
       </button>
     </div>
@@ -20,19 +20,19 @@
     <header class="drag" id="dragHandle">
       <div class="title">
         <span class="dot" id="statusDot"></span>
-        <span id="titleText">Claude usage</span>
+        <span id="titleText" data-i18n="widget.title">Claude usage</span>
       </div>
       <div class="actions no-drag">
-        <button class="icon-btn" id="refreshBtn" title="Refresh">
+        <button class="icon-btn" id="refreshBtn" data-i18n-attr="title:widget.refresh">
           <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 5V2L7 7l5 5V8a4 4 0 1 1-4 4H6a6 6 0 1 0 6-7z"/></svg>
         </button>
-        <button class="icon-btn" id="settingsBtn" title="Settings">
+        <button class="icon-btn" id="settingsBtn" data-i18n-attr="title:widget.settings">
           <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M19.14 12.94a7.11 7.11 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54a7 7 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.11 7.11 0 0 0 0 1.88L2.77 14.52a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.49.38 1.04.7 1.62.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54a7 7 0 0 0 1.62-.94l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
         </button>
-        <button class="icon-btn" id="minimizeBtn" title="Minimize to pill">
+        <button class="icon-btn" id="minimizeBtn" data-i18n-attr="title:widget.minimize">
           <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M19 13H5v-2h14v2z"/></svg>
         </button>
-        <button class="icon-btn" id="closeBtn" title="Hide to tray (click the tray icon to bring it back)">
+        <button class="icon-btn" id="closeBtn" data-i18n-attr="title:widget.hide">
           <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
@@ -43,16 +43,16 @@
 
       <div class="graph-wrap" id="graphWrap" hidden>
         <div class="graph-head">
-          <span id="graphTitle">7-day history</span>
+          <span id="graphTitle" data-i18n="graph.title.default">7-day history</span>
           <span class="graph-sub" id="graphSub"></span>
         </div>
         <svg id="graph" class="graph" viewBox="0 0 260 60" preserveAspectRatio="none"></svg>
-        <div class="graph-empty" id="graphEmpty" hidden>Collecting data…</div>
+        <div class="graph-empty" id="graphEmpty" data-i18n="graph.collecting" hidden>Collecting data…</div>
       </div>
 
       <div class="footer">
         <span id="lastUpdated">—</span>
-        <span class="badge soft" id="staleBadge" hidden>syncing</span>
+        <span class="badge soft" id="staleBadge" data-i18n="badge.syncing" hidden>syncing</span>
         <span class="badge" id="errorBadge" hidden></span>
         <a class="update-link no-drag" id="updateLink" href="#" hidden></a>
       </div>
@@ -63,7 +63,7 @@
          waves on quota reset, hops when clicked. Mood-specific accessories
          (panic marks, sweat drop, ZZZ, grumpy bubble) live inside the same
          container so they share his z-index and reflow with him. -->
-    <div class="mascot" id="mascot" title="Claw'd">
+    <div class="mascot" id="mascot" data-i18n-attr="title:mascot.title">
       <div class="mascot-zzz" aria-hidden="true">
         <span class="z" style="--zd:0s">z</span>
         <span class="z" style="--zd:-0.8s">Z</span>
@@ -107,6 +107,7 @@
     </div>
   </div>
 
+  <script src="i18n.js"></script>
   <script src="widget.js"></script>
 </body>
 </html>

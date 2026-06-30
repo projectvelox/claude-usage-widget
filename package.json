@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node scripts/launch.js",
     "dev": "node scripts/launch.js --dev",
-    "test": "node --test tests/normalize.test.js tests/updater.test.js tests/geom.test.js tests/poller.test.js tests/history.test.js tests/config.test.js tests/usage.test.js",
+    "test": "node --test tests/normalize.test.js tests/updater.test.js tests/geom.test.js tests/poller.test.js tests/history.test.js tests/config.test.js tests/usage.test.js tests/i18n.test.js",
     "icons": "node scripts/build-icon.js",
     "demo-gif": "node scripts/build-demo-gif.js",
     "pill-gif": "node scripts/build-pill-gif.js",
@@ -51,6 +51,7 @@
       "src/**/*",
       "renderer/**/*",
       "assets/**/*",
+      "locales/**/*",
       "scripts/launch.js",
       "package.json"
     ],
