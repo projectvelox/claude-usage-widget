@@ -33,7 +33,7 @@ The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 - An optional 7-day SVG history graph for any limit you pick
 - Threshold notifications and shell hooks that fire when a limit resets
 - A **pill / minimal mode** that collapses the widget to a tiny ~156×44 capsule showing just the worst-utilized limit %, ideal for non-developers who want ambient awareness without giving up screen real estate
-- **Claw'd**, a pixel-art crab mascot that walks the widget's bottom edge and reacts to your usage — strolls when you're fine, panic-skips with "!" marks at critical, sleeps with floating Zs when rate-limited, and gets grumpy if you click him while he's napping
+- **Claw'd**, an animated Clawd crab mascot that reacts to your usage state — happy at low use, thinking at warn, mind-blown at critical, sleeping when rate-limited, celebrating when a quota resets, waving when you click. Pet artwork by [@abderrahimghazali](https://github.com/abderrahimghazali/clawd-pet) (MIT).
 - **In-app update check** — once a day the widget pings GitHub Releases and surfaces a small `↑ v0.2.X` link in the footer when a newer build is out, so you never run a stale version without knowing
 - **13-language UI** — English (default), Portuguese (Brazil), Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian. Switch in Settings → Language. See [Translations](#translations) below for credits and how to refine machine-assisted languages.
 
@@ -224,28 +224,25 @@ Toggle on/off. Pick any single limit to plot (all-models, Sonnet, Opus, session,
 
 ### Claw'd, the resident crab
 
-<p align="center">
-  <img src="assets/claw-d.png" width="900" alt="Four panels showing Claw'd in each mood: ok (orange, casual stroll), warn (yellow with a blue sweat drop above his head), critical (red with red exclamation marks floating up), and paused (grey, slumped over with a floating cyan Z above his head)." />
-</p>
+Claw'd is animated using pet artwork from [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) by [@abderrahimghazali](https://github.com/abderrahimghazali) (MIT). Ten SVGs ship in [`renderer/pets/`](renderer/pets/); the widget swaps the src by mood so each state gets its own baked-in CSS animation.
 
-A pixel-art crab inspired by the Claude mascot, recreated as a tiny SVG that ships with the code (no bundled assets). He walks back and forth along the widget's bottom edge and his mood mirrors your worst limit:
-
-| Mood | Trigger | What he does |
+| State | Trigger | Pet |
 |---|---|---|
-| **ok** | worst limit < 75% | Casual 14-second stroll. Anthropic orange. |
-| **warn** | 75% – 90% | Hurried 8-second trot with a side-to-side wiggle. Tinted with your `--warn` color. A blue sweat drop beads above his head. |
-| **critical** | ≥ 90% | Panic-skip — 4-second fast run with intermittent anxious jumps and body tilt. Tinted with `--critical`. Three red "!" marks float up and fade. |
-| **paused** | rate-limited ≥ 2 min | Asleep. Body slumped at -22°, eyes closed as thin lines, slow breathing, three staggered Zs (small → large) drift up from his head. |
+| **happy** | worst limit < 75% | `clawd-happy.svg` |
+| **thinking** | 75% – 90% | `clawd-working-thinking.svg` |
+| **mind-blown** | ≥ 90% | `clawd-mindblown.svg` |
+| **sleeping** | rate-limited ≥ 2 min | `clawd-sleeping.svg` |
+| **shrug** | no Claude Code login found | `clawd-shrug.svg` |
+| **401** | OAuth token expired | `clawd-401.svg` |
+| **disconnected** | network / HTTP error | `clawd-disconnected.svg` |
+| **celebrating** | quota reset event (3-second flash) | `clawd-celebrating.svg` |
+| **waving** | click on the mascot (1.5-second flash) | `clawd-waving.svg` |
 
-He also reacts to interaction:
+He also keeps his old grumpy-click interaction:
 
-- **Click him** to make him hop (squish-jump-land in 0.45s).
-- **Click him while he's sleeping** and you get a random grumpy speech bubble (`"5 more minutes…"`, `"Hmph."`, `"Rude."`, etc.) instead of a hop. He goes back to sleep after 2 seconds.
-- When a quota actually resets, he stops walking and waves side-to-side for ~1.6s before resuming.
+- **Click him while he's sleeping** and you get a random grumpy speech bubble (`"5 more minutes…"`, `"Hmph."`, `"Rude."`, etc.) instead of a wave. Localized in all 13 UI languages.
 
-Toggle him on/off in **Settings → Layout → "Show Claw'd"**. Hidden automatically in pill and essential layouts where there's no room.
-
-Open [`assets/claw-d-states.html`](assets/claw-d-states.html) in a browser to see all four moods animating side-by-side with interactive buttons — no app launch required.
+Toggle him on/off in **Settings → Layout → "Show Claw'd"**. Hidden automatically in pill and essential layouts where there's no room. To swap in a different pet, drop the SVG in [`renderer/pets/`](renderer/pets/) and edit the `MOOD_PET` / `ERROR_PET` map at the top of [`renderer/widget.js`](renderer/widget.js) — [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) has 140+ to pick from.
 
 ### Thresholds & notifications
 

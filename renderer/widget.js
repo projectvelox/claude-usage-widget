@@ -31,6 +31,51 @@ const SOFT_THROTTLE_MS = 2 * 60 * 1000;
 let staleSince = null;
 let throttledSince = null;
 
+// Mascot pet swap. Each state maps to one of the clawd-pet SVGs in
+// renderer/pets/ (by @abderrahimghazali, MIT). Transient events (click,
+// reset) flip to a "waving" or "celebrating" pet for a moment, then
+// applyMascotPet() restores whatever the current lastData/lastError
+// wants to see.
+const MOOD_PET = {
+  ok: 'clawd-happy',
+  warn: 'clawd-working-thinking',
+  critical: 'clawd-mindblown',
+  paused: 'clawd-sleeping',
+};
+const ERROR_PET = {
+  NO_CREDS: 'clawd-shrug',
+  AUTH_EXPIRED: 'clawd-401',
+  HTTP_ERROR: 'clawd-disconnected',
+};
+let mascotTransientTimer = null;
+function setMascotPetSrc(name) {
+  const img = document.getElementById('mascotPet');
+  if (!img) return;
+  const next = `pets/${name}.svg`;
+  if (img.getAttribute('src') === next) return;
+  img.setAttribute('src', next);
+}
+function pickCurrentPet() {
+  const error = lastError;
+  if (error && ERROR_PET[error.code]) return ERROR_PET[error.code];
+  if (error && error.code === 'RATE_LIMITED' && throttledSince
+      && (Date.now() - throttledSince) >= SOFT_THROTTLE_MS) return MOOD_PET.paused;
+  const mood = root.dataset.mascotMood || 'ok';
+  return MOOD_PET[mood] || MOOD_PET.ok;
+}
+function applyMascotPet() {
+  if (mascotTransientTimer) return; // let the transient finish first
+  setMascotPetSrc(pickCurrentPet());
+}
+function flashMascotPet(name, ms) {
+  if (mascotTransientTimer) clearTimeout(mascotTransientTimer);
+  setMascotPetSrc(name);
+  mascotTransientTimer = setTimeout(() => {
+    mascotTransientTimer = null;
+    setMascotPetSrc(pickCurrentPet());
+  }, ms);
+}
+
 // Ask main to fit the window to the actual content height. The expanded layout
 // has variable rows (N limits × optional countdown + optional graph + footer),
 // so a hardcoded window height clips the bottom. Re-runs whenever the .widget
@@ -185,6 +230,7 @@ function render(payload) {
     pillLabel.textContent = '';
     pillDot.className = `pill-dot ${error ? 'stale' : ''}`;
     root.dataset.mascotMood = 'ok';
+    applyMascotPet();
     staleBadge.hidden = true;
     const eb = errorBadgeFor(error);
     errorBadge.hidden = eb.hidden;
@@ -236,13 +282,16 @@ function render(payload) {
   lastUpdatedEl.textContent = t('widget.lastUpdated', { age: fmtAge(data.fetchedAt) });
   renderPill(data, stale, worstSeverity);
 
-  // Claw'd's mood: throttled trumps everything (he naps), otherwise his
-  // walking speed mirrors the worst limit's severity tier.
+  // Claw'd's mood: throttled trumps everything (he naps), otherwise it
+  // mirrors the worst limit's severity tier. The mood attribute is kept
+  // so click-while-paused still opens the grumpy bubble; the actual pet
+  // pick happens in applyMascotPet() below and considers error state too.
   const mascotMood = (error && error.code === 'RATE_LIMITED' && throttledSince
                        && (Date.now() - throttledSince) >= SOFT_THROTTLE_MS)
     ? 'paused'
     : worstSeverity; // 'ok' | 'warn' | 'critical'
   root.dataset.mascotMood = mascotMood;
+  applyMascotPet();
 
   const staleLong = staleSince != null && (Date.now() - staleSince) >= SOFT_STALE_MS;
   staleBadge.hidden = !stale || !cfg.showStaleIndicator || !staleLong;
@@ -503,23 +552,21 @@ async function init() {
   }
   if (mascotEl) {
     mascotEl.addEventListener('click', () => {
-      // Asleep: don't hop. Wake him up grumpy with a random complaint.
+      // Asleep: wake him up grumpy with a random complaint (unchanged from
+      // the pixel-art crab — the bubble is what made this delightful, not
+      // the sprite). Otherwise flash the waving pet for a beat before
+      // settling back to whatever the current mood pet is.
       if (root.dataset.mascotMood === 'paused') {
         wakeGrumpy();
         return;
       }
-      mascotEl.classList.remove('hopping');
-      void mascotEl.offsetWidth;
-      mascotEl.classList.add('hopping');
-      setTimeout(() => mascotEl.classList.remove('hopping'), 500);
+      flashMascotPet('clawd-waving', 1500);
     });
   }
   window.api.onReset(() => {
-    if (!mascotEl) return;
-    mascotEl.classList.remove('waving');
-    void mascotEl.offsetWidth;
-    mascotEl.classList.add('waving');
-    setTimeout(() => mascotEl.classList.remove('waving'), 1700);
+    // Quota reset — Claw'd celebrates for a few seconds before returning to
+    // the current mood pet.
+    flashMascotPet('clawd-celebrating', 3000);
   });
 
   $('refreshBtn').addEventListener('click', async () => {
