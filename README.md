@@ -224,25 +224,47 @@ Toggle on/off. Pick any single limit to plot (all-models, Sonnet, Opus, session,
 
 ### Claw'd, the resident crab
 
-Claw'd is animated using pet artwork from [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) by [@abderrahimghazali](https://github.com/abderrahimghazali) (MIT). Ten SVGs ship in [`renderer/pets/`](renderer/pets/); the widget swaps the src by mood so each state gets its own baked-in CSS animation.
+Claw'd is animated using pet artwork from [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) by [@abderrahimghazali](https://github.com/abderrahimghazali) (MIT). Ten SVGs ship in [`renderer/pets/`](renderer/pets/) — each pet carries its own CSS animation baked into the SVG, and the widget wraps the current pet in a walk cycle so he actually paces the bottom strip.
 
-| State | Trigger | Pet |
-|---|---|---|
-| **happy** | worst limit < 75% | `clawd-happy.svg` |
-| **thinking** | 75% – 90% | `clawd-working-thinking.svg` |
-| **mind-blown** | ≥ 90% | `clawd-mindblown.svg` |
-| **sleeping** | rate-limited ≥ 2 min | `clawd-sleeping.svg` |
-| **shrug** | no Claude Code login found | `clawd-shrug.svg` |
-| **401** | OAuth token expired | `clawd-401.svg` |
-| **disconnected** | network / HTTP error | `clawd-disconnected.svg` |
-| **celebrating** | quota reset event (3-second flash) | `clawd-celebrating.svg` |
-| **waving** | click on the mascot (1.5-second flash) | `clawd-waving.svg` |
+#### The pet collection
 
-He also keeps his old grumpy-click interaction:
+**Ambient walking pets** — he paces the widget bottom while showing these.
+
+<table>
+  <tr>
+    <td align="center"><img src="renderer/pets/clawd-happy.svg" width="88" alt="happy" /><br /><b>happy</b><br /><sub>worst limit &lt; 75%</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-working-thinking.svg" width="88" alt="thinking" /><br /><b>thinking</b><br /><sub>75%–90%</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-mindblown.svg" width="88" alt="mind-blown" /><br /><b>mind-blown</b><br /><sub>≥ 90%</sub></td>
+  </tr>
+</table>
+
+**Paused / error pets** — he parks and looks at you when there's something to notice.
+
+<table>
+  <tr>
+    <td align="center"><img src="renderer/pets/clawd-sleeping.svg" width="88" alt="sleeping" /><br /><b>sleeping</b><br /><sub>rate-limited ≥ 2 min</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-shrug.svg" width="88" alt="shrug" /><br /><b>shrug</b><br /><sub>no Claude Code login</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-401.svg" width="88" alt="401" /><br /><b>401</b><br /><sub>OAuth token expired</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-disconnected.svg" width="88" alt="disconnected" /><br /><b>disconnected</b><br /><sub>network / HTTP error</sub></td>
+  </tr>
+</table>
+
+**Transient event pets** — he flashes these for a few seconds when something happens.
+
+<table>
+  <tr>
+    <td align="center"><img src="renderer/pets/clawd-celebrating.svg" width="88" alt="celebrating" /><br /><b>celebrating</b><br /><sub>quota reset (3s flash)</sub></td>
+    <td align="center"><img src="renderer/pets/clawd-waving.svg" width="88" alt="waving" /><br /><b>waving</b><br /><sub>click on the mascot (1.5s flash)</sub></td>
+  </tr>
+</table>
+
+#### Interactions
 
 - **Click him while he's sleeping** and you get a random grumpy speech bubble (`"5 more minutes…"`, `"Hmph."`, `"Rude."`, etc.) instead of a wave. Localized in all 13 UI languages.
+- **Click him any other time** and he waves for 1.5 seconds before going back to his usual pacing.
+- **Watch him celebrate** when a quota window resets — he does a 3-second victory dance.
 
-Toggle him on/off in **Settings → Layout → "Show Claw'd"**. Hidden automatically in pill and essential layouts where there's no room. To swap in a different pet, drop the SVG in [`renderer/pets/`](renderer/pets/) and edit the `MOOD_PET` / `ERROR_PET` map at the top of [`renderer/widget.js`](renderer/widget.js) — [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) has 140+ to pick from.
+Toggle him on/off in **Settings → Layout → "Show Claw'd"**. Hidden automatically in pill and essential layouts where there's no room. To swap in a different pet, drop the SVG in [`renderer/pets/`](renderer/pets/) and edit the `MOOD_PET` / `ERROR_PET` map at the top of [`renderer/widget.js`](renderer/widget.js) — [`clawd-pet`](https://github.com/abderrahimghazali/clawd-pet) has **140+** to pick from.
 
 ### Thresholds & notifications
 
