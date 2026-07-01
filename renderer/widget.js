@@ -178,7 +178,7 @@ function render(payload) {
   }
 
   if (!data || !data.limits) {
-    limitsEl.innerHTML = renderEmptyState(error);
+    limitsEl.replaceChildren(renderEmptyState(error));
     statusDot.className = `dot ${error ? 'stale' : ''}`;
     lastUpdatedEl.textContent = '';
     pillPct.textContent = '—';
@@ -264,32 +264,40 @@ function render(payload) {
 // Code login on this machine" (onboarding) from "first poll hasn't landed yet"
 // from "something failed" — so a new user sees what to do instead of a vague
 // spinner.
+// Builds the empty-state DOM directly and returns an Element. The previous
+// implementation returned an HTML string that got assigned to innerHTML —
+// which CodeQL (js/xss-through-dom) flagged because the body text is
+// pulled from t() and the localized strings intentionally embed <code>
+// tags. All rich content now goes through i18n.renderRichInto, which only
+// honors <code>text</code> and treats everything else as text.
 function renderEmptyState(error) {
-  if (error && error.code === 'NO_CREDS') {
-    return `
-      <div class="empty-state">
-        <div class="empty-title">${escapeHtml(t('empty.noCreds.title'))}</div>
-        <div class="empty-body">${t('empty.noCreds.body')}</div>
-      </div>
-    `;
-  }
-  if (error && error.code === 'AUTH_EXPIRED') {
-    return `
-      <div class="empty-state">
-        <div class="empty-title">${escapeHtml(t('empty.authExpired.title'))}</div>
-        <div class="empty-body">${t('empty.authExpired.body')}</div>
-      </div>
-    `;
-  }
+  const buildRich = (titleKey, bodyKey, bodyOverride) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'empty-state';
+    const title = document.createElement('div');
+    title.className = 'empty-title';
+    title.textContent = t(titleKey);
+    const body = document.createElement('div');
+    body.className = 'empty-body';
+    if (bodyOverride != null) body.textContent = bodyOverride;
+    else window.i18n.renderRichInto(body, t(bodyKey));
+    wrap.appendChild(title);
+    wrap.appendChild(body);
+    return wrap;
+  };
+
+  if (error && error.code === 'NO_CREDS') return buildRich('empty.noCreds.title', 'empty.noCreds.body');
+  if (error && error.code === 'AUTH_EXPIRED') return buildRich('empty.authExpired.title', 'empty.authExpired.body');
   if (error) {
-    return `
-      <div class="empty-state">
-        <div class="empty-title">${escapeHtml(t('empty.generic.title'))}</div>
-        <div class="empty-body">${escapeHtml(error.message || t('empty.generic.fallback'))}</div>
-      </div>
-    `;
+    // Generic error: prefer the server-supplied message when present. It
+    // never contains markup, so plain textContent is the right assignment.
+    return buildRich('empty.generic.title', 'empty.generic.fallback', error.message || t('empty.generic.fallback'));
   }
-  return `<div class="limit-label" style="opacity:0.7">${escapeHtml(t('empty.firstFetch'))}</div>`;
+  const fallback = document.createElement('div');
+  fallback.className = 'limit-label';
+  fallback.style.opacity = '0.7';
+  fallback.textContent = t('empty.firstFetch');
+  return fallback;
 }
 
 // The error-badge label needs to tell the user what's actually going on.
