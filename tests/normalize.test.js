@@ -134,6 +134,32 @@ test('normalize falls back to the new `limits` array when legacy keys are absent
   assert.deepEqual(ids, ['session', 'weekly_all']);
 });
 
+test('normalize aliases spend to extra_usage and reads its nested dollar shape', () => {
+  // The mid-2026 API sometimes returns the new `spend` object without the
+  // legacy `extra_usage` field (accounts whose plan uses only the new
+  // shape). Before this fix the widget rendered "Spend 0%" with no dollar
+  // context; now it aliases to extra_usage and pulls used/limit from the
+  // nested amount_minor + exponent form.
+  const payload = {
+    five_hour: { utilization: 12, resets_at: null },
+    spend: {
+      used: { amount_minor: 2343, currency: 'USD', exponent: 2 },
+      limit: { amount_minor: 10000, currency: 'USD', exponent: 2 },
+      percent: 23,
+      severity: 'normal',
+      enabled: true,
+    },
+  };
+  const r = normalize(payload, {});
+  const extra = r.limits.find((l) => l.id === 'extra_usage');
+  assert.ok(extra, 'spend should be aliased to extra_usage');
+  assert.equal(extra.label, 'Extra usage');
+  assert.equal(extra.utilization, 23);
+  assert.equal(extra.usedCredits, 23.43);
+  assert.equal(extra.monthlyLimit, 100);
+  assert.equal(extra.currency, 'USD');
+});
+
 test('normalize skips a `spend` entry that is explicitly disabled', () => {
   // The new `spend` shape uses `enabled: false` (not `is_enabled`) when the
   // account hasn't opted into a credit pool. Treat it the same way.
