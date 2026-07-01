@@ -60,13 +60,16 @@
 
     <!-- Claw'd, the resident crab. Pet SVGs by @abderrahimghazali
          (github.com/abderrahimghazali/clawd-pet, MIT). Each SVG carries
-         its own CSS animations, so we just swap the src by mood and let
-         the pet do its own thing. Grumpy speech bubble stays for the
-         click-while-paused interaction. -->
+         its own CSS animations; the .mascot-walker wraps them in a
+         translateX walk cycle and flips the pet on the turns.
+         Grumpy speech bubble stays for the click-while-paused
+         interaction. -->
     <div class="mascot" id="mascot" data-i18n-attr="title:mascot.title">
       <div class="mascot-msg" id="mascotMsg" hidden></div>
-      <img class="mascot-pet" id="mascotPet" alt="" width="64" height="64"
-           src="pets/clawd-happy.svg" />
+      <div class="mascot-walker">
+        <img class="mascot-pet" id="mascotPet" alt="" width="88" height="88"
+             src="pets/clawd-happy.svg" />
+      </div>
     </div>
   </div>
 

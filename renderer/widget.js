@@ -47,13 +47,23 @@ const ERROR_PET = {
   AUTH_EXPIRED: 'clawd-401',
   HTTP_ERROR: 'clawd-disconnected',
 };
+// Pets Claw'd should look at, not pace with. Anything not in this set is
+// a "walking" pet — he paces the bottom strip while showing it.
+const STATIC_PETS = new Set([
+  'clawd-sleeping', 'clawd-shrug', 'clawd-401', 'clawd-disconnected',
+  'clawd-celebrating', 'clawd-waving',
+]);
 let mascotTransientTimer = null;
 function setMascotPetSrc(name) {
   const img = document.getElementById('mascotPet');
+  const container = document.getElementById('mascot');
   if (!img) return;
   const next = `pets/${name}.svg`;
-  if (img.getAttribute('src') === next) return;
-  img.setAttribute('src', next);
+  if (img.getAttribute('src') !== next) img.setAttribute('src', next);
+  // Pause the walk cycle for pets meant to be stared at, resume for
+  // ambient/walking pets. Done here (not in a mood attribute) so a
+  // transient flash pet like celebrating pauses too.
+  if (container) container.classList.toggle('static', STATIC_PETS.has(name));
 }
 function pickCurrentPet() {
   const error = lastError;

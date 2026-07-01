@@ -208,47 +208,85 @@ header.drag {
 .widget.no-header header.drag { display: none; }
 
 /* Claw'd the resident crab. Pet SVGs by @abderrahimghazali (clawd-pet, MIT)
-   live in renderer/pets/. Each SVG carries its own CSS animations, so the
-   mascot container is just a positioned box holding one <img> that gets
-   swapped by mood + the grumpy speech bubble for the click-while-paused
-   interaction. */
+   live in renderer/pets/. Each SVG carries its own CSS animations; the
+   .mascot-walker wraps them in a translateX walk across the widget bottom
+   and the .mascot-pet <img> counter-flips at the turns so he faces the
+   direction he's walking. Grumpy speech bubble lives outside the walker
+   so it doesn't get mirrored when he turns around. */
 .mascot {
   position: absolute;
   bottom: 4px;
-  right: 6px;
-  width: 64px;
-  height: 64px;
-  pointer-events: auto;
-  cursor: pointer;
+  left: 0;
+  right: 0;
+  height: 88px;
+  pointer-events: none;
   z-index: 1;
 }
 /* Reserve a bottom strip in the widget for Claw'd, below the footer.
    Skipped when the mascot is toggled off or in a compact layout so the
    widget doesn't carry dead space. */
 .widget:not([data-no-mascot]):not([data-layout="minimal"]):not([data-layout="essential"]) {
-  padding-bottom: 72px;
+  padding-bottom: 96px;
 }
 .widget[data-no-mascot] .mascot,
 .widget[data-layout="minimal"] .mascot,
 .widget[data-layout="essential"] .mascot {
   display: none;
 }
+/* Walker is the moving frame. Translates from the left edge to just short
+   of the right edge and back over 16 s. The widget's actual content width
+   is ~280 px minus the shadow gutter; the calc() below keeps the pet in
+   bounds regardless of small tweaks to the widget's inner width. */
+.mascot-walker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 88px;
+  height: 88px;
+  animation: pet-walk 16s ease-in-out infinite;
+}
 .mascot-pet {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: pet-face 16s ease-in-out infinite;
+  transform-origin: center bottom;
   /* Short cross-fade on src change so mood transitions don't pop harshly. */
   transition: opacity 0.2s ease;
 }
 .mascot.swapping .mascot-pet { opacity: 0; }
+
+@keyframes pet-walk {
+  0%, 100% { transform: translateX(4px); }
+  45%      { transform: translateX(188px); }
+  50%      { transform: translateX(188px); }
+  95%      { transform: translateX(4px); }
+}
+@keyframes pet-face {
+  0%, 45%  { transform: scaleX(1); }
+  50%, 95% { transform: scaleX(-1); }
+  100%     { transform: scaleX(1); }
+}
+
+/* Paused / error / mid-transient-swap → stop pacing so the state pet is
+   easy to look at. JS toggles .static based on the current pick. */
+.mascot.static .mascot-walker,
+.mascot.static .mascot-pet { animation-play-state: paused; }
+.mascot.static .mascot-walker { transform: translateX(96px); } /* park center-ish */
 
 /* Grumpy speech bubble. JS sets textContent and toggles .hidden.
    Colors invert per theme so the bubble stays readable on both — without
    inversion the white-on-light pairing made the message disappear entirely. */
 .mascot-msg {
   position: absolute;
-  bottom: 30px;
-  left: 88px;
+  /* Sits above where the pet parks when he's paused (walker is
+     translateX(96px), pet is 88px wide, so his head is roughly at x=140).
+     The bubble is only shown in the paused state, so the position doesn't
+     need to track a moving pet. */
+  bottom: 76px;
+  left: 130px;
   background: #fff;
   color: #1a1a1d;
   padding: 4px 8px;
