@@ -207,146 +207,40 @@ header.drag {
 /* No-header mode */
 .widget.no-header header.drag { display: none; }
 
-/* Claw'd the resident crab. Walks the widget's bottom edge, tints with
-   severity, naps with ZZZ when throttled, waves on quota reset, hops on
-   click. Sized big enough that his head and eyes read clearly even at
-   the bottom-corner border-radius clip. */
+/* Claw'd the resident crab. Pet SVGs by @abderrahimghazali (clawd-pet, MIT)
+   live in renderer/pets/. Each SVG carries its own CSS animations, so the
+   mascot container is just a positioned box holding one <img> that gets
+   swapped by mood + the grumpy speech bubble for the click-while-paused
+   interaction. */
 .mascot {
   position: absolute;
-  /* Walks the bottom strip created by the widget's bottom padding (added
-     below when Claw'd is enabled). Lives entirely below the footer so
-     he never overlaps body text or footer chrome. */
   bottom: 4px;
-  left: 0;
-  width: 40px;
-  height: 32px;
-  color: var(--mascot-color, #d7613d);
+  right: 6px;
+  width: 64px;
+  height: 64px;
   pointer-events: auto;
   cursor: pointer;
   z-index: 1;
 }
-/* Reserve a 38px bottom strip in the widget for Claw'd to walk in,
-   below the footer. Skipped when the mascot is toggled off or in any
-   layout that hides him, so the widget doesn't carry dead space. */
+/* Reserve a bottom strip in the widget for Claw'd, below the footer.
+   Skipped when the mascot is toggled off or in a compact layout so the
+   widget doesn't carry dead space. */
 .widget:not([data-no-mascot]):not([data-layout="minimal"]):not([data-layout="essential"]) {
-  padding-bottom: 38px;
+  padding-bottom: 72px;
 }
 .widget[data-no-mascot] .mascot,
 .widget[data-layout="minimal"] .mascot,
 .widget[data-layout="essential"] .mascot {
   display: none;
 }
-.mascot-walk {
-  position: relative; /* so panic marks + sweat position relative to this */
-  width: 100%; height: 100%;
-  animation: claw-walk 14s ease-in-out infinite;
-  transform-origin: center;
-}
-.mascot-bob {
-  width: 100%; height: 100%;
-  animation: claw-bob 0.42s ease-in-out infinite alternate;
-}
-.mascot svg { display: block; }
-
-@keyframes claw-walk {
-  0%, 100% { transform: translateX(4px) scaleX(1); }
-  45%      { transform: translateX(228px) scaleX(1); }
-  50%      { transform: translateX(228px) scaleX(-1); }
-  95%      { transform: translateX(4px) scaleX(-1); }
-}
-@keyframes claw-bob {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-2px); }
-}
-
-/* Mood-driven speed, tint, and motion pattern. Each mood gets a distinct
-   bob/jump keyframe so a glance reads as "we're chill" vs "panic" without
-   needing to look at the bars. */
-
-/* OK: casual stroll, gentle bob (default .mascot-bob keyframe above). */
-.widget[data-mascot-mood="ok"]       { --mascot-color: #d7613d; }
-.widget[data-mascot-mood="ok"]       .mascot-walk { animation-duration: 14s; }
-.widget[data-mascot-mood="ok"]       .mascot-bob  { animation-duration: 0.5s; }
-
-/* Warn: hurried trot. Bigger bob, slight side-to-side wiggle. */
-.widget[data-mascot-mood="warn"]     { --mascot-color: var(--warn); }
-.widget[data-mascot-mood="warn"]     .mascot-walk { animation-duration: 8s; }
-.widget[data-mascot-mood="warn"]     .mascot-bob  {
-  animation: claw-trot 0.45s ease-in-out infinite;
-}
-@keyframes claw-trot {
-  0%, 100% { transform: translateY(0)    rotate(-1.5deg); }
-  25%      { transform: translateY(-3px) rotate(0deg); }
-  50%      { transform: translateY(0)    rotate(1.5deg); }
-  75%      { transform: translateY(-3px) rotate(0deg); }
-}
-
-/* Critical: panic skip. Fast steps with periodic big anxious jumps and
-   a body tilt — reads as "running and freaking out". */
-.widget[data-mascot-mood="critical"] { --mascot-color: var(--critical); }
-.widget[data-mascot-mood="critical"] .mascot-walk { animation-duration: 4s; }
-.widget[data-mascot-mood="critical"] .mascot-bob  {
-  animation: claw-panic 1.05s ease-in-out infinite;
-}
-@keyframes claw-panic {
-  0%   { transform: translateY(0)    rotate(0deg); }
-  8%   { transform: translateY(-3px) rotate(-4deg); }
-  16%  { transform: translateY(0)    rotate(0deg); }
-  30%  { transform: translateY(-12px) rotate(8deg); }   /* big anxious jump */
-  44%  { transform: translateY(0)    rotate(0deg); }
-  55%  { transform: translateY(-3px) rotate(-4deg); }
-  68%  { transform: translateY(-10px) rotate(-6deg); }  /* another jump */
-  82%  { transform: translateY(0)    rotate(0deg); }
-  92%  { transform: translateY(-2px) rotate(3deg); }
-  100% { transform: translateY(0)    rotate(0deg); }
-}
-
-/* Paused: actually sleeping. Body slumps over at -22deg with feet planted,
-   slow breathing, eyes hidden so it reads as "fell asleep". */
-.widget[data-mascot-mood="paused"]   { --mascot-color: var(--fg-dim); }
-.widget[data-mascot-mood="paused"]   .mascot-walk {
-  animation: none;
-  transform: translateX(120px) rotate(-22deg);
-  transform-origin: center bottom;
-}
-.widget[data-mascot-mood="paused"]   .mascot-bob {
-  animation: claw-breathe 2.8s ease-in-out infinite;
-}
-@keyframes claw-breathe {
-  0%, 100% { transform: translateY(0)    scale(1); }
-  50%      { transform: translateY(-1px) scale(1.03); }
-}
-/* Sleeping eyes use dedicated <line> elements with rounded caps so they
-   read as obvious slits, not 1px noise. Toggle via class so when grumpy
-   (clicked while paused) the awake rects come back. */
-.mascot svg .eye-shut { display: none; }
-.widget[data-mascot-mood="paused"] .mascot:not(.grumpy) svg .eye { display: none; }
-.widget[data-mascot-mood="paused"] .mascot:not(.grumpy) svg .eye-shut { display: inline; }
-
-/* Sleeping ZZZs follow the body to the center when paused — the body is
-   translateX(120px) on .mascot-walk, but the Zs live outside walk so they
-   don't rotate with him. Shift the container so they appear above the
-   slumped head (not above the shoulder where the original single z sat). */
-.widget[data-mascot-mood="paused"] .mascot-zzz {
+.mascot-pet {
+  width: 100%;
+  height: 100%;
   display: block;
-  left: 108px;
-  top: -24px;
+  /* Short cross-fade on src change so mood transitions don't pop harshly. */
+  transition: opacity 0.2s ease;
 }
-
-/* Click while paused → grumpy: stop the snooze rotation, sit up, body
-   shakes side-to-side, speech bubble pops up. Hide the ZZZ since he's
-   visibly awake now. */
-.widget[data-mascot-mood="paused"] .mascot.grumpy .mascot-walk {
-  transform: translateX(120px) rotate(-6deg);
-}
-.widget[data-mascot-mood="paused"] .mascot.grumpy .mascot-bob {
-  animation: claw-grumpy 0.13s ease-in-out infinite;
-}
-.widget[data-mascot-mood="paused"] .mascot.grumpy .mascot-zzz { display: none; }
-@keyframes claw-grumpy {
-  0%, 100% { transform: translate(-1.5px, -1px); }
-  50%      { transform: translate(1.5px,  -1px); }
-}
+.mascot.swapping .mascot-pet { opacity: 0; }
 
 /* Grumpy speech bubble. JS sets textContent and toggles .hidden.
    Colors invert per theme so the bubble stays readable on both — without
@@ -381,118 +275,10 @@ header.drag {
   to   { opacity: 1; transform: translateY(0)   scale(1); }
 }
 
-/* Critical panic indicators — bold "!" characters float up above his head,
-   rotated and staggered. Universally reads as panic, where the earlier
-   abstract sticks were unidentifiable. Lives inside .mascot-walk so they
-   travel with him as he scrambles. */
-.panic-mark {
-  display: none;
-  position: absolute;
-  font: 900 13px/1 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: var(--mascot-color, var(--critical));
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  user-select: none;
-}
-.widget[data-mascot-mood="critical"] .panic-mark { display: block; }
-.panic-mark:nth-child(1) { top: -16px; left: 10px; animation: panic-rise 0.7s ease-out infinite; }
-.panic-mark:nth-child(2) { top: -12px; left: 24px; animation: panic-rise 0.6s ease-out infinite 0.25s; }
-.panic-mark:nth-child(3) { top: -14px; left: 17px; animation: panic-rise 0.8s ease-out infinite 0.45s; }
-@keyframes panic-rise {
-  0%   { transform: translate(0, 4px)   rotate(-15deg) scale(0.6); opacity: 0; }
-  20%  { transform: translate(-1px, 0)  rotate(10deg)  scale(1);   opacity: 1; }
-  60%  { transform: translate(2px, -8px) rotate(-12deg) scale(1);  opacity: 1; }
-  100% { transform: translate(0, -16px) rotate(8deg)   scale(0.8); opacity: 0; }
-}
-
-/* Warn sweat drop — actual SVG teardrop with radial gradient + highlight
-   so it reads as a water bead, not a CSS-border-radius blob. Hangs
-   above his head with the point attached, bulge below; beads in, holds,
-   then drips off-screen. */
-.mascot-sweat {
-  display: none;
-  position: absolute;
-  top: -22px;
-  left: 19px;
-  width: 18px;
-  height: 24px;
-  pointer-events: none;
-  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.3))
-          drop-shadow(0 0 3px rgba(94, 192, 255, 0.5));
-}
-.widget[data-mascot-mood="warn"] .mascot-sweat {
-  display: block;
-  animation: sweat-drip 1.8s ease-in-out infinite;
-  transform-origin: 50% 0%;
-}
-@keyframes sweat-drip {
-  0%   { transform: translate(0, -6px) scale(0.25); opacity: 0; }
-  20%  { transform: translate(0, 0)    scale(1);    opacity: 1; }
-  65%  { transform: translate(0, 0)    scale(1);    opacity: 1; }
-  90%  { transform: translate(1px, 8px) scale(1.1); opacity: 1; }
-  100% { transform: translate(2px, 16px) scale(1.15); opacity: 0; }
-}
-
-/* Floating ZZZs — three staggered z/Z/Z characters drift up and right
-   from above the sleeping head. Brighter cyan-white (not muted grey) and
-   bigger sizes (11/14/17px) so they read on dark backgrounds. */
-.mascot-zzz {
-  display: none;
-  position: absolute;
-  top: -22px;
-  left: 28px;
-  width: 30px;
-  height: 26px;
-  pointer-events: none;
-}
-.mascot-zzz .z {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font: 800 11px/1 ui-sans-serif, system-ui, sans-serif;
-  color: #e0f0ff;
-  text-shadow: 0 0 2px rgba(94, 192, 255, 0.55), 0 1px 1px rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  animation: claw-zzz 2.4s ease-out infinite;
-  animation-delay: var(--zd, 0s);
-}
-.mascot-zzz .z:nth-child(1) { font-size: 11px; }
-.mascot-zzz .z:nth-child(2) { font-size: 14px; }
-.mascot-zzz .z:nth-child(3) { font-size: 17px; }
-
-@keyframes claw-zzz {
-  0%   { transform: translate(0, 4px)    scale(0.7); opacity: 0; }
-  15%  { transform: translate(0, 0)      scale(1);   opacity: 1; }
-  60%  { transform: translate(10px, -10px) scale(1.1); opacity: 0.85; }
-  100% { transform: translate(18px, -22px) scale(1.25); opacity: 0; }
-}
-
-/* Quota reset → brief wave. Walk pauses, body tilts. JS adds .waving for
-   ~1.6s and removes it. */
-.mascot.waving .mascot-walk { animation-play-state: paused; }
-.mascot.waving .mascot-bob {
-  animation: claw-wave 1.6s ease-in-out 1;
-  transform-origin: center bottom;
-}
-@keyframes claw-wave {
-  0%, 100% { transform: rotate(0deg)   translateY(0); }
-  20%      { transform: rotate(-14deg) translateY(-3px); }
-  40%      { transform: rotate(10deg)  translateY(-3px); }
-  60%      { transform: rotate(-10deg) translateY(-3px); }
-  80%      { transform: rotate(8deg)   translateY(-2px); }
-}
-
-/* Click to hop. JS adds .hopping for ~0.45s and removes it. */
-.mascot.hopping .mascot-bob {
-  animation: claw-hop 0.45s ease-out 1;
-}
-@keyframes claw-hop {
-  0%   { transform: translateY(0)   scaleY(1); }
-  15%  { transform: translateY(0)   scaleY(0.8) scaleX(1.1); } /* squish */
-  45%  { transform: translateY(-14px) scaleY(1.05) scaleX(0.95); } /* peak */
-  80%  { transform: translateY(0)   scaleY(0.9) scaleX(1.05); } /* land */
-  100% { transform: translateY(0)   scaleY(1); }
-}
+/* Panic marks, sweat drop, ZZZ overlays, and the walk/hop/wave keyframes
+   that used to live here belonged to the pixel-art Claw'd. The pet SVGs
+   handle their own animations, so those layers were removed. Ambient
+   personality per state comes from the pet swap in widget.js. */
 
 /* Pill (minimal) mode — collapses the widget to a small draggable capsule
    showing only the worst-limit %. Click the chevron to expand back. */

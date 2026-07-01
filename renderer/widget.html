@@ -58,52 +58,15 @@
       </div>
     </div>
 
-    <!-- Claw'd, the resident crab. Pixel-art SVG inspired by the Claude
-         mascot. Walks the widget's bottom edge, tints with severity,
-         waves on quota reset, hops when clicked. Mood-specific accessories
-         (panic marks, sweat drop, ZZZ, grumpy bubble) live inside the same
-         container so they share his z-index and reflow with him. -->
+    <!-- Claw'd, the resident crab. Pet SVGs by @abderrahimghazali
+         (github.com/abderrahimghazali/clawd-pet, MIT). Each SVG carries
+         its own CSS animations, so we just swap the src by mood and let
+         the pet do its own thing. Grumpy speech bubble stays for the
+         click-while-paused interaction. -->
     <div class="mascot" id="mascot" data-i18n-attr="title:mascot.title">
-      <div class="mascot-zzz" aria-hidden="true">
-        <span class="z" style="--zd:0s">z</span>
-        <span class="z" style="--zd:-0.8s">Z</span>
-        <span class="z" style="--zd:-1.6s">Z</span>
-      </div>
       <div class="mascot-msg" id="mascotMsg" hidden></div>
-      <div class="mascot-walk">
-        <span class="panic-mark">!</span>
-        <span class="panic-mark">!</span>
-        <span class="panic-mark">!</span>
-        <div class="mascot-sweat" aria-hidden="true">
-          <svg viewBox="0 0 12 16" width="18" height="24">
-            <defs>
-              <radialGradient id="sweat-grad" cx="0.35" cy="0.65" r="0.55">
-                <stop offset="0%"  stop-color="#eaf5ff"/>
-                <stop offset="55%" stop-color="#5ec0ff"/>
-                <stop offset="100%" stop-color="#1e7fc8"/>
-              </radialGradient>
-            </defs>
-            <path d="M 6 1 C 1.5 6 0.5 11 1.5 13.5 A 5 5 0 0 0 10.5 13.5 C 11.5 11 10.5 6 6 1 Z"
-                  fill="url(#sweat-grad)" stroke="#1565a3" stroke-width="0.5"/>
-            <ellipse cx="4" cy="10.5" rx="1.4" ry="2" fill="#fff" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="mascot-bob">
-          <svg viewBox="0 0 14 11" width="40" height="32" shape-rendering="crispEdges">
-            <rect class="body" x="1" y="0" width="12" height="8" fill="currentColor"/>
-            <rect class="bump" x="0" y="2" width="1" height="4" fill="currentColor"/>
-            <rect class="bump" x="13" y="2" width="1" height="4" fill="currentColor"/>
-            <rect class="eye" x="3" y="2" width="1" height="2" fill="#000"/>
-            <rect class="eye" x="10" y="2" width="1" height="2" fill="#000"/>
-            <line class="eye-shut" x1="2.2" y1="3.2" x2="5" y2="3.2" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>
-            <line class="eye-shut" x1="9" y1="3.2" x2="11.8" y2="3.2" stroke="#000" stroke-width="0.8" stroke-linecap="round"/>
-            <rect class="leg" x="2" y="8" width="1" height="3" fill="currentColor"/>
-            <rect class="leg" x="5" y="8" width="1" height="3" fill="currentColor"/>
-            <rect class="leg" x="8" y="8" width="1" height="3" fill="currentColor"/>
-            <rect class="leg" x="11" y="8" width="1" height="3" fill="currentColor"/>
-          </svg>
-        </div>
-      </div>
+      <img class="mascot-pet" id="mascotPet" alt="" width="64" height="64"
+           src="pets/clawd-happy.svg" />
     </div>
   </div>
 
