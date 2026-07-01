@@ -164,24 +164,44 @@ function normalize(raw, meta = {}) {
     const fp = `${resetsAtFp}|${Math.round(utilization)}`;
     if (seenFingerprint.has(fp)) continue;
     seenFingerprint.add(fp);
+    // "spend" is the newer shape for the credit-pool row (mid-2026 API
+    // change). When only spend is present — e.g. an account whose plan uses
+    // the new field and never populates the legacy `extra_usage` — we alias
+    // the id to `extra_usage` so downstream label lookups, i18n keys, and
+    // config bindings all stay on the same identifier. When both are
+    // present, the fingerprint dedup above already dropped this one.
+    const canonicalKey = key === 'spend' ? 'extra_usage' : key;
     const limit = {
-      id: key,
-      label: prettyLabel(key),
+      id: canonicalKey,
+      label: prettyLabel(canonicalKey),
       utilization: clamp(utilization, 0, 100),
       resetsAt: value.resets_at || value.resetsAt || value.reset_at || null,
-      windowMs: WINDOW_MS[key] || null,
+      windowMs: WINDOW_MS[canonicalKey] || null,
     };
-    // Credit-pool limits (extra_usage) expose dollar amounts alongside the
-    // percentage. The API returns these in cents (e.g. 1386 for "$13.86",
-    // 10000 for a "$100" cap) — convert to whole-currency units so the
-    // renderer can format them with Intl.NumberFormat directly. Without this
-    // the widget displayed 100× the real value ($1,386 of $10,000 instead of
-    // $13.86 of $100), which is why v0.2.17 ships this fix.
+    // Credit-pool limits expose dollar amounts alongside the percentage.
+    // Two shapes coexist right now:
+    //   Legacy `extra_usage`: flat `used_credits` / `monthly_limit` in
+    //   cents (10000 = "$100.00"). Currency in `value.currency`.
+    //   New `spend`: nested `used.amount_minor` / `limit.amount_minor`
+    //   with an explicit `exponent` (usually 2). Currency on each side.
+    // Read either. Cents division is baked into the exponent path.
     const usedCentsRaw = pickNumber(value.used_credits, value.usedCredits);
     const limitCentsRaw = pickNumber(value.monthly_limit, value.monthlyLimit);
     if (usedCentsRaw != null) limit.usedCredits = usedCentsRaw / 100;
     if (limitCentsRaw != null) limit.monthlyLimit = limitCentsRaw / 100;
     if (typeof value.currency === 'string' && value.currency) limit.currency = value.currency;
+    if (value.used && typeof value.used === 'object') {
+      const usedMinor = pickNumber(value.used.amount_minor, value.used.amountMinor);
+      const exponent = pickNumber(value.used.exponent) ?? 2;
+      if (usedMinor != null) limit.usedCredits = usedMinor / Math.pow(10, exponent);
+      if (typeof value.used.currency === 'string' && value.used.currency) limit.currency = value.used.currency;
+    }
+    if (value.limit && typeof value.limit === 'object') {
+      const limitMinor = pickNumber(value.limit.amount_minor, value.limit.amountMinor);
+      const exponent = pickNumber(value.limit.exponent) ?? 2;
+      if (limitMinor != null) limit.monthlyLimit = limitMinor / Math.pow(10, exponent);
+      if (typeof value.limit.currency === 'string' && value.limit.currency) limit.currency = value.limit.currency;
+    }
     limits.push(limit);
   }
 

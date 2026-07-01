@@ -218,13 +218,16 @@ header.drag {
   bottom: 4px;
   left: 0;
   right: 0;
-  height: 88px;
+  height: 112px;
   pointer-events: none;
   z-index: 1;
 }
 /* Reserve a bottom strip in the widget for Claw'd, below the footer.
-   Skipped when the mascot is toggled off or in a compact layout so the
-   widget doesn't carry dead space. */
+   Kept at 96 px even though the pet grew to 112 — the pet SVGs have
+   transparent padding around the character, so the visible crab lands
+   at about 60 px and doesn't crash into the footer. Skipped when the
+   mascot is toggled off or in a compact layout so the widget doesn't
+   carry dead space. */
 .widget:not([data-no-mascot]):not([data-layout="minimal"]):not([data-layout="essential"]) {
   padding-bottom: 96px;
 }
@@ -234,15 +237,15 @@ header.drag {
   display: none;
 }
 /* Walker is the moving frame. Translates from the left edge to just short
-   of the right edge and back over 16 s. The widget's actual content width
-   is ~280 px minus the shadow gutter; the calc() below keeps the pet in
-   bounds regardless of small tweaks to the widget's inner width. */
+   of the right edge and back over 16 s. Widget's actual content width is
+   ~280 px, so 280 - 112 - 4 ≈ 164 px is the rightmost his left edge can
+   sit at without clipping. */
 .mascot-walker {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 88px;
-  height: 88px;
+  width: 112px;
+  height: 112px;
   animation: pet-walk 16s ease-in-out infinite;
 }
 .mascot-pet {
@@ -260,8 +263,8 @@ header.drag {
 
 @keyframes pet-walk {
   0%, 100% { transform: translateX(4px); }
-  45%      { transform: translateX(188px); }
-  50%      { transform: translateX(188px); }
+  45%      { transform: translateX(164px); }
+  50%      { transform: translateX(164px); }
   95%      { transform: translateX(4px); }
 }
 @keyframes pet-face {
@@ -274,7 +277,7 @@ header.drag {
    easy to look at. JS toggles .static based on the current pick. */
 .mascot.static .mascot-walker,
 .mascot.static .mascot-pet { animation-play-state: paused; }
-.mascot.static .mascot-walker { transform: translateX(96px); } /* park center-ish */
+.mascot.static .mascot-walker { transform: translateX(84px); } /* park centered */
 
 /* Grumpy speech bubble. JS sets textContent and toggles .hidden.
    Colors invert per theme so the bubble stays readable on both — without
@@ -282,10 +285,10 @@ header.drag {
 .mascot-msg {
   position: absolute;
   /* Sits above where the pet parks when he's paused (walker is
-     translateX(96px), pet is 88px wide, so his head is roughly at x=140).
-     The bubble is only shown in the paused state, so the position doesn't
-     need to track a moving pet. */
-  bottom: 76px;
+     translateX(84px), pet is 112px wide, so his head is roughly at
+     x=140). The bubble is only shown in the paused state, so the
+     position doesn't need to track a moving pet. */
+  bottom: 96px;
   left: 130px;
   background: #fff;
   color: #1a1a1d;
