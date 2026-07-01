@@ -35,6 +35,7 @@ The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 - A **pill / minimal mode** that collapses the widget to a tiny ~156×44 capsule showing just the worst-utilized limit %, ideal for non-developers who want ambient awareness without giving up screen real estate
 - **Claw'd**, a pixel-art crab mascot that walks the widget's bottom edge and reacts to your usage — strolls when you're fine, panic-skips with "!" marks at critical, sleeps with floating Zs when rate-limited, and gets grumpy if you click him while he's napping
 - **In-app update check** — once a day the widget pings GitHub Releases and surfaces a small `↑ v0.2.X` link in the footer when a newer build is out, so you never run a stale version without knowing
+- **13-language UI** — English (default), Portuguese (Brazil), Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian. Switch in Settings → Language. See [Translations](#translations) below for credits and how to refine machine-assisted languages.
 
 ## How it's different
 
@@ -339,6 +340,18 @@ scripts/
 - `winget install` distribution
 
 See [open issues](../../issues) for the current state.
+
+## Translations
+
+The widget ships with 13 languages. English is canonical and hand-written; **Portuguese (Brazil)** was contributed by [@Ian03](https://github.com/Ian03/claude-usage-widget), whose fork seeded the i18n architecture and the first translation. The remaining 11 (Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian) are **machine-assisted** — marked with a `*` in the language picker — and will benefit from native-speaker refinement.
+
+If something reads awkwardly in your language:
+
+1. Open [`locales/<your-lang>.json`](locales/) and edit the strings you want to improve.
+2. Drop `_meta.machineTranslated` to `false` once you (or another native speaker) have reviewed the whole file.
+3. Open a PR. The test suite enforces schema parity (every locale must have every key in `en.json`), so missing keys will fail CI before review.
+
+Want to add a language that isn't here? Copy `en.json` to `locales/<your-code>.json`, set `_meta` accordingly, translate, and open a PR.
 
 ## Changelog
 

@@ -55,6 +55,11 @@ const DEFAULTS = {
   // Tray icon
   trayIconStyle: 'bars', // bars | battery | gauge | minimal | dynamic
 
+  // Language. 'en' is canonical; other locales fall back to English for any
+  // missing keys. Default is English regardless of system locale — users opt
+  // in to other languages via Settings.
+  language: 'en',
+
   // Reset hooks: limit id -> shell command. Fires once when that quota's
   // resetsAt advances. Commands run detached; output is discarded.
   onReset: {

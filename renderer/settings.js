@@ -1,8 +1,10 @@
 const $ = (id) => document.getElementById(id);
+const t = (key, params) => (window.i18n ? window.i18n.t(key, params) : key);
 let cfg = null;
 let saveTimer = null;
 
 const BINDINGS = [
+  { id: 'language', path: ['language'], type: 'value' },
   { id: 'layout', path: ['layout'], type: 'value' },
   { id: 'alwaysOnTop', path: ['alwaysOnTop'], type: 'checked' },
   { id: 'clickThrough', path: ['clickThrough'], type: 'checked' },
@@ -85,7 +87,46 @@ function scheduleSave() {
   }, 120);
 }
 
+function populateLanguageSelect() {
+  const sel = $('language');
+  if (!sel) return;
+  const available = window.i18n?.available() || [];
+  sel.innerHTML = '';
+  for (const loc of available) {
+    const opt = document.createElement('option');
+    opt.value = loc.code;
+    // Show "Español (Spanish) *" — native name first since that's what a
+    // speaker recognizes at a glance; English in parens helps anyone who
+    // mis-clicked and needs to recognize "their" language to switch back.
+    // Asterisk flags machine-assisted translations so users know to expect
+    // rough edges and to file PRs.
+    const flag = loc.machineTranslated ? ' *' : '';
+    const label = loc.nativeName === loc.name ? loc.nativeName : `${loc.nativeName} (${loc.name})`;
+    opt.textContent = `${label}${flag}`;
+    sel.appendChild(opt);
+  }
+}
+
+function renderUpdateStatus(info) {
+  const status = $('updateStatus');
+  if (!status) return;
+  if (!info) { status.textContent = t('settings.updateStatus.neverChecked'); return; }
+  if (info.available) status.textContent = t('settings.updateStatus.available', { version: info.latestVersion });
+  else if (info.latestVersion) status.textContent = t('settings.updateStatus.latest', { version: info.latestVersion });
+  else status.textContent = '';
+}
+
 async function init() {
+  await window.i18n.init();
+  populateLanguageSelect();
+  // Re-render dynamic strings (update status, language list) when the user
+  // switches language so the panel flips without a relaunch.
+  window.i18n.onChange(() => {
+    populateLanguageSelect();
+    if (cfg) { $('language').value = cfg.language || 'en'; }
+    window.api.getUpdate?.().then(renderUpdateStatus);
+  });
+
   cfg = await window.api.getConfig();
   load();
   for (const b of BINDINGS) {
@@ -101,17 +142,11 @@ async function init() {
   const checkBtn = $('checkUpdateNow');
   const status = $('updateStatus');
   if (checkBtn && status) {
-    const renderUpdateStatus = (info) => {
-      if (!info) { status.textContent = 'Never checked yet.'; return; }
-      if (info.available) status.textContent = `v${info.latestVersion} is available — see the header link to download.`;
-      else if (info.latestVersion) status.textContent = `You're on the latest version (v${info.latestVersion}).`;
-      else status.textContent = '';
-    };
     window.api.getUpdate?.().then(renderUpdateStatus);
     window.api.onUpdate?.(renderUpdateStatus);
     checkBtn.addEventListener('click', async () => {
       checkBtn.disabled = true;
-      status.textContent = 'Checking…';
+      status.textContent = t('settings.checking');
       try { await window.api.checkUpdate?.(); } finally { checkBtn.disabled = false; }
     });
   }

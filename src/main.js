@@ -8,6 +8,11 @@ const { History } = require('./history');
 const icon = require('./icon');
 const { checkForUpdate, CHECK_INTERVAL_MS } = require('./updater');
 const { isOnAnyDisplay } = require('./geom');
+const { makeT, bundleFor } = require('./i18n');
+
+// Single t() bound to the current language. Rebuilt whenever the user switches
+// languages so tray/dialog/notification text refreshes without a relaunch.
+let t = (key, params) => key;
 
 let widgetWindow = null;
 let settingsWindow = null;
@@ -192,7 +197,7 @@ function makeTrayIconImage() {
 
 function createTray() {
   tray = new Tray(makeTrayIconImage());
-  tray.setToolTip('Claude Usage Widget');
+  tray.setToolTip(t('tray.tooltip'));
   rebuildTrayMenu();
   tray.on('click', () => {
     if (!widgetWindow) createWidget();
@@ -208,7 +213,7 @@ function refreshTrayIcon() {
 function rebuildTrayMenu() {
   if (!tray) return;
   const styleSubmenu = ['bars', 'battery', 'gauge', 'minimal', 'dynamic'].map((s) => ({
-    label: s.charAt(0).toUpperCase() + s.slice(1),
+    label: t(`tray.style.${s}`),
     type: 'radio',
     checked: cfg.trayIconStyle === s,
     click: () => {
@@ -219,21 +224,21 @@ function rebuildTrayMenu() {
     },
   }));
   const menu = Menu.buildFromTemplate([
-    { label: 'Show widget', click: () => { if (!widgetWindow) createWidget(); else widgetWindow.show(); } },
-    { label: 'Hide widget', click: () => widgetWindow?.hide() },
+    { label: t('tray.show'), click: () => { if (!widgetWindow) createWidget(); else widgetWindow.show(); } },
+    { label: t('tray.hide'), click: () => widgetWindow?.hide() },
     { type: 'separator' },
-    { label: 'Refresh now', click: () => poller?.manualRefresh() },
-    { label: 'Settings…', click: createSettings },
+    { label: t('tray.refresh'), click: () => poller?.manualRefresh() },
+    { label: t('tray.settings'), click: createSettings },
     { type: 'separator' },
-    { label: 'Tray icon style', submenu: styleSubmenu },
+    { label: t('tray.iconStyle'), submenu: styleSubmenu },
     {
-      label: 'Always on top',
+      label: t('tray.alwaysOnTop'),
       type: 'checkbox',
       checked: cfg.alwaysOnTop,
       click: (item) => { cfg.alwaysOnTop = item.checked; widgetWindow?.setAlwaysOnTop(cfg.alwaysOnTop, 'screen-saver'); config.save(cfg); },
     },
     {
-      label: 'Click-through',
+      label: t('tray.clickThrough'),
       type: 'checkbox',
       checked: cfg.clickThrough,
       click: async (item) => {
@@ -248,7 +253,7 @@ function rebuildTrayMenu() {
       },
     },
     {
-      label: 'Start with Windows',
+      label: t('tray.startWithWindows'),
       type: 'checkbox',
       checked: cfg.openAtLogin,
       click: (item) => { cfg.openAtLogin = item.checked; syncLoginItem(); config.save(cfg); broadcast('config:changed', cfg); },
@@ -256,8 +261,8 @@ function rebuildTrayMenu() {
     { type: 'separator' },
     {
       label: lastUpdateInfo?.available
-        ? `Get v${lastUpdateInfo.latestVersion} (you have v${app.getVersion()})`
-        : 'Check for updates',
+        ? t('tray.getUpdate', { latest: lastUpdateInfo.latestVersion, current: app.getVersion() })
+        : t('tray.checkUpdate'),
       click: () => {
         if (lastUpdateInfo?.available && lastUpdateInfo.releaseUrl) {
           shell.openExternal(lastUpdateInfo.releaseUrl);
@@ -267,7 +272,7 @@ function rebuildTrayMenu() {
       },
     },
     {
-      label: 'Auto-check for updates',
+      label: t('tray.autoCheck'),
       type: 'checkbox',
       checked: cfg.checkForUpdates !== false,
       click: (item) => {
@@ -278,7 +283,7 @@ function rebuildTrayMenu() {
       },
     },
     { type: 'separator' },
-    { label: 'Quit', click: () => { app.isQuitting = true; app.quit(); } },
+    { label: t('tray.quit'), click: () => { app.isQuitting = true; app.quit(); } },
   ]);
   tray.setContextMenu(menu);
 }
@@ -298,16 +303,27 @@ function broadcast(channel, payload) {
   }
 }
 
+function localizedLimitLabel(limit) {
+  if (!limit) return '';
+  const key = `limit.${limit.id}`;
+  const translated = t(key);
+  // If the key isn't in the locale (t() falls through to returning the key
+  // itself), use whatever label the server / normalizer assigned. That
+  // covers future limit ids the widget hasn't been taught yet.
+  return translated && translated !== key ? translated : (limit.label || limit.id || '');
+}
+
 function checkNotifications(usage) {
   if (!usage || !Array.isArray(usage.limits)) return;
   for (const limit of usage.limits) {
     const pct = limit.utilization;
     const key = `${limit.id}:${limit.resetsAt || ''}`;
+    const labelArg = { label: localizedLimitLabel(limit), pct: Math.round(pct) };
     if (cfg.notifyAtCritical && pct >= cfg.thresholds.critical && !notifiedFor.has(key + ':crit')) {
-      notify(`${limit.label} at ${Math.round(pct)}%`, 'Critical threshold reached.');
+      notify(t('notify.limitAtPct', labelArg), t('notify.critical'));
       notifiedFor.add(key + ':crit');
     } else if (cfg.notifyAtWarn && pct >= cfg.thresholds.warn && pct < cfg.thresholds.critical && !notifiedFor.has(key + ':warn')) {
-      notify(`${limit.label} at ${Math.round(pct)}%`, 'Warning threshold reached.');
+      notify(t('notify.limitAtPct', labelArg), t('notify.warn'));
       notifiedFor.add(key + ':warn');
     }
     if (pct < cfg.thresholds.warn) {
@@ -325,14 +341,12 @@ function notify(title, body) {
 async function confirmEnableClickThrough() {
   const { response } = await dialog.showMessageBox({
     type: 'warning',
-    buttons: ['Cancel', 'Enable click-through'],
+    buttons: [t('dialog.clickThrough.cancel'), t('dialog.clickThrough.confirm')],
     defaultId: 0,
     cancelId: 0,
-    title: 'Enable click-through?',
-    message: 'Click-through makes the widget invisible to mouse clicks.',
-    detail:
-      "While it's on, you won't be able to drag the widget, click its buttons, or close it — clicks pass straight through to whatever is underneath.\n\n" +
-      "To turn it back off, right-click the tray icon and uncheck Click-through.\n\nContinue?",
+    title: t('dialog.clickThrough.title'),
+    message: t('dialog.clickThrough.message'),
+    detail: t('dialog.clickThrough.detail'),
   });
   return response === 1;
 }
@@ -371,11 +385,11 @@ async function runUpdateCheck({ manual = false } = {}) {
     broadcast('update:available', info);
     rebuildTrayMenu();
     if (manual && info && !info.available) {
-      notify('You\'re up to date', `Running v${app.getVersion()} — the latest release.`);
+      notify(t('notify.upToDate.title'), t('notify.upToDate.body', { version: app.getVersion() }));
     }
   } catch (e) {
     // Network blips and 403 rate-limits are expected; surface nothing.
-    if (manual) notify('Update check failed', e.message || 'Could not reach GitHub.');
+    if (manual) notify(t('notify.updateFailed.title'), e.message || t('notify.updateFailed.body'));
   }
 }
 
@@ -409,6 +423,7 @@ function updateActivityState() {
 app.whenReady().then(() => {
   cfg = config.load();
   nativeTheme.themeSource = cfg.theme;
+  t = makeT(cfg.language || 'en');
   history = new History(config.historyPath());
 
   syncLoginItem();
@@ -501,6 +516,7 @@ app.whenReady().then(() => {
   });
   ipcMain.handle('update:get', () => lastUpdateInfo);
   ipcMain.handle('update:check', () => runUpdateCheck({ manual: true }));
+  ipcMain.handle('i18n:get', () => bundleFor(cfg.language || 'en'));
 });
 
 // Pill mode uses a small fixed-size window so it actually feels minimized
@@ -510,8 +526,15 @@ const MINIMAL_SIZE = { width: 156, height: 44 };
 function applyConfig() {
   syncLoginItem();
   nativeTheme.themeSource = cfg.theme;
+  // Rebind t() in case the language changed since the last apply. Tray menu /
+  // dialogs / notifications rendered after this call pick up the new strings.
+  t = makeT(cfg.language || 'en');
+  if (tray) tray.setToolTip(t('tray.tooltip'));
   rebuildTrayMenu();
   scheduleUpdateChecks();
+  // Push the new bundle to any open renderer windows so widget + settings UI
+  // re-render their static labels immediately, no relaunch required.
+  broadcast('i18n:changed', bundleFor(cfg.language || 'en'));
   if (!widgetWindow) return;
   widgetWindow.setOpacity(cfg.opacity);
   widgetWindow.setAlwaysOnTop(cfg.alwaysOnTop, 'screen-saver');
