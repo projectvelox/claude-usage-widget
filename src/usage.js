@@ -167,8 +167,6 @@ function normalize(raw, meta = {}) {
       const slug = scopeDisplayName.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
       if (slug) canonicalKey = `seven_day_${slug}`;
     }
-    if (seen.has(canonicalKey)) continue;
-    seen.add(canonicalKey);
     const utilization = pickNumber(value.utilization, value.percent, value.percentage, value.usage);
     if (utilization == null) continue;
     // Skip limits the API explicitly marks disabled (e.g. extra_usage when the
@@ -176,6 +174,14 @@ function normalize(raw, meta = {}) {
     // would just be confusing noise.
     if (value.is_enabled === false) continue;
     if (value.enabled === false) continue;
+    // Only reserve the seen slot AFTER the row has cleared every validity
+    // check. Otherwise a null-utilization `extra_usage` row (which is what
+    // the API returns when the user hasn't touched credits yet) would claim
+    // 'extra_usage' before being skipped, and the sibling `spend` row that
+    // aliases to the same canonical key would then get blocked — even
+    // though `spend` is the only row that actually carries the data.
+    if (seen.has(canonicalKey)) continue;
+    seen.add(canonicalKey);
     // Content-based dedup: Anthropic now returns the same usage data under
     // multiple shapes simultaneously (e.g. top-level `extra_usage` + new
     // `spend` object, top-level `five_hour` + an entry in the new `limits`
