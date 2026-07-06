@@ -145,8 +145,30 @@ function normalize(raw, meta = {}) {
   }
 
   for (const [key, value] of candidates) {
-    if (seen.has(key)) continue;
-    seen.add(key);
+    // Compute the aliased id up front so two different scoped weekly limits
+    // (e.g. Fable and Haiku 5, both coming through as `weekly_scoped`) don't
+    // collide in the key-based seen set below.
+    //
+    // Key aliasing:
+    //   * `spend` (mid-2026 new credit-pool shape) → `extra_usage` so
+    //     downstream label lookups, i18n keys, and config bindings stay on
+    //     the same identifier as the legacy field.
+    //   * `weekly_scoped` (from the new `limits` array, one entry per
+    //     model-specific weekly limit) → `seven_day_<slug>` derived from
+    //     `scope.model.display_name` — e.g. Fable → `seven_day_fable`,
+    //     "Haiku 5" → `seven_day_haiku_5`. Any scoped model surfaces with a
+    //     unique id and a `scopeModel` field the renderer uses to build the
+    //     localized "Weekly · <model>" label.
+    const scopeDisplayName = (value.scope && value.scope.model && typeof value.scope.model.display_name === 'string')
+      ? value.scope.model.display_name : '';
+    let canonicalKey = key;
+    if (key === 'spend') canonicalKey = 'extra_usage';
+    if (key === 'weekly_scoped' && scopeDisplayName) {
+      const slug = scopeDisplayName.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+      if (slug) canonicalKey = `seven_day_${slug}`;
+    }
+    if (seen.has(canonicalKey)) continue;
+    seen.add(canonicalKey);
     const utilization = pickNumber(value.utilization, value.percent, value.percentage, value.usage);
     if (utilization == null) continue;
     // Skip limits the API explicitly marks disabled (e.g. extra_usage when the
@@ -155,29 +177,26 @@ function normalize(raw, meta = {}) {
     if (value.is_enabled === false) continue;
     if (value.enabled === false) continue;
     // Content-based dedup: Anthropic now returns the same usage data under
-    // multiple shapes simultaneously (e.g. top-level `extra_usage` + new `spend`
-    // object, top-level `five_hour` + an entry in the new `limits` array).
-    // Fingerprint by (resets_at, rounded utilization) so the second occurrence
-    // is dropped. Candidates are pushed top-level-first, so the richer original
-    // row wins and the slimmer dup is suppressed.
+    // multiple shapes simultaneously (e.g. top-level `extra_usage` + new
+    // `spend` object, top-level `five_hour` + an entry in the new `limits`
+    // array). Fingerprint by (resets_at, rounded utilization, scope model)
+    // so the second occurrence is dropped. Scope is the newer dimension:
+    // without it, a scoped weekly limit at 0% (e.g. "Fable" for an account
+    // that hasn't used Fable yet) would fingerprint identically to `spend`
+    // at 0% and get deduped away. Candidates are pushed top-level-first,
+    // so the richer original row wins and the slimmer dup is suppressed.
     const resetsAtFp = value.resets_at || value.resetsAt || value.reset_at || '';
-    const fp = `${resetsAtFp}|${Math.round(utilization)}`;
+    const fp = `${resetsAtFp}|${Math.round(utilization)}|${scopeDisplayName}`;
     if (seenFingerprint.has(fp)) continue;
     seenFingerprint.add(fp);
-    // "spend" is the newer shape for the credit-pool row (mid-2026 API
-    // change). When only spend is present — e.g. an account whose plan uses
-    // the new field and never populates the legacy `extra_usage` — we alias
-    // the id to `extra_usage` so downstream label lookups, i18n keys, and
-    // config bindings all stay on the same identifier. When both are
-    // present, the fingerprint dedup above already dropped this one.
-    const canonicalKey = key === 'spend' ? 'extra_usage' : key;
     const limit = {
       id: canonicalKey,
-      label: prettyLabel(canonicalKey),
+      label: scopeDisplayName ? `Weekly · ${scopeDisplayName}` : prettyLabel(canonicalKey),
       utilization: clamp(utilization, 0, 100),
       resetsAt: value.resets_at || value.resetsAt || value.reset_at || null,
-      windowMs: WINDOW_MS[canonicalKey] || null,
+      windowMs: WINDOW_MS[canonicalKey] || (key === 'weekly_scoped' ? 7 * 24 * 60 * 60 * 1000 : null),
     };
+    if (scopeDisplayName) limit.scopeModel = scopeDisplayName;
     // Credit-pool limits expose dollar amounts alongside the percentage.
     // Two shapes coexist right now:
     //   Legacy `extra_usage`: flat `used_credits` / `monthly_limit` in

@@ -134,6 +134,68 @@ test('normalize falls back to the new `limits` array when legacy keys are absent
   assert.deepEqual(ids, ['session', 'weekly_all']);
 });
 
+test('normalize surfaces scoped weekly limits with an id derived from display_name', () => {
+  // Real-world payload for an account that hasn't used Fable yet: the only
+  // Fable signal in the response is a weekly_scoped entry in the new limits
+  // array carrying `scope.model.display_name`. Before this fix the row got
+  // deduped away by `spend` (both at 0% with no resets_at) and, even without
+  // the collision, would have rendered as "Weekly Scoped" instead of naming
+  // Fable.
+  const payload = {
+    five_hour: { utilization: 26, resets_at: '2026-07-06T07:50:00.324439+00:00' },
+    seven_day: { utilization: 8, resets_at: '2026-07-11T16:00:00.324461+00:00' },
+    seven_day_sonnet: null,
+    limits: [
+      { kind: 'session', percent: 26, resets_at: '2026-07-06T07:50:00.324439+00:00' },
+      { kind: 'weekly_all', percent: 8, resets_at: '2026-07-11T16:00:00.324461+00:00' },
+      { kind: 'weekly_scoped', percent: 0, resets_at: null, scope: { model: { display_name: 'Fable' } } },
+    ],
+    spend: {
+      used: { amount_minor: 0, currency: 'USD', exponent: 2 },
+      limit: { amount_minor: 10000, currency: 'USD', exponent: 2 },
+      percent: 0,
+      enabled: true,
+    },
+  };
+  const r = normalize(payload, {});
+  const ids = r.limits.map((l) => l.id).sort();
+  // Legacy top-level rows keep their ids; spend aliases to extra_usage;
+  // Fable's weekly_scoped entry gets a per-model id + scopeModel field.
+  assert.deepEqual(ids, ['extra_usage', 'five_hour', 'seven_day', 'seven_day_fable']);
+  const fable = r.limits.find((l) => l.id === 'seven_day_fable');
+  assert.equal(fable.scopeModel, 'Fable');
+  assert.equal(fable.label, 'Weekly · Fable');
+  assert.equal(fable.utilization, 0);
+  assert.equal(fable.windowMs, 7 * 24 * 60 * 60 * 1000);
+});
+
+test('normalize keeps scoped limits distinct from spend at the same 0% + no-reset fingerprint', () => {
+  // Direct regression test for the collision: without the scope dimension in
+  // the fingerprint, Fable (0%, no resets_at) hashes identically to spend
+  // (0%, no resets_at) and gets dropped.
+  const payload = {
+    spend: { percent: 0, enabled: true, used: { amount_minor: 0, exponent: 2 }, limit: { amount_minor: 10000, exponent: 2 } },
+    limits: [
+      { kind: 'weekly_scoped', percent: 0, resets_at: null, scope: { model: { display_name: 'Fable' } } },
+    ],
+  };
+  const r = normalize(payload, {});
+  const ids = r.limits.map((l) => l.id).sort();
+  assert.deepEqual(ids, ['extra_usage', 'seven_day_fable']);
+});
+
+test('normalize slugifies scoped model display names into stable ids', () => {
+  const payload = {
+    limits: [
+      { kind: 'weekly_scoped', percent: 5, scope: { model: { display_name: 'Haiku 5' } } },
+      { kind: 'weekly_scoped', percent: 10, scope: { model: { display_name: 'Opus 4.7 (1M context)' } } },
+    ],
+  };
+  const r = normalize(payload, {});
+  const ids = r.limits.map((l) => l.id).sort();
+  assert.deepEqual(ids, ['seven_day_haiku_5', 'seven_day_opus_4_7_1m_context']);
+});
+
 test('normalize aliases spend to extra_usage and reads its nested dollar shape', () => {
   // The mid-2026 API sometimes returns the new `spend` object without the
   // legacy `extra_usage` field (accounts whose plan uses only the new

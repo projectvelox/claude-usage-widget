@@ -80,6 +80,7 @@
   "limit.cowork": "Cowork",
   "limit.routines": "每日例程",
   "limit.extra_usage": "额外用量",
+  "limit.weeklyScoped": "每周 · {model}",
 
   "settings.title": "Claude Usage Widget",
   "settings.subtitle": "外观与行为选项。更改实时生效。",
