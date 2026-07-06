@@ -89,7 +89,15 @@ You need [Claude Code](https://claude.com/claude-code) installed and logged in e
 2. Double-click it. SmartScreen → **More info → Run anyway**.
 3. Right-click the tray icon for options, or click the cog inside the widget for the full settings panel.
 
-### macOS, Linux, or anyone who'd rather build from source
+### Linux — download the AppImage (tester build)
+
+1. Download the latest **`ClaudeUsageWidget-X.Y.Z-x86_64.AppImage`** from [Releases](../../releases/latest).
+2. `chmod +x ClaudeUsageWidget-*.AppImage` then double-click it (or run it from a terminal).
+3. Right-click the tray icon for options, or click the cog inside the widget for the full settings panel.
+
+Linux is a **first tester build** — everything should work but a couple of Windows-flavored strings still leak through (e.g. the "Start with Windows" toggle label). Report issues on the tracker.
+
+### macOS, or anyone who'd rather build from source
 
 You already have the perfect tool to set this up: your own Claude Code. Paste the prompt below into a Claude Code session and let it handle the install. Works on macOS (Apple Silicon and Intel), Linux, and Windows.
 
