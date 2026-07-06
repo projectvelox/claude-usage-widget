@@ -26,7 +26,7 @@
 The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 
 - Current session (5-hour rolling window)
-- Weekly · all models / Sonnet / Opus / Cowork — whichever your plan exposes
+- Weekly · all models / Sonnet / Opus / Cowork / **Fable** / any other model-scoped weekly limit Anthropic ships — the widget picks these up automatically from the API's new scoped-limit shape and labels them "Weekly · &lt;model&gt;" in whichever of the 13 UI languages you're using
 - Extra usage credits if your plan has a credit pool — with the dollar amount used and the monthly cap (e.g. `$225 of $5,000 used`), not just the percentage
 - Reset countdowns per limit
 - A **pace marker** on each bar — a vertical line that turns red when you're burning faster than the timer

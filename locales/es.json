@@ -80,6 +80,7 @@
   "limit.cowork": "Cowork",
   "limit.routines": "Rutinas diarias",
   "limit.extra_usage": "Uso extra",
+  "limit.weeklyScoped": "Semanal · {model}",
 
   "settings.title": "Claude Usage Widget",
   "settings.subtitle": "Opciones cosméticas y de comportamiento. Los cambios se aplican al instante.",

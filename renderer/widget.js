@@ -167,6 +167,13 @@ function bcp47(code) { return code === 'zh-CN' ? 'zh-Hans-CN' : code; }
 
 function localizedLimitLabel(limit) {
   if (!limit) return '';
+  // Scoped weekly limits (e.g. "Fable", future model-specific quotas) come
+  // through with a `scopeModel` field so the label can localize as
+  // "Weekly · <model>" without needing a per-model key in every locale file.
+  if (limit.scopeModel) {
+    const scoped = t('limit.weeklyScoped', { model: limit.scopeModel });
+    if (scoped && scoped !== 'limit.weeklyScoped') return scoped;
+  }
   const key = `limit.${limit.id}`;
   const translated = t(key);
   // t() returns the key itself when neither the active locale nor the
