@@ -196,6 +196,41 @@ test('normalize slugifies scoped model display names into stable ids', () => {
   assert.deepEqual(ids, ['seven_day_haiku_5', 'seven_day_opus_4_7_1m_context']);
 });
 
+test('normalize surfaces spend when extra_usage exists with null utilization', () => {
+  // Regression: the API returns both `extra_usage` (utilization: null when
+  // the user hasn't touched credits yet — used_credits is set but the
+  // percentage isn't) AND `spend` (the new shape carrying the actual
+  // numbers). Before this fix v0.2.24's early seen.add() reserved the
+  // 'extra_usage' slot when processing the null-utilization legacy row and
+  // silently blocked the sibling spend row from being surfaced — the widget
+  // showed no Extra usage line at all despite the account having a credit
+  // pool.
+  const payload = {
+    five_hour: { utilization: 12, resets_at: null },
+    extra_usage: {
+      is_enabled: true,
+      monthly_limit: 10000,
+      used_credits: 0,
+      utilization: null,
+      currency: 'USD',
+    },
+    spend: {
+      used: { amount_minor: 0, currency: 'USD', exponent: 2 },
+      limit: { amount_minor: 10000, currency: 'USD', exponent: 2 },
+      percent: 0,
+      enabled: true,
+    },
+  };
+  const r = normalize(payload, {});
+  const ids = r.limits.map((l) => l.id).sort();
+  assert.deepEqual(ids, ['extra_usage', 'five_hour']);
+  const extra = r.limits.find((l) => l.id === 'extra_usage');
+  assert.equal(extra.utilization, 0);
+  assert.equal(extra.usedCredits, 0);
+  assert.equal(extra.monthlyLimit, 100);
+  assert.equal(extra.currency, 'USD');
+});
+
 test('normalize aliases spend to extra_usage and reads its nested dollar shape', () => {
   // The mid-2026 API sometimes returns the new `spend` object without the
   // legacy `extra_usage` field (accounts whose plan uses only the new
