@@ -1,8 +1,10 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const CREDS_PATH = path.join(os.homedir(), '.claude', '.credentials.json');
+const KEYCHAIN_SERVICE = 'Claude Code-credentials';
 const USAGE_URL = 'https://api.anthropic.com/api/oauth/usage';
 const BETA_HEADER = 'oauth-2025-04-20';
 
@@ -18,20 +20,50 @@ const WINDOW_MS = {
   seven_day_oauth_apps: 7 * 24 * 60 * 60 * 1000,
 };
 
+// Read the credentials JSON blob from the macOS login Keychain. On darwin,
+// Claude Code stores its OAuth token there instead of the plaintext
+// ~/.claude/.credentials.json file (which is the Linux/Windows/fallback
+// location), so the Keychain is the real source of truth on macOS. Returns
+// the raw JSON string, or null when the platform isn't macOS or the item
+// doesn't exist. Isolated behind module.exports so the test suite can stub
+// it without spawning the `security` binary.
+function readKeychainCreds() {
+  if (process.platform !== 'darwin') return null;
+  try {
+    const out = execFileSync(
+      'security',
+      ['find-generic-password', '-s', KEYCHAIN_SERVICE, '-w'],
+      { encoding: 'utf8' },
+    );
+    return out.trim() || null;
+  } catch (e) {
+    // Non-zero exit (item not found) or `security` unavailable — treat as
+    // "no keychain credential" and let the caller fall through to NO_CREDS.
+    return null;
+  }
+}
+
 function readToken() {
   let raw;
   try {
     raw = fs.readFileSync(CREDS_PATH, 'utf8');
   } catch (e) {
     if (e.code === 'ENOENT') {
-      // Distinct from AUTH_EXPIRED: the file has never existed, so the user
-      // has not signed in via Claude Code yet. The UI shows an onboarding
-      // message instead of the generic "offline" badge.
-      const err = new Error('No Claude Code login found. Run `claude` in a terminal to sign in.');
-      err.code = 'NO_CREDS';
-      throw err;
+      // On macOS the plaintext file usually never exists — Claude Code keeps
+      // the token in the login Keychain — so a missing file is expected there.
+      // Fall back to the Keychain before concluding the user hasn't logged in.
+      raw = module.exports.readKeychainCreds();
+      if (!raw) {
+        // Distinct from AUTH_EXPIRED: neither the file nor the Keychain has a
+        // credential, so the user has not signed in via Claude Code yet. The
+        // UI shows an onboarding message instead of the generic "offline" badge.
+        const err = new Error('No Claude Code login found. Run `claude` in a terminal to sign in.');
+        err.code = 'NO_CREDS';
+        throw err;
+      }
+    } else {
+      throw e;
     }
-    throw e;
   }
   const creds = JSON.parse(raw);
   const oauth = creds.claudeAiOauth;
@@ -262,4 +294,4 @@ function prettyLabel(key) {
   return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-module.exports = { fetchUsage, readToken, normalize, CREDS_PATH, WINDOW_MS };
+module.exports = { fetchUsage, readToken, readKeychainCreds, normalize, CREDS_PATH, WINDOW_MS };

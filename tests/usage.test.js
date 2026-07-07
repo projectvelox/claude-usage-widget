@@ -1,7 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const { fetchUsage } = require('../src/usage');
+const usage = require('../src/usage');
+const { fetchUsage } = usage;
 
 // Lightweight stub for a Response-like object — avoids importing the global
 // Response constructor (which has quirky body handling) and lets us control
@@ -36,6 +37,14 @@ function stubCreds(t, behavior) {
   });
 }
 
+// Replaces the Keychain reader so the file-missing path is deterministic on a
+// real macOS dev machine (where the live Keychain would otherwise return a
+// real token). `value` is the raw JSON string the Keychain would yield, or
+// null when no item exists.
+function stubKeychain(t, value) {
+  t.mock.method(usage, 'readKeychainCreds', () => value);
+}
+
 const validCreds = {
   claudeAiOauth: {
     accessToken: 'sk-ant-oat01-pretend-token',
@@ -45,14 +54,28 @@ const validCreds = {
   },
 };
 
-test('fetchUsage throws NO_CREDS when credentials file is missing', async (t) => {
+test('fetchUsage throws NO_CREDS when the file is missing and the Keychain is empty', async (t) => {
   const enoent = Object.assign(new Error('ENOENT'), { code: 'ENOENT' });
   stubCreds(t, { error: enoent });
+  stubKeychain(t, null);
   await assert.rejects(fetchUsage(), (err) => {
     assert.equal(err.code, 'NO_CREDS');
     assert.match(err.message, /Run `claude`/);
     return true;
   });
+});
+
+test('fetchUsage reads the token from the macOS Keychain when the file is missing', async (t) => {
+  const enoent = Object.assign(new Error('ENOENT'), { code: 'ENOENT' });
+  stubCreds(t, { error: enoent });
+  stubKeychain(t, JSON.stringify(validCreds));
+  stubFetch(t, makeResponse({
+    status: 200,
+    json: { five_hour: { utilization: 42, resets_at: '2026-07-01T00:00:00Z' } },
+  }));
+  const data = await fetchUsage();
+  assert.equal(data.limits.length, 1);
+  assert.equal(data.subscriptionType, 'pro');
 });
 
 test('fetchUsage throws NO_CREDS when claudeAiOauth field is absent', async (t) => {
