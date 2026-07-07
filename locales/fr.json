@@ -157,7 +157,9 @@
 
   "settings.section.about": "À propos",
   "settings.about.desc": "Lit le jeton OAuth depuis <code>~/.claude/.credentials.json</code>. Le renouvellement du jeton est détecté automatiquement à la prochaine requête.",
+  "settings.about.desc.keychain": "Lit le jeton OAuth depuis le Trousseau macOS (service <code>Claude Code-credentials</code>). Le renouvellement du jeton est détecté automatiquement à la prochaine requête.",
   "settings.openCreds": "Ouvrir le fichier d'identifiants",
+  "settings.openCreds.keychain": "Ouvrir Trousseaux d'accès",
   "settings.quit": "Quitter le widget",
 
   "settings.section.language": "Langue",

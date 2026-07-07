@@ -506,7 +506,20 @@ app.whenReady().then(() => {
   ipcMain.handle('settings:close', () => settingsWindow?.close());
   ipcMain.handle('app:quit', () => { app.isQuitting = true; app.quit(); });
   ipcMain.handle('window:hide', () => widgetWindow?.hide());
-  ipcMain.handle('shell:openCreds', () => shell.openPath(require('./usage').CREDS_PATH));
+  ipcMain.handle('shell:openCreds', () => {
+    // On macOS Claude Code stores the OAuth token in the login Keychain, not
+    // in the JSON file — so the "open credentials" button opens Keychain
+    // Access instead (users can then search the "Claude Code-credentials"
+    // item themselves; Keychain doesn't accept a direct URL for a specific
+    // generic-password entry). On every other platform we still open the
+    // file the way we always have.
+    if (process.platform === 'darwin') {
+      const child = spawn('open', ['-a', 'Keychain Access'], { detached: true, stdio: 'ignore' });
+      child.unref();
+      return;
+    }
+    return shell.openPath(require('./usage').CREDS_PATH);
+  });
   ipcMain.handle('shell:openExternal', (_evt, url) => {
     // Whitelist: only open GitHub release pages for this repo. Prevents the
     // renderer from coaxing the main process into opening arbitrary URLs.

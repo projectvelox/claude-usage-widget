@@ -157,7 +157,9 @@
 
   "settings.section.about": "Hakkında",
   "settings.about.desc": "OAuth token'ı <code>~/.claude/.credentials.json</code> dosyasından okur. Token yenilenmesi bir sonraki yoklamada otomatik algılanır.",
+  "settings.about.desc.keychain": "OAuth token'ı macOS Anahtar Zinciri'nden (servis <code>Claude Code-credentials</code>) okur. Token yenilenmesi bir sonraki yoklamada otomatik algılanır.",
   "settings.openCreds": "Kimlik bilgileri dosyasını aç",
+  "settings.openCreds.keychain": "Anahtar Zinciri Erişimi'ni aç",
   "settings.quit": "Widget'tan çık",
 
   "settings.section.language": "Dil",

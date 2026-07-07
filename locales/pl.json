@@ -157,7 +157,9 @@
 
   "settings.section.about": "O programie",
   "settings.about.desc": "Czyta token OAuth z <code>~/.claude/.credentials.json</code>. Odświeżenie tokenu jest wykrywane automatycznie przy następnym odpytaniu.",
+  "settings.about.desc.keychain": "Czyta token OAuth z pęku kluczy macOS (usługa <code>Claude Code-credentials</code>). Odświeżenie tokenu jest wykrywane automatycznie przy następnym odpytaniu.",
   "settings.openCreds": "Otwórz plik poświadczeń",
+  "settings.openCreds.keychain": "Otwórz Dostęp do pęku kluczy",
   "settings.quit": "Zamknij widżet",
 
   "settings.section.language": "Język",

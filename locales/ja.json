@@ -157,7 +157,9 @@
 
   "settings.section.about": "情報",
   "settings.about.desc": "OAuthトークンを <code>~/.claude/.credentials.json</code> から読み込みます。トークンの更新は次回のポーリングで自動検出されます。",
+  "settings.about.desc.keychain": "OAuthトークンをmacOSログインキーチェーン（サービス <code>Claude Code-credentials</code>）から読み込みます。トークンの更新は次回のポーリングで自動検出されます。",
   "settings.openCreds": "認証ファイルを開く",
+  "settings.openCreds.keychain": "キーチェーンアクセスを開く",
   "settings.quit": "ウィジェットを終了",
 
   "settings.section.language": "言語",

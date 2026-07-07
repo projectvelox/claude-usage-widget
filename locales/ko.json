@@ -157,7 +157,9 @@
 
   "settings.section.about": "정보",
   "settings.about.desc": "<code>~/.claude/.credentials.json</code> 에서 OAuth 토큰을 읽습니다. 토큰 갱신은 다음 폴링에서 자동 감지됩니다.",
+  "settings.about.desc.keychain": "macOS 로그인 키체인(서비스 <code>Claude Code-credentials</code>)에서 OAuth 토큰을 읽습니다. 토큰 갱신은 다음 폴링에서 자동 감지됩니다.",
   "settings.openCreds": "자격 증명 파일 열기",
+  "settings.openCreds.keychain": "키체인 접근 열기",
   "settings.quit": "위젯 종료",
 
   "settings.section.language": "언어",
