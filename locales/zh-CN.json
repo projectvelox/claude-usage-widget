@@ -157,7 +157,9 @@
 
   "settings.section.about": "关于",
   "settings.about.desc": "从 <code>~/.claude/.credentials.json</code> 读取 OAuth 令牌。令牌刷新在下次轮询时自动检测。",
+  "settings.about.desc.keychain": "从 macOS 登录钥匙串（服务 <code>Claude Code-credentials</code>）读取 OAuth 令牌。令牌刷新在下次轮询时自动检测。",
   "settings.openCreds": "打开凭据文件",
+  "settings.openCreds.keychain": "打开钥匙串访问",
   "settings.quit": "退出小部件",
 
   "settings.section.language": "语言",

@@ -1,6 +1,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  // Exposed so the renderer can pick platform-specific copy without an IPC
+  // round-trip. Under sandbox+contextIsolation, only a curated subset of
+  // `process` is available in the preload, but `platform` is one of them.
+  platform: process.platform,
   getConfig: () => ipcRenderer.invoke('config:get'),
   updateConfig: (patch) => ipcRenderer.invoke('config:update', patch),
   getLastUsage: () => ipcRenderer.invoke('usage:last'),

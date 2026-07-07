@@ -157,7 +157,9 @@
 
   "settings.section.about": "About",
   "settings.about.desc": "Reads OAuth token from <code>~/.claude/.credentials.json</code>. Token refresh is picked up automatically on the next poll.",
+  "settings.about.desc.keychain": "Reads OAuth token from the macOS login Keychain (service <code>Claude Code-credentials</code>). Token refresh is picked up automatically on the next poll.",
   "settings.openCreds": "Open credentials file",
+  "settings.openCreds.keychain": "Open Keychain Access",
   "settings.quit": "Quit widget",
 
   "settings.section.language": "Language",

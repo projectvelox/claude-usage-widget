@@ -157,7 +157,9 @@
 
   "settings.section.about": "Info",
   "settings.about.desc": "Liest das OAuth-Token aus <code>~/.claude/.credentials.json</code>. Token-Erneuerung wird automatisch bei der nächsten Abfrage erkannt.",
+  "settings.about.desc.keychain": "Liest das OAuth-Token aus dem macOS-Schlüsselbund (Dienst <code>Claude Code-credentials</code>). Token-Erneuerung wird automatisch bei der nächsten Abfrage erkannt.",
   "settings.openCreds": "Anmeldedatei öffnen",
+  "settings.openCreds.keychain": "Schlüsselbundverwaltung öffnen",
   "settings.quit": "Widget beenden",
 
   "settings.section.language": "Sprache",

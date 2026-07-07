@@ -157,7 +157,9 @@
 
   "settings.section.about": "Acerca de",
   "settings.about.desc": "Lee el token OAuth de <code>~/.claude/.credentials.json</code>. La renovación del token se detecta automáticamente en la siguiente consulta.",
+  "settings.about.desc.keychain": "Lee el token OAuth del Llavero de macOS (servicio <code>Claude Code-credentials</code>). La renovación del token se detecta automáticamente en la siguiente consulta.",
   "settings.openCreds": "Abrir archivo de credenciales",
+  "settings.openCreds.keychain": "Abrir Acceso a Llaveros",
   "settings.quit": "Salir del widget",
 
   "settings.section.language": "Idioma",

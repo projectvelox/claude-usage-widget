@@ -157,7 +157,9 @@
 
   "settings.section.about": "Informazioni",
   "settings.about.desc": "Legge il token OAuth da <code>~/.claude/.credentials.json</code>. Il rinnovo del token è rilevato automaticamente al polling successivo.",
+  "settings.about.desc.keychain": "Legge il token OAuth dal Portachiavi di macOS (servizio <code>Claude Code-credentials</code>). Il rinnovo del token è rilevato automaticamente al polling successivo.",
   "settings.openCreds": "Apri file credenziali",
+  "settings.openCreds.keychain": "Apri Accesso Portachiavi",
   "settings.quit": "Esci dal widget",
 
   "settings.section.language": "Lingua",

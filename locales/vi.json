@@ -157,7 +157,9 @@
 
   "settings.section.about": "Giới thiệu",
   "settings.about.desc": "Đọc token OAuth từ <code>~/.claude/.credentials.json</code>. Token được tự nhận khi làm mới ở lần thăm dò tiếp theo.",
+  "settings.about.desc.keychain": "Đọc token OAuth từ Keychain đăng nhập của macOS (dịch vụ <code>Claude Code-credentials</code>). Token được tự nhận khi làm mới ở lần thăm dò tiếp theo.",
   "settings.openCreds": "Mở tệp thông tin đăng nhập",
+  "settings.openCreds.keychain": "Mở Keychain Access",
   "settings.quit": "Thoát widget",
 
   "settings.section.language": "Ngôn ngữ",

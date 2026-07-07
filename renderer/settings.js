@@ -116,15 +116,31 @@ function renderUpdateStatus(info) {
   else status.textContent = '';
 }
 
+// On macOS Claude Code stores the OAuth token in the login Keychain, not in
+// ~/.claude/.credentials.json. Swap the About-panel description and the
+// "Open credentials file" button label with Keychain-flavored copy so
+// nothing in the UI is contradicting reality. Called after each language
+// switch so the platform-specific strings re-translate too.
+function applyPlatformCopy() {
+  if (window.api?.platform !== 'darwin') return;
+  const desc = $('aboutDesc');
+  if (desc) window.i18n.renderRichInto(desc, t('settings.about.desc.keychain'));
+  const btn = $('openCreds');
+  if (btn) btn.textContent = t('settings.openCreds.keychain');
+}
+
 async function init() {
   await window.i18n.init();
   populateLanguageSelect();
-  // Re-render dynamic strings (update status, language list) when the user
-  // switches language so the panel flips without a relaunch.
+  applyPlatformCopy();
+  // Re-render dynamic strings (update status, language list, platform
+  // copy) when the user switches language so the panel flips without a
+  // relaunch.
   window.i18n.onChange(() => {
     populateLanguageSelect();
     if (cfg) { $('language').value = cfg.language || 'en'; }
     window.api.getUpdate?.().then(renderUpdateStatus);
+    applyPlatformCopy();
   });
 
   cfg = await window.api.getConfig();

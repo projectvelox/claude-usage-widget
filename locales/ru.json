@@ -157,7 +157,9 @@
 
   "settings.section.about": "О программе",
   "settings.about.desc": "Читает OAuth-токен из <code>~/.claude/.credentials.json</code>. Обновление токена обнаруживается автоматически при следующем опросе.",
+  "settings.about.desc.keychain": "Читает OAuth-токен из связки ключей macOS (сервис <code>Claude Code-credentials</code>). Обновление токена обнаруживается автоматически при следующем опросе.",
   "settings.openCreds": "Открыть файл учётных данных",
+  "settings.openCreds.keychain": "Открыть Связку ключей",
   "settings.quit": "Выйти из виджета",
 
   "settings.section.language": "Язык",

@@ -157,7 +157,9 @@
 
   "settings.section.about": "Tentang",
   "settings.about.desc": "Membaca token OAuth dari <code>~/.claude/.credentials.json</code>. Penyegaran token terdeteksi otomatis pada polling berikutnya.",
+  "settings.about.desc.keychain": "Membaca token OAuth dari Keychain login macOS (layanan <code>Claude Code-credentials</code>). Penyegaran token terdeteksi otomatis pada polling berikutnya.",
   "settings.openCreds": "Buka berkas kredensial",
+  "settings.openCreds.keychain": "Buka Keychain Access",
   "settings.quit": "Keluar dari widget",
 
   "settings.section.language": "Bahasa",
