@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Indicador (se llena con el peor límite)",
   "settings.trayStyle.minimalDot": "Punto mínimo (teñido por la severidad)",
   "settings.trayStyle.dynamic": "Indicador dinámico (se llena + tiñe por el peor límite)",
+  "settings.trayStyle.text": "Texto porcentaje (% en vivo en la bandeja)",
 
   "settings.section.pill": "Modo píldora",
   "settings.pill.desc": "Solo activo cuando la Densidad está en Mínimo (la píldora pequeña arrastrable).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Indicador",
   "tray.style.minimal": "Mínimo",
   "tray.style.dynamic": "Dinámico",
+  "tray.style.text": "Texto",
   "tray.alwaysOnTop": "Siempre visible",
   "tray.clickThrough": "Clic traspasable",
   "tray.startWithWindows": "Iniciar con Windows",

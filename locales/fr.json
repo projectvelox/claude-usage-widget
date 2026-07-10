@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Jauge (se remplit avec la pire limite)",
   "settings.trayStyle.minimalDot": "Point minimal (teinté par la sévérité)",
   "settings.trayStyle.dynamic": "Jauge dynamique (remplit + teinte selon la pire limite)",
+  "settings.trayStyle.text": "Texte pourcentage (% en direct dans la barre)",
 
   "settings.section.pill": "Mode pastille",
   "settings.pill.desc": "Actif uniquement quand la Densité est réglée sur Minimal (la petite pastille déplaçable).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Jauge",
   "tray.style.minimal": "Minimal",
   "tray.style.dynamic": "Dynamique",
+  "tray.style.text": "Texte",
   "tray.alwaysOnTop": "Toujours visible",
   "tray.clickThrough": "Clic traversant",
   "tray.startWithWindows": "Démarrer avec Windows",

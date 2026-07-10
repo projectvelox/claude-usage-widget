@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Indicatore (si riempie col limite peggiore)",
   "settings.trayStyle.minimalDot": "Punto minimo (colorato per gravità)",
   "settings.trayStyle.dynamic": "Indicatore dinamico (riempie + colora secondo il limite peggiore)",
+  "settings.trayStyle.text": "Testo percentuale (% dal vivo nella barra)",
 
   "settings.section.pill": "Modalità pillola",
   "settings.pill.desc": "Attiva solo quando la Densità è impostata su Minimo (la piccola pillola trascinabile).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Indicatore",
   "tray.style.minimal": "Minimo",
   "tray.style.dynamic": "Dinamico",
+  "tray.style.text": "Testo",
   "tray.alwaysOnTop": "Sempre in primo piano",
   "tray.clickThrough": "Click attraverso",
   "tray.startWithWindows": "Avvia con Windows",

@@ -120,6 +120,7 @@
   "settings.trayStyle.gauge": "Medidor (preenche com o pior limite)",
   "settings.trayStyle.minimalDot": "Ponto mínimo (tingido pela severidade)",
   "settings.trayStyle.dynamic": "Medidor dinâmico (preenche + tinge pelo pior limite)",
+  "settings.trayStyle.text": "Texto de porcentagem (% ao vivo na bandeja)",
 
   "settings.section.pill": "Modo pílula",
   "settings.pill.desc": "Ativo apenas quando a Densidade está em Mínimo (a pequena pílula arrastável).",
@@ -187,6 +188,7 @@
   "tray.style.gauge": "Medidor",
   "tray.style.minimal": "Mínimo",
   "tray.style.dynamic": "Dinâmico",
+  "tray.style.text": "Texto",
   "tray.alwaysOnTop": "Sempre visível",
   "tray.clickThrough": "Clique transparente",
   "tray.startWithWindows": "Iniciar com o Windows",

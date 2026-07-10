@@ -192,7 +192,7 @@ function makeTrayIconImage() {
   const ctx = worstLimitContext();
   const opts = { accent: cfg.accentColor };
   if (ctx) { opts.pct = ctx.pct; opts.severity = ctx.severity; }
-  else if (style === 'battery' || style === 'gauge') { opts.pct = 50; }
+  else if (style === 'battery' || style === 'gauge' || style === 'text') { opts.pct = 0; }
   let canvas32, canvas64;
   if (style === 'dynamic') {
     canvas32 = icon.drawDynamic(32, lastUsage, cfg);
@@ -225,7 +225,7 @@ function refreshTrayIcon() {
 
 function rebuildTrayMenu() {
   if (!tray) return;
-  const styleSubmenu = ['bars', 'battery', 'gauge', 'minimal', 'dynamic'].map((s) => ({
+  const styleSubmenu = ['bars', 'battery', 'gauge', 'minimal', 'dynamic', 'text'].map((s) => ({
     label: t(`tray.style.${s}`),
     type: 'radio',
     checked: cfg.trayIconStyle === s,

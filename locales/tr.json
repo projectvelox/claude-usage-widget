@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Gösterge (en kötü sınırla dolar)",
   "settings.trayStyle.minimalDot": "Minimal nokta (önem derecesine göre renklenir)",
   "settings.trayStyle.dynamic": "Dinamik gösterge (en kötü sınıra göre dolup renklenir)",
+  "settings.trayStyle.text": "Yüzde metni (tepside canlı %)",
 
   "settings.section.pill": "Hap modu",
   "settings.pill.desc": "Yalnızca Yoğunluk Minimal olarak ayarlandığında (küçük sürüklenebilir hap) aktif.",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Gösterge",
   "tray.style.minimal": "Minimal",
   "tray.style.dynamic": "Dinamik",
+  "tray.style.text": "Metin",
   "tray.alwaysOnTop": "Her zaman üstte",
   "tray.clickThrough": "Tıklama geçişi",
   "tray.startWithWindows": "Windows ile başlat",
