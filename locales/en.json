@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Gauge (fills with worst limit)",
   "settings.trayStyle.minimalDot": "Minimal dot (tinted by severity)",
   "settings.trayStyle.dynamic": "Dynamic gauge (fills + tints by worst limit)",
+  "settings.trayStyle.text": "Percentage text (live % in the tray)",
 
   "settings.section.pill": "Pill mode",
   "settings.pill.desc": "Only active when Density is set to Minimal (the small draggable pill).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Gauge",
   "tray.style.minimal": "Minimal",
   "tray.style.dynamic": "Dynamic",
+  "tray.style.text": "Percentage text",
   "tray.alwaysOnTop": "Always on top",
   "tray.clickThrough": "Click-through",
   "tray.startWithWindows": "Start with Windows",

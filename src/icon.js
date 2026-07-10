@@ -198,11 +198,70 @@ function drawMinimal(size, opts = {}) {
   return c;
 }
 
+// 5-column × 7-row bitmap font. Rows are top-to-bottom; each row is a bit
+// mask with the leftmost column at bit 4 and the rightmost at bit 0.
+// Covers digits 0–9 and %, which is all the tray text style needs.
+const FONT_5X7 = {
+  '0': [0b01110, 0b10001, 0b10011, 0b10101, 0b11001, 0b10001, 0b01110],
+  '1': [0b00100, 0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110],
+  '2': [0b01110, 0b10001, 0b00001, 0b00010, 0b00100, 0b01000, 0b11111],
+  '3': [0b11110, 0b00001, 0b00001, 0b01110, 0b00001, 0b00001, 0b11110],
+  '4': [0b00010, 0b00110, 0b01010, 0b10010, 0b11111, 0b00010, 0b00010],
+  '5': [0b11111, 0b10000, 0b11110, 0b00001, 0b00001, 0b10001, 0b01110],
+  '6': [0b00110, 0b01000, 0b10000, 0b11110, 0b10001, 0b10001, 0b01110],
+  '7': [0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b01000, 0b01000],
+  '8': [0b01110, 0b10001, 0b10001, 0b01110, 0b10001, 0b10001, 0b01110],
+  '9': [0b01110, 0b10001, 0b10001, 0b01111, 0b00001, 0b00010, 0b01100],
+  '%': [0b11001, 0b11010, 0b00100, 0b00100, 0b00100, 0b01011, 0b10011],
+};
+const GLYPH_W = 5, GLYPH_H = 7;
+
+function drawGlyph(canvas, glyph, x, y, scale, color) {
+  const rows = FONT_5X7[glyph];
+  if (!rows) return;
+  for (let ry = 0; ry < GLYPH_H; ry++) {
+    for (let cx = 0; cx < GLYPH_W; cx++) {
+      if (!(rows[ry] & (1 << (GLYPH_W - 1 - cx)))) continue;
+      for (let dy = 0; dy < scale; dy++) {
+        for (let dx = 0; dx < scale; dx++) {
+          set(canvas, x + cx * scale + dx, y + ry * scale + dy, color);
+        }
+      }
+    }
+  }
+}
+
+function drawText(size, opts = {}) {
+  const c = makeCanvas(size, size);
+  // Clamp to 0–100 but display 100 without a "%" so the string still fits
+  // three characters even at "MAX" — otherwise "100%" would overflow.
+  const raw = Math.max(0, Math.min(100, Math.round(opts.pct ?? 0)));
+  const text = raw >= 100 ? '100' : `${raw}%`;
+  const color = opts.severity || (opts.accent ? hexToRgba(opts.accent) : ACCENT);
+  // Pick the biggest scale that still fits horizontally with a 1-scale gap
+  // between glyphs. At 32px this lands on scale=2 (glyphs 10 wide + 2 gap =
+  // 32 for 3 chars). At 64px it lands on scale=4.
+  const gapUnits = 1;
+  const chars = text.length;
+  const maxScale = Math.max(1, Math.floor((size - 2) / (chars * GLYPH_W + (chars - 1) * gapUnits)));
+  const scale = maxScale;
+  const gap = gapUnits * scale;
+  const totalW = chars * GLYPH_W * scale + (chars - 1) * gap;
+  const totalH = GLYPH_H * scale;
+  const startX = Math.round((size - totalW) / 2);
+  const startY = Math.round((size - totalH) / 2);
+  for (let i = 0; i < chars; i++) {
+    drawGlyph(c, text[i], startX + i * (GLYPH_W * scale + gap), startY, scale, color);
+  }
+  return c;
+}
+
 const STYLES = {
   bars: drawBars,
   battery: drawBattery,
   gauge: drawGauge,
   minimal: drawMinimal,
+  text: drawText,
 };
 
 function draw(style, size, opts = {}) {
@@ -232,5 +291,6 @@ module.exports = {
   encodePNG,
   draw,
   drawDynamic,
+  drawText,
   STYLES: Object.keys(STYLES),
 };

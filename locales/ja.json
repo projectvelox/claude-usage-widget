@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "ゲージ（最悪の制限で充填）",
   "settings.trayStyle.minimalDot": "ミニマルドット（重大度で色付け）",
   "settings.trayStyle.dynamic": "ダイナミックゲージ（最悪の制限で充填 + 色付け）",
+  "settings.trayStyle.text": "パーセント表示（タスクトレイに%表示）",
 
   "settings.section.pill": "ピルモード",
   "settings.pill.desc": "密度が最小（ドラッグ可能な小さなピル）に設定されている場合のみ有効。",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "ゲージ",
   "tray.style.minimal": "ミニマル",
   "tray.style.dynamic": "ダイナミック",
+  "tray.style.text": "テキスト",
   "tray.alwaysOnTop": "常に最前面",
   "tray.clickThrough": "クリックスルー",
   "tray.startWithWindows": "Windowsと一緒に起動",

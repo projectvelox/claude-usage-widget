@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "게이지(최악 한도로 채움)",
   "settings.trayStyle.minimalDot": "최소 점(심각도로 색조)",
   "settings.trayStyle.dynamic": "동적 게이지(최악 한도에 따라 채움 + 색조)",
+  "settings.trayStyle.text": "퍼센트 텍스트(트레이에 실시간 %)",
 
   "settings.section.pill": "알약 모드",
   "settings.pill.desc": "밀도가 최소(끌 수 있는 작은 알약)로 설정된 경우에만 활성화.",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "게이지",
   "tray.style.minimal": "최소",
   "tray.style.dynamic": "동적",
+  "tray.style.text": "텍스트",
   "tray.alwaysOnTop": "항상 위",
   "tray.clickThrough": "클릭 통과",
   "tray.startWithWindows": "Windows와 함께 시작",

@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Anzeige (füllt mit schlechtestem Limit)",
   "settings.trayStyle.minimalDot": "Minimaler Punkt (eingefärbt nach Schwere)",
   "settings.trayStyle.dynamic": "Dynamische Anzeige (füllt + tönt nach schlechtestem Limit)",
+  "settings.trayStyle.text": "Prozenttext (Live-% in der Taskleiste)",
 
   "settings.section.pill": "Pillenmodus",
   "settings.pill.desc": "Nur aktiv, wenn die Dichte auf Minimal steht (die kleine ziehbare Pille).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Anzeige",
   "tray.style.minimal": "Minimal",
   "tray.style.dynamic": "Dynamisch",
+  "tray.style.text": "Text",
   "tray.alwaysOnTop": "Immer im Vordergrund",
   "tray.clickThrough": "Klick-Durchlass",
   "tray.startWithWindows": "Mit Windows starten",

@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Шкала (заполняется худшим лимитом)",
   "settings.trayStyle.minimalDot": "Минимальная точка (окраска по тяжести)",
   "settings.trayStyle.dynamic": "Динамическая шкала (заполнение + окраска по худшему лимиту)",
+  "settings.trayStyle.text": "Проценты текстом (живой % в трее)",
 
   "settings.section.pill": "Режим пилюли",
   "settings.pill.desc": "Активен только когда Плотность установлена в Минимум (маленькая перетаскиваемая пилюля).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Шкала",
   "tray.style.minimal": "Минимум",
   "tray.style.dynamic": "Динамическая",
+  "tray.style.text": "Текст",
   "tray.alwaysOnTop": "Поверх всех окон",
   "tray.clickThrough": "Сквозной клик",
   "tray.startWithWindows": "Запускать с Windows",

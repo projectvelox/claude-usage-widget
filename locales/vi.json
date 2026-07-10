@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Đồng hồ (đầy theo giới hạn xấu nhất)",
   "settings.trayStyle.minimalDot": "Chấm tối thiểu (tô màu theo mức nghiêm trọng)",
   "settings.trayStyle.dynamic": "Đồng hồ động (đầy + tô màu theo giới hạn xấu nhất)",
+  "settings.trayStyle.text": "Văn bản phần trăm (% trực tiếp trong khay)",
 
   "settings.section.pill": "Chế độ viên",
   "settings.pill.desc": "Chỉ hoạt động khi Mật độ được đặt là Tối thiểu (viên nhỏ có thể kéo).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Đồng hồ",
   "tray.style.minimal": "Tối thiểu",
   "tray.style.dynamic": "Động",
+  "tray.style.text": "Văn bản",
   "tray.alwaysOnTop": "Luôn trên cùng",
   "tray.clickThrough": "Bấm xuyên qua",
   "tray.startWithWindows": "Khởi động cùng Windows",

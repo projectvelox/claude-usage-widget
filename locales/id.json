@@ -119,6 +119,7 @@
   "settings.trayStyle.gauge": "Pengukur (terisi sesuai batas terburuk)",
   "settings.trayStyle.minimalDot": "Titik minimal (diwarnai oleh keparahan)",
   "settings.trayStyle.dynamic": "Pengukur dinamis (isi + warna sesuai batas terburuk)",
+  "settings.trayStyle.text": "Teks persentase (% langsung di baki)",
 
   "settings.section.pill": "Mode pil",
   "settings.pill.desc": "Hanya aktif saat Kepadatan disetel ke Minimal (pil kecil yang dapat diseret).",
@@ -186,6 +187,7 @@
   "tray.style.gauge": "Pengukur",
   "tray.style.minimal": "Minimal",
   "tray.style.dynamic": "Dinamis",
+  "tray.style.text": "Teks",
   "tray.alwaysOnTop": "Selalu di atas",
   "tray.clickThrough": "Klik tembus",
   "tray.startWithWindows": "Mulai dengan Windows",
