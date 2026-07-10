@@ -121,6 +121,15 @@
   "settings.trayStyle.minimalDot": "Ponto mínimo (tingido pela severidade)",
   "settings.trayStyle.dynamic": "Medidor dinâmico (preenche + tinge pelo pior limite)",
 
+  "settings.section.pill": "Modo pílula",
+  "settings.pill.desc": "Ativo apenas quando a Densidade está em Mínimo (a pequena pílula arrastável).",
+  "settings.pill.show": "Mostrar",
+  "settings.pill.mode.worst": "Pior limite (padrão)",
+  "settings.pill.mode.specific": "Limite específico",
+  "settings.pill.mode.cycle": "Alternar entre limites",
+  "settings.pill.whichLimit": "Qual limite",
+  "settings.pill.cycleEvery": "Alternar a cada (segundos)",
+
   "settings.section.historyGraph": "Gráfico de histórico",
   "settings.show7DayGraph": "Mostrar gráfico de 7 dias",
   "settings.series": "Série",

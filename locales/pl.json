@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Minimalna kropka (kolor wg powagi)",
   "settings.trayStyle.dynamic": "Wskaźnik dynamiczny (wypełnienie + kolor wg najgorszego limitu)",
 
+  "settings.section.pill": "Tryb pigułki",
+  "settings.pill.desc": "Aktywny tylko gdy Gęstość jest ustawiona na Minimum (mała przeciągana pigułka).",
+  "settings.pill.show": "Pokaż",
+  "settings.pill.mode.worst": "Najgorszy limit (domyślnie)",
+  "settings.pill.mode.specific": "Konkretny limit",
+  "settings.pill.mode.cycle": "Cykluj między limitami",
+  "settings.pill.whichLimit": "Który limit",
+  "settings.pill.cycleEvery": "Cykluj co (sekund)",
+
   "settings.section.historyGraph": "Wykres historii",
   "settings.show7DayGraph": "Pokaż wykres 7 dni",
   "settings.series": "Seria",

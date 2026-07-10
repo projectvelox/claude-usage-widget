@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Минимальная точка (окраска по тяжести)",
   "settings.trayStyle.dynamic": "Динамическая шкала (заполнение + окраска по худшему лимиту)",
 
+  "settings.section.pill": "Режим пилюли",
+  "settings.pill.desc": "Активен только когда Плотность установлена в Минимум (маленькая перетаскиваемая пилюля).",
+  "settings.pill.show": "Показывать",
+  "settings.pill.mode.worst": "Худший лимит (по умолчанию)",
+  "settings.pill.mode.specific": "Конкретный лимит",
+  "settings.pill.mode.cycle": "Чередовать лимиты",
+  "settings.pill.whichLimit": "Какой лимит",
+  "settings.pill.cycleEvery": "Чередовать каждые (сек)",
+
   "settings.section.historyGraph": "График истории",
   "settings.show7DayGraph": "Показывать график 7 дней",
   "settings.series": "Серия",

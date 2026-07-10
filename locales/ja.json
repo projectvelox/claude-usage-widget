@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "ミニマルドット（重大度で色付け）",
   "settings.trayStyle.dynamic": "ダイナミックゲージ（最悪の制限で充填 + 色付け）",
 
+  "settings.section.pill": "ピルモード",
+  "settings.pill.desc": "密度が最小（ドラッグ可能な小さなピル）に設定されている場合のみ有効。",
+  "settings.pill.show": "表示",
+  "settings.pill.mode.worst": "最悪の制限（デフォルト）",
+  "settings.pill.mode.specific": "特定の制限",
+  "settings.pill.mode.cycle": "制限を切り替え",
+  "settings.pill.whichLimit": "どの制限",
+  "settings.pill.cycleEvery": "切り替え間隔（秒）",
+
   "settings.section.historyGraph": "履歴グラフ",
   "settings.show7DayGraph": "7日間グラフを表示",
   "settings.series": "系列",

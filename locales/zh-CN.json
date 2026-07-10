@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "最小圆点（按严重度上色）",
   "settings.trayStyle.dynamic": "动态仪表（按最差限制填充并上色）",
 
+  "settings.section.pill": "药丸模式",
+  "settings.pill.desc": "仅在密度设置为最小（可拖动的小药丸）时启用。",
+  "settings.pill.show": "显示",
+  "settings.pill.mode.worst": "最差限制（默认）",
+  "settings.pill.mode.specific": "指定限制",
+  "settings.pill.mode.cycle": "在限制间循环",
+  "settings.pill.whichLimit": "哪个限制",
+  "settings.pill.cycleEvery": "循环间隔（秒）",
+
   "settings.section.historyGraph": "历史图表",
   "settings.show7DayGraph": "显示 7 天图表",
   "settings.series": "系列",

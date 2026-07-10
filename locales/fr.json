@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Point minimal (teinté par la sévérité)",
   "settings.trayStyle.dynamic": "Jauge dynamique (remplit + teinte selon la pire limite)",
 
+  "settings.section.pill": "Mode pastille",
+  "settings.pill.desc": "Actif uniquement quand la Densité est réglée sur Minimal (la petite pastille déplaçable).",
+  "settings.pill.show": "Afficher",
+  "settings.pill.mode.worst": "Pire limite (par défaut)",
+  "settings.pill.mode.specific": "Limite spécifique",
+  "settings.pill.mode.cycle": "Alterner entre les limites",
+  "settings.pill.whichLimit": "Quelle limite",
+  "settings.pill.cycleEvery": "Alterner toutes les (secondes)",
+
   "settings.section.historyGraph": "Graphique d'historique",
   "settings.show7DayGraph": "Afficher le graphique 7 jours",
   "settings.series": "Série",

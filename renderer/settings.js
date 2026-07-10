@@ -21,6 +21,9 @@ const BINDINGS = [
   { id: 'fontFamily', path: ['fontFamily'], type: 'value' },
   { id: 'blur', path: ['blur'], type: 'checked' },
   { id: 'trayIconStyle', path: ['trayIconStyle'], type: 'value' },
+  { id: 'pillDisplayMode', path: ['pillDisplayMode'], type: 'value' },
+  { id: 'pillDisplayLimitId', path: ['pillDisplayLimitId'], type: 'value' },
+  { id: 'pillCycleIntervalSec', path: ['pillCycleIntervalSec'], type: 'number' },
   { id: 'showHistoryGraph', path: ['showHistoryGraph'], type: 'checked' },
   { id: 'historyLimitId', path: ['historyLimitId'], type: 'value' },
   { id: 'warn', path: ['thresholds', 'warn'], type: 'number' },
@@ -121,6 +124,17 @@ function renderUpdateStatus(info) {
 // "Open credentials file" button label with Keychain-flavored copy so
 // nothing in the UI is contradicting reality. Called after each language
 // switch so the platform-specific strings re-translate too.
+// The "Which limit" and "Cycle every" rows are only meaningful for two of
+// the three pill-display modes. Hide the one that isn't in play so the
+// panel doesn't ask the user to fill in a value that will be ignored.
+function applyPillRowVisibility() {
+  const mode = $('pillDisplayMode')?.value || 'worst';
+  const limitRow = $('pillDisplayLimitIdRow');
+  const cycleRow = $('pillCycleIntervalSecRow');
+  if (limitRow) limitRow.hidden = mode !== 'specific';
+  if (cycleRow) cycleRow.hidden = mode !== 'cycle';
+}
+
 function applyPlatformCopy() {
   if (window.api?.platform !== 'darwin') return;
   const desc = $('aboutDesc');
@@ -145,15 +159,17 @@ async function init() {
 
   cfg = await window.api.getConfig();
   load();
+  applyPillRowVisibility();
   for (const b of BINDINGS) {
     const el = $(b.id);
     if (!el) continue;
     el.addEventListener('input', scheduleSave);
     el.addEventListener('change', scheduleSave);
   }
+  $('pillDisplayMode')?.addEventListener('change', applyPillRowVisibility);
   $('openCreds').addEventListener('click', () => window.api.openCreds());
   $('quit').addEventListener('click', () => window.api.quit());
-  window.api.onConfig((newCfg) => { cfg = newCfg; load(); });
+  window.api.onConfig((newCfg) => { cfg = newCfg; load(); applyPillRowVisibility(); });
 
   const checkBtn = $('checkUpdateNow');
   const status = $('updateStatus');
