@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Minimal dot (tinted by severity)",
   "settings.trayStyle.dynamic": "Dynamic gauge (fills + tints by worst limit)",
 
+  "settings.section.pill": "Pill mode",
+  "settings.pill.desc": "Only active when Density is set to Minimal (the small draggable pill).",
+  "settings.pill.show": "Show",
+  "settings.pill.mode.worst": "Worst limit (default)",
+  "settings.pill.mode.specific": "Specific limit",
+  "settings.pill.mode.cycle": "Cycle through limits",
+  "settings.pill.whichLimit": "Which limit",
+  "settings.pill.cycleEvery": "Cycle every (seconds)",
+
   "settings.section.historyGraph": "History graph",
   "settings.show7DayGraph": "Show 7-day graph",
   "settings.series": "Series",

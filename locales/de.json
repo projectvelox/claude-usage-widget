@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Minimaler Punkt (eingefärbt nach Schwere)",
   "settings.trayStyle.dynamic": "Dynamische Anzeige (füllt + tönt nach schlechtestem Limit)",
 
+  "settings.section.pill": "Pillenmodus",
+  "settings.pill.desc": "Nur aktiv, wenn die Dichte auf Minimal steht (die kleine ziehbare Pille).",
+  "settings.pill.show": "Anzeigen",
+  "settings.pill.mode.worst": "Schlechtestes Limit (Standard)",
+  "settings.pill.mode.specific": "Bestimmtes Limit",
+  "settings.pill.mode.cycle": "Zwischen Limits wechseln",
+  "settings.pill.whichLimit": "Welches Limit",
+  "settings.pill.cycleEvery": "Wechseln alle (Sekunden)",
+
   "settings.section.historyGraph": "Verlaufsgraph",
   "settings.show7DayGraph": "7-Tage-Graph anzeigen",
   "settings.series": "Serie",

@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Minimal nokta (önem derecesine göre renklenir)",
   "settings.trayStyle.dynamic": "Dinamik gösterge (en kötü sınıra göre dolup renklenir)",
 
+  "settings.section.pill": "Hap modu",
+  "settings.pill.desc": "Yalnızca Yoğunluk Minimal olarak ayarlandığında (küçük sürüklenebilir hap) aktif.",
+  "settings.pill.show": "Göster",
+  "settings.pill.mode.worst": "En kötü sınır (varsayılan)",
+  "settings.pill.mode.specific": "Belirli sınır",
+  "settings.pill.mode.cycle": "Sınırlar arasında geç",
+  "settings.pill.whichLimit": "Hangi sınır",
+  "settings.pill.cycleEvery": "Geçiş aralığı (saniye)",
+
   "settings.section.historyGraph": "Geçmiş grafiği",
   "settings.show7DayGraph": "7 günlük grafiği göster",
   "settings.series": "Seri",

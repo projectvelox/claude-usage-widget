@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Chấm tối thiểu (tô màu theo mức nghiêm trọng)",
   "settings.trayStyle.dynamic": "Đồng hồ động (đầy + tô màu theo giới hạn xấu nhất)",
 
+  "settings.section.pill": "Chế độ viên",
+  "settings.pill.desc": "Chỉ hoạt động khi Mật độ được đặt là Tối thiểu (viên nhỏ có thể kéo).",
+  "settings.pill.show": "Hiển thị",
+  "settings.pill.mode.worst": "Giới hạn xấu nhất (mặc định)",
+  "settings.pill.mode.specific": "Giới hạn cụ thể",
+  "settings.pill.mode.cycle": "Xoay vòng các giới hạn",
+  "settings.pill.whichLimit": "Giới hạn nào",
+  "settings.pill.cycleEvery": "Xoay vòng mỗi (giây)",
+
   "settings.section.historyGraph": "Biểu đồ lịch sử",
   "settings.show7DayGraph": "Hiện biểu đồ 7 ngày",
   "settings.series": "Chuỗi",

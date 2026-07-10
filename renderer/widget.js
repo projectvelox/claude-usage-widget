@@ -131,6 +131,10 @@ function applyTheme(cfg) {
   ds.setProperty('--font-scale', cfg.fontScale);
   if (cfg.fontFamily && cfg.fontFamily !== 'system') ds.setProperty('--font-family', cfg.fontFamily);
   else ds.removeProperty('--font-family');
+  // Pill-mode config changes (mode swap, interval change, layout swap out
+  // of minimal) may need to start or stop the cycle timer even without a
+  // fresh data poll.
+  ensurePillCycleTimer();
 }
 
 function severity(pct, cfg) {
@@ -297,7 +301,12 @@ function render(payload) {
 
   statusDot.className = `dot ${stale ? 'stale' : worstSeverity}`;
   lastUpdatedEl.textContent = t('widget.lastUpdated', { age: fmtAge(data.fetchedAt) });
+  // Fresh data → reset the cycle to the top of the limit list so the user
+  // isn't stuck on a stale index (e.g. the limit that used to be at index 3
+  // may not exist in the new response).
+  pillCycleIndex = 0;
   renderPill(data, stale, worstSeverity);
+  ensurePillCycleTimer();
 
   // Claw'd's mood: throttled trumps everything (he naps), otherwise it
   // mirrors the worst limit's severity tier. The mood attribute is kept
@@ -391,9 +400,32 @@ function errorBadgeFor(error) {
   return { hidden: false, label: t('badge.offline'), kind: 'error', title: error.message || t('badge.offline.tooltip') };
 }
 
-// Pill mode shows only the worst-utilized limit at a glance. The label is
-// kept tight ("week", "5h", etc) so a non-technical user can read it without
-// thinking — the colored dot already encodes severity.
+// Pill mode shows one limit at a glance. Three modes are available via
+// pillDisplayMode:
+//   'worst'    — pick the currently-highest-utilization limit (default;
+//                keeps the classic "pill shows the scariest thing" behavior)
+//   'specific' — always show the same pillDisplayLimitId; falls back to
+//                'worst' if that id isn't present in the current response
+//   'cycle'    — rotate through every visible limit every
+//                pillCycleIntervalSec seconds. Timer resets on data update.
+let pillCycleTimer = null;
+let pillCycleIndex = 0;
+function pickPillLimit(data, cfg) {
+  if (!data || !Array.isArray(data.limits) || data.limits.length === 0) return null;
+  const mode = cfg?.pillDisplayMode || 'worst';
+  if (mode === 'specific') {
+    const id = cfg?.pillDisplayLimitId || 'seven_day';
+    const match = data.limits.find((l) => l.id === id);
+    if (match) return match;
+    // Requested id isn't in this response (e.g. asked for seven_day_opus but
+    // the account doesn't have it). Fall back to the worst limit instead of
+    // rendering an empty pill.
+  }
+  if (mode === 'cycle') {
+    return data.limits[pillCycleIndex % data.limits.length];
+  }
+  return data.limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
+}
 function renderPill(data, stale, worstSeverity) {
   if (!data || !data.limits || data.limits.length === 0) {
     pillPct.textContent = '—';
@@ -401,14 +433,33 @@ function renderPill(data, stale, worstSeverity) {
     pillDot.className = `pill-dot ${stale ? 'stale' : ''}`;
     return;
   }
-  const worst = data.limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
-  pillPct.textContent = `${Math.round(worst.utilization)}%`;
-  pillLabel.textContent = shortLabel(worst);
+  const shown = pickPillLimit(data, currentCfg);
+  if (!shown) return;
+  pillPct.textContent = `${Math.round(shown.utilization)}%`;
+  pillLabel.textContent = shortLabel(shown);
   // The pill label is text-overflow:ellipsis on narrow pills. Surface the full
   // label as a tooltip so users can confirm which limit they're seeing without
   // expanding the widget.
-  pillLabel.title = worst.label || '';
-  pillDot.className = `pill-dot ${stale ? 'stale' : worstSeverity}`;
+  pillLabel.title = localizedLimitLabel(shown) || '';
+  // Colored dot always reflects the SHOWN limit's severity — not the
+  // overall worst — so a "safe" pill actually looks safe when in specific
+  // or cycle modes.
+  const sev = severity(shown.utilization, currentCfg);
+  pillDot.className = `pill-dot ${stale ? 'stale' : sev}`;
+}
+function ensurePillCycleTimer() {
+  const cfg = currentCfg;
+  const isCycling = cfg && cfg.layout === 'minimal' && cfg.pillDisplayMode === 'cycle';
+  if (!isCycling) {
+    if (pillCycleTimer) { clearInterval(pillCycleTimer); pillCycleTimer = null; }
+    return;
+  }
+  if (pillCycleTimer) return; // already running
+  const seconds = Math.max(2, Math.min(60, Number(cfg.pillCycleIntervalSec) || 5));
+  pillCycleTimer = setInterval(() => {
+    pillCycleIndex += 1;
+    if (lastData) renderPill(lastData, !!lastError, 'ok');
+  }, seconds * 1000);
 }
 
 function shortLabel(limit) {

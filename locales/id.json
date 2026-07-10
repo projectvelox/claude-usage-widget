@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Titik minimal (diwarnai oleh keparahan)",
   "settings.trayStyle.dynamic": "Pengukur dinamis (isi + warna sesuai batas terburuk)",
 
+  "settings.section.pill": "Mode pil",
+  "settings.pill.desc": "Hanya aktif saat Kepadatan disetel ke Minimal (pil kecil yang dapat diseret).",
+  "settings.pill.show": "Tampilkan",
+  "settings.pill.mode.worst": "Batas terburuk (default)",
+  "settings.pill.mode.specific": "Batas tertentu",
+  "settings.pill.mode.cycle": "Putar antar batas",
+  "settings.pill.whichLimit": "Batas mana",
+  "settings.pill.cycleEvery": "Putar setiap (detik)",
+
   "settings.section.historyGraph": "Grafik riwayat",
   "settings.show7DayGraph": "Tampilkan grafik 7 hari",
   "settings.series": "Seri",

@@ -94,6 +94,33 @@
     </section>
 
     <section>
+      <h2 data-i18n="settings.section.pill">Pill mode</h2>
+      <p class="muted" data-i18n="settings.pill.desc">Only active when Density is set to Minimal (the small draggable pill).</p>
+      <div class="row">
+        <label for="pillDisplayMode" data-i18n="settings.pill.show">Show</label>
+        <select id="pillDisplayMode">
+          <option value="worst" data-i18n="settings.pill.mode.worst">Worst limit (default)</option>
+          <option value="specific" data-i18n="settings.pill.mode.specific">Specific limit</option>
+          <option value="cycle" data-i18n="settings.pill.mode.cycle">Cycle through limits</option>
+        </select>
+      </div>
+      <div class="row" id="pillDisplayLimitIdRow" hidden>
+        <label for="pillDisplayLimitId" data-i18n="settings.pill.whichLimit">Which limit</label>
+        <select id="pillDisplayLimitId">
+          <option value="seven_day" data-i18n="limit.seven_day">Weekly · all models</option>
+          <option value="seven_day_sonnet" data-i18n="limit.seven_day_sonnet">Weekly · Sonnet</option>
+          <option value="seven_day_opus" data-i18n="limit.seven_day_opus">Weekly · Opus</option>
+          <option value="five_hour" data-i18n="limit.five_hour">Current session</option>
+          <option value="extra_usage" data-i18n="limit.extra_usage">Extra usage</option>
+        </select>
+      </div>
+      <div class="row" id="pillCycleIntervalSecRow" hidden>
+        <label for="pillCycleIntervalSec" data-i18n="settings.pill.cycleEvery">Cycle every (seconds)</label>
+        <input type="number" id="pillCycleIntervalSec" min="2" max="60" step="1">
+      </div>
+    </section>
+
+    <section>
       <h2 data-i18n="settings.section.historyGraph">History graph</h2>
       <div class="row toggle"><label for="showHistoryGraph" data-i18n="settings.show7DayGraph">Show 7-day graph</label><input type="checkbox" id="showHistoryGraph"></div>
       <div class="row">

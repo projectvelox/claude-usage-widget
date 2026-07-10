@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "최소 점(심각도로 색조)",
   "settings.trayStyle.dynamic": "동적 게이지(최악 한도에 따라 채움 + 색조)",
 
+  "settings.section.pill": "알약 모드",
+  "settings.pill.desc": "밀도가 최소(끌 수 있는 작은 알약)로 설정된 경우에만 활성화.",
+  "settings.pill.show": "표시",
+  "settings.pill.mode.worst": "최악 한도(기본)",
+  "settings.pill.mode.specific": "특정 한도",
+  "settings.pill.mode.cycle": "한도 순환",
+  "settings.pill.whichLimit": "어느 한도",
+  "settings.pill.cycleEvery": "순환 간격(초)",
+
   "settings.section.historyGraph": "기록 그래프",
   "settings.show7DayGraph": "7일 그래프 표시",
   "settings.series": "시리즈",

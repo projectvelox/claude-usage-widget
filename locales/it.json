@@ -120,6 +120,15 @@
   "settings.trayStyle.minimalDot": "Punto minimo (colorato per gravità)",
   "settings.trayStyle.dynamic": "Indicatore dinamico (riempie + colora secondo il limite peggiore)",
 
+  "settings.section.pill": "Modalità pillola",
+  "settings.pill.desc": "Attiva solo quando la Densità è impostata su Minimo (la piccola pillola trascinabile).",
+  "settings.pill.show": "Mostra",
+  "settings.pill.mode.worst": "Limite peggiore (predefinito)",
+  "settings.pill.mode.specific": "Limite specifico",
+  "settings.pill.mode.cycle": "Alterna tra i limiti",
+  "settings.pill.whichLimit": "Quale limite",
+  "settings.pill.cycleEvery": "Alterna ogni (secondi)",
+
   "settings.section.historyGraph": "Grafico cronologia",
   "settings.show7DayGraph": "Mostra grafico 7 giorni",
   "settings.series": "Serie",

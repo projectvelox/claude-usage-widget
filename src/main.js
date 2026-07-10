@@ -38,6 +38,21 @@ function isOnVisibleDisplay(rect) {
 // edge. Must match the .widget margin in widget.css.
 const SHADOW_GUTTER = 24;
 
+// Sets the widget's always-on-top level. Regular layouts use plain
+// 'screen-saver'; the pill (minimal) mode nudges one level higher because
+// the pill is a glanceable indicator that's expected to sit above the
+// Windows taskbar as well as other windows. The relative-level parameter
+// is a no-op on some platforms/window managers, so this is best-effort.
+function applyAlwaysOnTop() {
+  if (!widgetWindow || widgetWindow.isDestroyed() || !cfg) return;
+  if (!cfg.alwaysOnTop) {
+    widgetWindow.setAlwaysOnTop(false);
+    return;
+  }
+  const relative = cfg.layout === 'minimal' ? 1 : 0;
+  widgetWindow.setAlwaysOnTop(true, 'screen-saver', relative);
+}
+
 function defaultCorner(width) {
   const { workArea } = screen.getPrimaryDisplay();
   return { x: workArea.x + workArea.width - width - 24, y: workArea.y + 24 };
@@ -95,9 +110,7 @@ function createWidget() {
   widgetWindow.setOpacity(cfg.opacity);
   widgetWindow.setIgnoreMouseEvents(cfg.clickThrough, { forward: true });
 
-  if (cfg.alwaysOnTop) {
-    widgetWindow.setAlwaysOnTop(true, 'screen-saver');
-  }
+  applyAlwaysOnTop();
 
   widgetWindow.loadFile(path.join(__dirname, '..', 'renderer', 'widget.html'));
   widgetWindow.once('ready-to-show', () => widgetWindow.show());
@@ -235,7 +248,7 @@ function rebuildTrayMenu() {
       label: t('tray.alwaysOnTop'),
       type: 'checkbox',
       checked: cfg.alwaysOnTop,
-      click: (item) => { cfg.alwaysOnTop = item.checked; widgetWindow?.setAlwaysOnTop(cfg.alwaysOnTop, 'screen-saver'); config.save(cfg); },
+      click: (item) => { cfg.alwaysOnTop = item.checked; applyAlwaysOnTop(); config.save(cfg); },
     },
     {
       label: t('tray.clickThrough'),
@@ -550,7 +563,7 @@ function applyConfig() {
   broadcast('i18n:changed', bundleFor(cfg.language || 'en'));
   if (!widgetWindow) return;
   widgetWindow.setOpacity(cfg.opacity);
-  widgetWindow.setAlwaysOnTop(cfg.alwaysOnTop, 'screen-saver');
+  applyAlwaysOnTop();
   widgetWindow.setIgnoreMouseEvents(cfg.clickThrough, { forward: true });
 
   const [x, y] = widgetWindow.getPosition();

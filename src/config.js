@@ -16,6 +16,14 @@ const DEFAULTS = {
   // user un-minimizes from the pill.
   layout: 'expanded',
   lastExpandedLayout: 'expanded',
+
+  // Pill (minimal-mode) display:
+  //   'worst'    — show the currently-highest-utilization limit (default)
+  //   'specific' — always show pillDisplayLimitId
+  //   'cycle'    — rotate through all limits every pillCycleIntervalSec
+  pillDisplayMode: 'worst',
+  pillDisplayLimitId: 'seven_day',
+  pillCycleIntervalSec: 5,
   showHeader: true,
   showResetCountdown: true,
   showPaceMarker: true,
