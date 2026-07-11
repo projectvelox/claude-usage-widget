@@ -26,6 +26,7 @@ let activityState = 'active';
 let notifiedFor = new Set();
 let lastUpdateInfo = null;
 let updateTimer = null;
+let alwaysOnTopTicker = null;
 
 // "Is this rect on any currently-connected display?" — used to detect a
 // stranded widget after the user unplugs a monitor it was pinned to.
@@ -47,10 +48,38 @@ function applyAlwaysOnTop() {
   if (!widgetWindow || widgetWindow.isDestroyed() || !cfg) return;
   if (!cfg.alwaysOnTop) {
     widgetWindow.setAlwaysOnTop(false);
+    scheduleAlwaysOnTopTicker();
     return;
   }
   const relative = cfg.layout === 'minimal' ? 1 : 0;
   widgetWindow.setAlwaysOnTop(true, 'screen-saver', relative);
+  scheduleAlwaysOnTopTicker();
+}
+
+// Windows relaxes our z-order the moment another window steals focus, so a
+// pill widget in the corner ends up hidden behind the taskbar as soon as
+// the user clicks into VS Code / a browser / etc. This ticker rebinds the
+// setAlwaysOnTop call every 1.5 s so the widget claws its way back on top
+// after each focus change. Only runs when we actually want to be on top;
+// stopped when alwaysOnTop is off, when the widget is hidden, or on quit.
+function scheduleAlwaysOnTopTicker() {
+  const wanted = cfg && cfg.alwaysOnTop && widgetWindow && !widgetWindow.isDestroyed() && widgetWindow.isVisible();
+  if (!wanted) {
+    if (alwaysOnTopTicker) { clearInterval(alwaysOnTopTicker); alwaysOnTopTicker = null; }
+    return;
+  }
+  if (alwaysOnTopTicker) return; // already running
+  alwaysOnTopTicker = setInterval(() => {
+    if (!widgetWindow || widgetWindow.isDestroyed() || !widgetWindow.isVisible() || !cfg.alwaysOnTop) {
+      clearInterval(alwaysOnTopTicker);
+      alwaysOnTopTicker = null;
+      return;
+    }
+    const relative = cfg.layout === 'minimal' ? 1 : 0;
+    // Best-effort — errors here are usually a race with a window state
+    // transition; swallow so the ticker keeps trying on the next tick.
+    try { widgetWindow.setAlwaysOnTop(true, 'screen-saver', relative); } catch (_) {}
+  }, 1500);
 }
 
 function defaultCorner(width) {
@@ -114,6 +143,14 @@ function createWidget() {
 
   widgetWindow.loadFile(path.join(__dirname, '..', 'renderer', 'widget.html'));
   widgetWindow.once('ready-to-show', () => widgetWindow.show());
+  // The window's own visibility transitions (hide, minimize, restore) and
+  // focus changes both invalidate the always-on-top level Windows was
+  // honoring, so re-apply after each. scheduleAlwaysOnTopTicker() also
+  // gets called from applyAlwaysOnTop() on config changes.
+  widgetWindow.on('show', () => { applyAlwaysOnTop(); });
+  widgetWindow.on('hide', () => { scheduleAlwaysOnTopTicker(); });
+  widgetWindow.on('blur', () => { applyAlwaysOnTop(); });
+  widgetWindow.on('focus', () => { applyAlwaysOnTop(); });
 
   // 'moved' fires for every pixel of a drag. Persisting synchronously to disk
   // on each event blocks the main thread mid-drag and makes the widget feel
@@ -594,5 +631,6 @@ app.on('before-quit', () => {
   // Hygiene: stop background work so quit can complete without dangling
   // timers calling into a half-torn-down app.
   if (updateTimer) { clearInterval(updateTimer); updateTimer = null; }
+  if (alwaysOnTopTicker) { clearInterval(alwaysOnTopTicker); alwaysOnTopTicker = null; }
   poller?.stop();
 });
