@@ -74,8 +74,15 @@
           <option value="'Inter', sans-serif">Inter</option>
           <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
           <option value="'Cascadia Code', monospace">Cascadia Code</option>
+          <option value="custom" data-i18n="settings.fontFamily.custom">Custom (installed font)…</option>
         </select>
       </div>
+      <div class="row stretch" id="customFontFamilyRow" hidden>
+        <label for="customFontFamily" data-i18n="settings.customFont">Font name</label>
+        <input type="text" id="customFontFamily" list="installedFonts" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:settings.customFont.placeholder">
+        <datalist id="installedFonts"></datalist>
+      </div>
+      <p class="muted font-status" id="customFontStatus" hidden></p>
       <div class="row toggle"><label for="blur" data-i18n="settings.blur">Background blur</label><input type="checkbox" id="blur"></div>
     </section>
 
@@ -182,9 +189,14 @@
         <button id="openCreds" data-i18n="settings.openCreds">Open credentials file</button>
         <button id="quit" class="danger" data-i18n="settings.quit">Quit widget</button>
       </div>
+      <div class="actions-row">
+        <button id="openRepo" data-i18n="settings.openRepo">View on GitHub</button>
+        <button id="reportIssue" data-i18n="settings.reportIssue">Report an issue</button>
+      </div>
     </section>
   </main>
   <script src="i18n.js"></script>
+  <script src="fonts.js"></script>
   <script src="settings.js"></script>
 </body>
 </html>

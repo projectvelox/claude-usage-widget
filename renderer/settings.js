@@ -19,6 +19,7 @@ const BINDINGS = [
   { id: 'cornerRadius', path: ['cornerRadius'], type: 'number', display: 'cornerRadiusVal', fmt: (v) => `${v}px` },
   { id: 'fontScale', path: ['fontScale'], type: 'number', display: 'fontScaleVal', fmt: (v) => `${Math.round(v * 100)}%` },
   { id: 'fontFamily', path: ['fontFamily'], type: 'value' },
+  { id: 'customFontFamily', path: ['customFontFamily'], type: 'value' },
   { id: 'blur', path: ['blur'], type: 'checked' },
   { id: 'trayIconStyle', path: ['trayIconStyle'], type: 'value' },
   { id: 'pillDisplayMode', path: ['pillDisplayMode'], type: 'value' },
@@ -135,6 +136,49 @@ function applyPillRowVisibility() {
   if (cycleRow) cycleRow.hidden = mode !== 'cycle';
 }
 
+const REPO_URL = 'https://github.com/projectvelox/claude-usage-widget/';
+
+// The font-name row only matters for the "Custom" choice. The status line
+// under it tells the user whether the typed family was found — when it
+// isn't, the CSS stack silently falls back to the system default, which
+// otherwise looks like the setting did nothing.
+function applyCustomFontUi() {
+  const custom = $('fontFamily')?.value === 'custom';
+  const row = $('customFontFamilyRow');
+  const status = $('customFontStatus');
+  if (row) row.hidden = !custom;
+  if (!status) return;
+  const name = window.fontUtil.sanitizeFamily($('customFontFamily')?.value);
+  if (!custom || !name) { status.hidden = true; return; }
+  const found = window.fontUtil.isInstalled(name);
+  status.hidden = false;
+  status.textContent = t(found ? 'settings.customFont.found' : 'settings.customFont.missing', { name });
+  status.classList.toggle('missing', !found);
+}
+
+// The settings panel uses the same font as the widget so the choice is
+// previewed right where it's made.
+function applySettingsFont() {
+  window.fontUtil.applyTo(document.documentElement, cfg);
+}
+
+// Autocomplete from installed fonts. queryLocalFonts() needs a user gesture,
+// so fill the datalist on the first interaction with the field rather than
+// at load. Typing a name still works when the API isn't available.
+let fontListRequested = false;
+async function loadInstalledFonts() {
+  if (fontListRequested) return;
+  fontListRequested = true;
+  const families = await window.fontUtil.listInstalled();
+  const list = $('installedFonts');
+  if (!list || families.length === 0) return;
+  list.replaceChildren(...families.map((f) => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    return opt;
+  }));
+}
+
 function applyPlatformCopy() {
   if (window.api?.platform !== 'darwin') return;
   const desc = $('aboutDesc');
@@ -155,11 +199,14 @@ async function init() {
     if (cfg) { $('language').value = cfg.language || 'en'; }
     window.api.getUpdate?.().then(renderUpdateStatus);
     applyPlatformCopy();
+    applyCustomFontUi();
   });
 
   cfg = await window.api.getConfig();
   load();
   applyPillRowVisibility();
+  applyCustomFontUi();
+  applySettingsFont();
   for (const b of BINDINGS) {
     const el = $(b.id);
     if (!el) continue;
@@ -167,9 +214,27 @@ async function init() {
     el.addEventListener('change', scheduleSave);
   }
   $('pillDisplayMode')?.addEventListener('change', applyPillRowVisibility);
+  $('fontFamily')?.addEventListener('change', applyCustomFontUi);
+  const customFont = $('customFontFamily');
+  customFont?.addEventListener('input', applyCustomFontUi);
+  customFont?.addEventListener('pointerdown', loadInstalledFonts);
+  customFont?.addEventListener('keydown', loadInstalledFonts);
   $('openCreds').addEventListener('click', () => window.api.openCreds());
   $('quit').addEventListener('click', () => window.api.quit());
-  window.api.onConfig((newCfg) => { cfg = newCfg; load(); applyPillRowVisibility(); });
+  $('openRepo')?.addEventListener('click', () => window.api.openExternal(REPO_URL));
+  $('reportIssue')?.addEventListener('click', () => window.api.openExternal(`${REPO_URL}issues/new/choose`));
+  window.api.onConfig((newCfg) => {
+    cfg = newCfg;
+    // Don't clobber the font-name field mid-typing: config:changed echoes
+    // back after every debounced save and would reset the caret.
+    const typing = document.activeElement === customFont;
+    const typed = customFont?.value;
+    load();
+    if (typing) customFont.value = typed;
+    applyPillRowVisibility();
+    applyCustomFontUi();
+    applySettingsFont();
+  });
 
   const checkBtn = $('checkUpdateNow');
   const status = $('updateStatus');

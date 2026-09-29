@@ -110,6 +110,11 @@
   "settings.fontSize": "Font size",
   "settings.fontFamily": "Font family",
   "settings.fontFamily.system": "System default",
+  "settings.fontFamily.custom": "Custom (installed font)…",
+  "settings.customFont": "Font name",
+  "settings.customFont.placeholder": "e.g. IBM Plex Mono",
+  "settings.customFont.found": "\"{name}\" is installed.",
+  "settings.customFont.missing": "\"{name}\" was not found on this system — using the default font.",
   "settings.blur": "Background blur",
 
   "settings.section.trayIcon": "Tray icon",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Open credentials file",
   "settings.openCreds.keychain": "Open Keychain Access",
   "settings.quit": "Quit widget",
+  "settings.openRepo": "View on GitHub",
+  "settings.reportIssue": "Report an issue",
 
   "settings.section.language": "Language",
   "settings.language": "Language",

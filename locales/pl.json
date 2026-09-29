@@ -110,6 +110,11 @@
   "settings.fontSize": "Rozmiar czcionki",
   "settings.fontFamily": "Czcionka",
   "settings.fontFamily.system": "Domyślna systemowa",
+  "settings.fontFamily.custom": "Własna (zainstalowana czcionka)…",
+  "settings.customFont": "Nazwa czcionki",
+  "settings.customFont.placeholder": "np. IBM Plex Mono",
+  "settings.customFont.found": "„{name}” jest zainstalowana.",
+  "settings.customFont.missing": "Nie znaleziono „{name}” w tym systemie — używana jest czcionka domyślna.",
   "settings.blur": "Rozmycie tła",
 
   "settings.section.trayIcon": "Ikona zasobnika",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Otwórz plik poświadczeń",
   "settings.openCreds.keychain": "Otwórz Dostęp do pęku kluczy",
   "settings.quit": "Zamknij widżet",
+  "settings.openRepo": "Zobacz na GitHubie",
+  "settings.reportIssue": "Zgłoś problem",
 
   "settings.section.language": "Język",
   "settings.language": "Język",

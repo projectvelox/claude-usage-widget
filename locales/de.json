@@ -110,6 +110,11 @@
   "settings.fontSize": "Schriftgröße",
   "settings.fontFamily": "Schriftart",
   "settings.fontFamily.system": "Systemstandard",
+  "settings.fontFamily.custom": "Benutzerdefiniert (installierte Schrift)…",
+  "settings.customFont": "Schriftname",
+  "settings.customFont.placeholder": "z. B. IBM Plex Mono",
+  "settings.customFont.found": "„{name}“ ist installiert.",
+  "settings.customFont.missing": "„{name}“ wurde auf diesem System nicht gefunden — Standardschrift wird verwendet.",
   "settings.blur": "Hintergrundunschärfe",
 
   "settings.section.trayIcon": "Taskleisten-Icon",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Anmeldedatei öffnen",
   "settings.openCreds.keychain": "Schlüsselbundverwaltung öffnen",
   "settings.quit": "Widget beenden",
+  "settings.openRepo": "Auf GitHub ansehen",
+  "settings.reportIssue": "Problem melden",
 
   "settings.section.language": "Sprache",
   "settings.language": "Sprache",

@@ -571,7 +571,8 @@ app.whenReady().then(() => {
     return shell.openPath(require('./usage').CREDS_PATH);
   });
   ipcMain.handle('shell:openExternal', (_evt, url) => {
-    // Whitelist: only open GitHub release pages for this repo. Prevents the
+    // Whitelist: only open this repo's GitHub pages (releases, repo home,
+    // issues). Prevents the
     // renderer from coaxing the main process into opening arbitrary URLs.
     if (typeof url !== 'string') return;
     if (!url.startsWith('https://github.com/projectvelox/claude-usage-widget/')) return;

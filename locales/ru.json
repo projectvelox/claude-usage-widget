@@ -110,6 +110,11 @@
   "settings.fontSize": "Размер шрифта",
   "settings.fontFamily": "Шрифт",
   "settings.fontFamily.system": "Системный",
+  "settings.fontFamily.custom": "Своя (установленный шрифт)…",
+  "settings.customFont": "Название шрифта",
+  "settings.customFont.placeholder": "например, IBM Plex Mono",
+  "settings.customFont.found": "«{name}» установлен.",
+  "settings.customFont.missing": "«{name}» не найден в системе — используется шрифт по умолчанию.",
   "settings.blur": "Размытие фона",
 
   "settings.section.trayIcon": "Значок трея",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Открыть файл учётных данных",
   "settings.openCreds.keychain": "Открыть Связку ключей",
   "settings.quit": "Выйти из виджета",
+  "settings.openRepo": "Открыть на GitHub",
+  "settings.reportIssue": "Сообщить о проблеме",
 
   "settings.section.language": "Язык",
   "settings.language": "Язык",

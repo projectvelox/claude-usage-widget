@@ -129,8 +129,7 @@ function applyTheme(cfg) {
   ds.setProperty('--critical', cfg.colors.critical);
   ds.setProperty('--radius', `${cfg.cornerRadius}px`);
   ds.setProperty('--font-scale', cfg.fontScale);
-  if (cfg.fontFamily && cfg.fontFamily !== 'system') ds.setProperty('--font-family', cfg.fontFamily);
-  else ds.removeProperty('--font-family');
+  window.fontUtil.applyTo(document.documentElement, cfg);
   // Pill-mode config changes (mode swap, interval change, layout swap out
   // of minimal) may need to start or stop the cycle timer even without a
   // fresh data poll.
@@ -217,6 +216,12 @@ function fmtCountdown(resetsAt) {
   return t('time.resets.minutes', { m });
 }
 
+// The countdown strings are lowercase because they sit mid-row; a tooltip
+// reads as a sentence, so uppercase the first letter (no-op for CJK).
+function capitalize(s) {
+  return s ? s.charAt(0).toLocaleUpperCase(tLang()) + s.slice(1) : s;
+}
+
 function fmtAge(ts) {
   const sec = Math.floor((Date.now() - ts) / 1000);
   if (sec < 5) return t('time.justNow');
@@ -285,6 +290,11 @@ function render(payload) {
     const moneyText = fmtMoney(limit);
     const countdownText = (cfg.showResetCountdown && limit.resetsAt) ? fmtCountdown(limit.resetsAt) : '';
     const showMeta = moneyText || countdownText;
+    // Hover tooltip with the reset time, independent of showResetCountdown so
+    // users who hide the countdown row can still check it on demand. The 30s
+    // re-render keeps it within a minute of accurate.
+    const resetTip = limit.resetsAt ? capitalize(fmtCountdown(limit.resetsAt)) : '';
+    if (resetTip) row.title = resetTip;
     row.innerHTML = `
       <div class="limit-head">
         <span class="limit-label">${escapeHtml(localizedLimitLabel(limit))}</span>

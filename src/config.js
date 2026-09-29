@@ -35,7 +35,8 @@ const DEFAULTS = {
   // Theme
   theme: 'system',
   accentColor: '#38AEEB',
-  fontFamily: 'system',
+  fontFamily: 'system',        // 'system' | preset CSS stack | 'custom'
+  customFontFamily: '',        // installed family name used when fontFamily === 'custom'
   fontScale: 1.0,
   cornerRadius: 14,
   blur: true,

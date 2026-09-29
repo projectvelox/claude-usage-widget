@@ -110,6 +110,11 @@
   "settings.fontSize": "Cỡ chữ",
   "settings.fontFamily": "Phông chữ",
   "settings.fontFamily.system": "Mặc định hệ thống",
+  "settings.fontFamily.custom": "Tùy chỉnh (phông đã cài)…",
+  "settings.customFont": "Tên phông",
+  "settings.customFont.placeholder": "vd: IBM Plex Mono",
+  "settings.customFont.found": "Đã cài \"{name}\".",
+  "settings.customFont.missing": "Không tìm thấy \"{name}\" trên hệ thống — dùng phông mặc định.",
   "settings.blur": "Mờ nền",
 
   "settings.section.trayIcon": "Biểu tượng khay",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Mở tệp thông tin đăng nhập",
   "settings.openCreds.keychain": "Mở Keychain Access",
   "settings.quit": "Thoát widget",
+  "settings.openRepo": "Xem trên GitHub",
+  "settings.reportIssue": "Báo cáo sự cố",
 
   "settings.section.language": "Ngôn ngữ",
   "settings.language": "Ngôn ngữ",
