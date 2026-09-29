@@ -110,6 +110,11 @@
   "settings.fontSize": "Tamaño de fuente",
   "settings.fontFamily": "Familia de fuente",
   "settings.fontFamily.system": "Predeterminada del sistema",
+  "settings.fontFamily.custom": "Personalizada (fuente instalada)…",
+  "settings.customFont": "Nombre de la fuente",
+  "settings.customFont.placeholder": "p. ej. IBM Plex Mono",
+  "settings.customFont.found": "«{name}» está instalada.",
+  "settings.customFont.missing": "No se encontró «{name}» en este sistema: se usa la fuente predeterminada.",
   "settings.blur": "Desenfoque de fondo",
 
   "settings.section.trayIcon": "Icono de la bandeja",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Abrir archivo de credenciales",
   "settings.openCreds.keychain": "Abrir Acceso a Llaveros",
   "settings.quit": "Salir del widget",
+  "settings.openRepo": "Ver en GitHub",
+  "settings.reportIssue": "Informar de un problema",
 
   "settings.section.language": "Idioma",
   "settings.language": "Idioma",

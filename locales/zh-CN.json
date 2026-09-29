@@ -110,6 +110,11 @@
   "settings.fontSize": "字体大小",
   "settings.fontFamily": "字体",
   "settings.fontFamily.system": "系统默认",
+  "settings.fontFamily.custom": "自定义（已安装字体）…",
+  "settings.customFont": "字体名称",
+  "settings.customFont.placeholder": "例如 IBM Plex Mono",
+  "settings.customFont.found": "已安装“{name}”。",
+  "settings.customFont.missing": "在此系统上未找到“{name}”，将使用默认字体。",
   "settings.blur": "背景模糊",
 
   "settings.section.trayIcon": "托盘图标",
@@ -171,6 +176,8 @@
   "settings.openCreds": "打开凭据文件",
   "settings.openCreds.keychain": "打开钥匙串访问",
   "settings.quit": "退出小部件",
+  "settings.openRepo": "在 GitHub 上查看",
+  "settings.reportIssue": "报告问题",
 
   "settings.section.language": "语言",
   "settings.language": "语言",

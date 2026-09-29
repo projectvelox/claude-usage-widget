@@ -110,6 +110,11 @@
   "settings.fontSize": "ขนาดตัวอักษร",
   "settings.fontFamily": "ตระกูลตัวอักษร",
   "settings.fontFamily.system": "ค่าเริ่มต้นของระบบ",
+  "settings.fontFamily.custom": "กำหนดเอง (ฟอนต์ที่ติดตั้งไว้)…",
+  "settings.customFont": "ชื่อฟอนต์",
+  "settings.customFont.placeholder": "เช่น IBM Plex Mono",
+  "settings.customFont.found": "ติดตั้ง \"{name}\" แล้ว",
+  "settings.customFont.missing": "ไม่พบ \"{name}\" ในระบบนี้ — ใช้ฟอนต์เริ่มต้นแทน",
   "settings.blur": "เบลอพื้นหลัง",
 
   "settings.section.trayIcon": "ไอคอนถาดระบบ",
@@ -171,6 +176,8 @@
   "settings.openCreds": "เปิดไฟล์ข้อมูลรับรอง",
   "settings.openCreds.keychain": "เปิด Keychain Access",
   "settings.quit": "ออกจาก Widget",
+  "settings.openRepo": "ดูบน GitHub",
+  "settings.reportIssue": "แจ้งปัญหา",
 
   "settings.section.language": "ภาษา",
   "settings.language": "ภาษา",

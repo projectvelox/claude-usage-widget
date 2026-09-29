@@ -110,6 +110,11 @@
   "settings.fontSize": "글꼴 크기",
   "settings.fontFamily": "글꼴",
   "settings.fontFamily.system": "시스템 기본",
+  "settings.fontFamily.custom": "사용자 지정 (설치된 글꼴)…",
+  "settings.customFont": "글꼴 이름",
+  "settings.customFont.placeholder": "예: IBM Plex Mono",
+  "settings.customFont.found": "\"{name}\" 글꼴이 설치되어 있습니다.",
+  "settings.customFont.missing": "이 시스템에서 \"{name}\" 글꼴을 찾을 수 없습니다 — 기본 글꼴을 사용합니다.",
   "settings.blur": "배경 흐림",
 
   "settings.section.trayIcon": "트레이 아이콘",
@@ -171,6 +176,8 @@
   "settings.openCreds": "자격 증명 파일 열기",
   "settings.openCreds.keychain": "키체인 접근 열기",
   "settings.quit": "위젯 종료",
+  "settings.openRepo": "GitHub에서 보기",
+  "settings.reportIssue": "문제 신고",
 
   "settings.section.language": "언어",
   "settings.language": "언어",

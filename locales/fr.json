@@ -110,6 +110,11 @@
   "settings.fontSize": "Taille de police",
   "settings.fontFamily": "Famille de police",
   "settings.fontFamily.system": "Système par défaut",
+  "settings.fontFamily.custom": "Personnalisée (police installée)…",
+  "settings.customFont": "Nom de la police",
+  "settings.customFont.placeholder": "p. ex. IBM Plex Mono",
+  "settings.customFont.found": "« {name} » est installée.",
+  "settings.customFont.missing": "« {name} » est introuvable sur ce système — police par défaut utilisée.",
   "settings.blur": "Flou d'arrière-plan",
 
   "settings.section.trayIcon": "Icône de la barre",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Ouvrir le fichier d'identifiants",
   "settings.openCreds.keychain": "Ouvrir Trousseaux d'accès",
   "settings.quit": "Quitter le widget",
+  "settings.openRepo": "Voir sur GitHub",
+  "settings.reportIssue": "Signaler un problème",
 
   "settings.section.language": "Langue",
   "settings.language": "Langue",

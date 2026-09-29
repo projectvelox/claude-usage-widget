@@ -110,6 +110,11 @@
   "settings.fontSize": "Yazı boyutu",
   "settings.fontFamily": "Yazı tipi",
   "settings.fontFamily.system": "Sistem varsayılanı",
+  "settings.fontFamily.custom": "Özel (yüklü yazı tipi)…",
+  "settings.customFont": "Yazı tipi adı",
+  "settings.customFont.placeholder": "ör. IBM Plex Mono",
+  "settings.customFont.found": "\"{name}\" yüklü.",
+  "settings.customFont.missing": "\"{name}\" bu sistemde bulunamadı — varsayılan yazı tipi kullanılıyor.",
   "settings.blur": "Arka plan bulanıklığı",
 
   "settings.section.trayIcon": "Tepsi simgesi",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Kimlik bilgileri dosyasını aç",
   "settings.openCreds.keychain": "Anahtar Zinciri Erişimi'ni aç",
   "settings.quit": "Widget'tan çık",
+  "settings.openRepo": "GitHub'da görüntüle",
+  "settings.reportIssue": "Sorun bildir",
 
   "settings.section.language": "Dil",
   "settings.language": "Dil",

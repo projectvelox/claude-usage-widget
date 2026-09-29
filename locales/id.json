@@ -110,6 +110,11 @@
   "settings.fontSize": "Ukuran font",
   "settings.fontFamily": "Keluarga font",
   "settings.fontFamily.system": "Bawaan sistem",
+  "settings.fontFamily.custom": "Kustom (font terpasang)…",
+  "settings.customFont": "Nama font",
+  "settings.customFont.placeholder": "mis. IBM Plex Mono",
+  "settings.customFont.found": "\"{name}\" terpasang.",
+  "settings.customFont.missing": "\"{name}\" tidak ditemukan di sistem ini — memakai font bawaan.",
   "settings.blur": "Buram latar",
 
   "settings.section.trayIcon": "Ikon tray",
@@ -171,6 +176,8 @@
   "settings.openCreds": "Buka berkas kredensial",
   "settings.openCreds.keychain": "Buka Keychain Access",
   "settings.quit": "Keluar dari widget",
+  "settings.openRepo": "Lihat di GitHub",
+  "settings.reportIssue": "Laporkan masalah",
 
   "settings.section.language": "Bahasa",
   "settings.language": "Bahasa",

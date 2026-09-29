@@ -110,6 +110,11 @@
   "settings.fontSize": "フォントサイズ",
   "settings.fontFamily": "フォントファミリー",
   "settings.fontFamily.system": "システム標準",
+  "settings.fontFamily.custom": "カスタム（インストール済みフォント）…",
+  "settings.customFont": "フォント名",
+  "settings.customFont.placeholder": "例: IBM Plex Mono",
+  "settings.customFont.found": "「{name}」はインストールされています。",
+  "settings.customFont.missing": "「{name}」はこのシステムに見つかりません — 既定のフォントを使用します。",
   "settings.blur": "背景ぼかし",
 
   "settings.section.trayIcon": "トレイアイコン",
@@ -171,6 +176,8 @@
   "settings.openCreds": "認証ファイルを開く",
   "settings.openCreds.keychain": "キーチェーンアクセスを開く",
   "settings.quit": "ウィジェットを終了",
+  "settings.openRepo": "GitHub で見る",
+  "settings.reportIssue": "問題を報告",
 
   "settings.section.language": "言語",
   "settings.language": "言語",
