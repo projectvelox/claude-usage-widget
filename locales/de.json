@@ -67,7 +67,11 @@
   "badge.syncing": "synchron.",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Neue Version verfügbar — klicken, um die GitHub-Release-Seite für v{version} zu öffnen.",
+  "update.tooltip.install": "v{version} ist verfügbar ({behind}). Zum Aktualisieren klicken.",
+  "update.behind.one": "1 Version zurück",
+  "update.behind.many": "{n} Versionen zurück",
+  "update.progress": "Aktualisiere… {pct}%",
+  "update.restarting": "Neustart…",
 
   "refresh.debounced": "Gerade aktualisiert — in {sec}s erneut versuchen",
   "refresh.title": "Aktualisieren",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Jetzt prüfen",
   "settings.checking": "Prüfe…",
   "settings.updateStatus.neverChecked": "Noch nie geprüft.",
-  "settings.updateStatus.available": "v{version} verfügbar — Link im Kopf zum Herunterladen.",
+  "settings.updateStatus.availableBehind": "v{version} ist verfügbar — du bist {behind}.",
+  "settings.updateNow": "Jetzt aktualisieren",
+  "settings.releaseNotes": "Versionshinweise",
   "settings.updateStatus.latest": "Du nutzt die neueste Version (v{version}).",
 
   "settings.section.about": "Info",
@@ -214,6 +220,10 @@
   "notify.warn": "Warnschwelle erreicht.",
   "notify.upToDate.title": "Du bist aktuell",
   "notify.upToDate.body": "Läuft v{version} — die neueste Version.",
+  "notify.updateAvailable.title": "Update verfügbar",
+  "notify.updateAvailable.body": "v{version} ist da — du bist {behind}. Zum Aktualisieren klicken.",
+  "notify.updateInstallFailed.title": "Update fehlgeschlagen",
+  "notify.updateInstallFailed.body": "Die Release-Seite wird geöffnet, damit du es manuell herunterladen kannst.",
   "notify.updateFailed.title": "Update-Prüfung fehlgeschlagen",
   "notify.updateFailed.body": "GitHub konnte nicht erreicht werden."
 }

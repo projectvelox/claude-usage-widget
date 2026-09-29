@@ -1,15 +1,13 @@
-// In-app update check. Polls the GitHub Releases API for the latest published
-// release tag (vMAJOR.MINOR.PATCH) and compares it to the running app version.
-// We don't auto-download — the renderer just surfaces a "v0.2.11 available"
-// link that opens the release page in the user's browser. This keeps the
-// portable EXE actually portable (no self-rewrite) and avoids SmartScreen
-// re-prompts that would come with electron-updater on an unsigned build.
+// In-app update check. Reads the GitHub Releases list, picks the newest
+// published vMAJOR.MINOR.PATCH tag, and counts how many releases the running
+// version is behind. Installing is handled separately by src/selfUpdate.js
+// when the user accepts the prompt.
 
-const RELEASES_URL = 'https://api.github.com/repos/projectvelox/claude-usage-widget/releases/latest';
+const RELEASES_URL = 'https://api.github.com/repos/projectvelox/claude-usage-widget/releases?per_page=100';
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // once a day
 const REQUEST_TIMEOUT_MS = 8_000;
 
-async function fetchLatestRelease() {
+async function fetchReleases() {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -50,28 +48,43 @@ function compareVersions(a, b) {
   return 0;
 }
 
+// Pure summary of a GitHub releases list relative to the running version:
+// the newest published release, and how many published releases are newer
+// than `current` (drafts, prereleases and non-semver tags are ignored).
+function summarizeReleases(releases, current) {
+  const published = (Array.isArray(releases) ? releases : [])
+    .filter((r) => r && !r.draft && !r.prerelease)
+    .map((r) => ({ release: r, version: parseVersion(r.tag_name) }))
+    .filter((r) => r.version)
+    .sort((a, b) => compareVersions(b.version, a.version));
+  if (published.length === 0) return null;
+  const behind = published.filter((r) => compareVersions(r.version, current) > 0).length;
+  return { latest: published[0], behind };
+}
+
 async function checkForUpdate(currentVersion) {
   const current = parseVersion(currentVersion);
   if (!current) return { available: false, reason: 'bad-current-version' };
 
-  const release = await fetchLatestRelease();
-  const latest = parseVersion(release.tag_name);
-  if (!latest) return { available: false, reason: 'bad-remote-tag', remoteTag: release.tag_name };
+  const summary = summarizeReleases(await fetchReleases(), current);
+  if (!summary) return { available: false, reason: 'no-releases' };
 
-  const available = compareVersions(latest, current) > 0;
-  // Build the release URL from the tag we just validated instead of trusting
-  // `release.html_url`. If the GitHub response were ever tampered with (MITM,
-  // mirror compromise), an attacker could phish the user via a spoofed link.
-  // The hardcoded host means `shell:openExternal` only ever opens our repo.
-  const tag = release.tag_name.replace(/^v/i, '');
+  const { latest, behind } = summary;
+  // Build the release URL from the version we just validated instead of
+  // trusting `release.html_url`. If the GitHub response were ever tampered
+  // with (MITM, mirror compromise), an attacker could phish the user via a
+  // spoofed link. The hardcoded host means `shell:openExternal` only ever
+  // opens our repo.
+  const tag = latest.version.join('.');
   return {
-    available,
+    available: behind > 0,
+    behind,
     currentVersion,
     latestVersion: tag,
     releaseUrl: `https://github.com/projectvelox/claude-usage-widget/releases/tag/v${tag}`,
-    publishedAt: release.published_at || null,
+    publishedAt: latest.release.published_at || null,
     checkedAt: Date.now(),
   };
 }
 
-module.exports = { checkForUpdate, parseVersion, compareVersions, CHECK_INTERVAL_MS };
+module.exports = { checkForUpdate, summarizeReleases, parseVersion, compareVersions, CHECK_INTERVAL_MS };

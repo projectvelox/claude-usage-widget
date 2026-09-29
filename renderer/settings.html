@@ -178,8 +178,10 @@
       <div class="row toggle"><label for="checkForUpdates" data-i18n="settings.checkForUpdates">Check GitHub for new releases (once a day)</label><input type="checkbox" id="checkForUpdates"></div>
       <div class="actions-row">
         <button id="checkUpdateNow" data-i18n="settings.checkNow">Check now</button>
-        <span class="muted" id="updateStatus"></span>
+        <button id="installUpdate" class="primary" data-i18n="settings.updateNow" hidden>Update now</button>
+        <button id="releaseNotes" data-i18n="settings.releaseNotes" hidden>Release notes</button>
       </div>
+      <p class="muted update-status" id="updateStatus"></p>
     </section>
 
     <section>

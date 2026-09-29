@@ -67,7 +67,11 @@
   "badge.syncing": "syncing",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "New release available — click to open the GitHub release page for v{version}.",
+  "update.tooltip.install": "v{version} is available ({behind}). Click to update.",
+  "update.behind.one": "1 version behind",
+  "update.behind.many": "{n} versions behind",
+  "update.progress": "Updating… {pct}%",
+  "update.restarting": "Restarting…",
 
   "refresh.debounced": "Just refreshed — try again in {sec}s",
   "refresh.title": "Refresh",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Check now",
   "settings.checking": "Checking…",
   "settings.updateStatus.neverChecked": "Never checked yet.",
-  "settings.updateStatus.available": "v{version} is available — see the header link to download.",
+  "settings.updateStatus.availableBehind": "v{version} is available — you're {behind}.",
+  "settings.updateNow": "Update now",
+  "settings.releaseNotes": "Release notes",
   "settings.updateStatus.latest": "You're on the latest version (v{version}).",
 
   "settings.section.about": "About",
@@ -214,6 +220,10 @@
   "notify.warn": "Warning threshold reached.",
   "notify.upToDate.title": "You're up to date",
   "notify.upToDate.body": "Running v{version} — the latest release.",
+  "notify.updateAvailable.title": "Update available",
+  "notify.updateAvailable.body": "v{version} is out — you're {behind}. Click to update.",
+  "notify.updateInstallFailed.title": "Update failed",
+  "notify.updateInstallFailed.body": "Opening the release page so you can download it manually.",
   "notify.updateFailed.title": "Update check failed",
   "notify.updateFailed.body": "Could not reach GitHub."
 }

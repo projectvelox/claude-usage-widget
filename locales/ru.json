@@ -67,7 +67,11 @@
   "badge.syncing": "синхр.",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Доступна новая версия — нажмите, чтобы открыть страницу релиза v{version} на GitHub.",
+  "update.tooltip.install": "Доступна v{version} ({behind}). Нажмите, чтобы обновить.",
+  "update.behind.one": "отставание на 1 версию",
+  "update.behind.many": "отставание в версиях: {n}",
+  "update.progress": "Обновление… {pct}%",
+  "update.restarting": "Перезапуск…",
 
   "refresh.debounced": "Только что обновлено — повторите через {sec}с",
   "refresh.title": "Обновить",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Проверить сейчас",
   "settings.checking": "Проверка…",
   "settings.updateStatus.neverChecked": "Ещё не проверялось.",
-  "settings.updateStatus.available": "v{version} доступна — ссылка в заголовке для загрузки.",
+  "settings.updateStatus.availableBehind": "Доступна v{version} — {behind}.",
+  "settings.updateNow": "Обновить сейчас",
+  "settings.releaseNotes": "Список изменений",
   "settings.updateStatus.latest": "У вас последняя версия (v{version}).",
 
   "settings.section.about": "О программе",
@@ -214,6 +220,10 @@
   "notify.warn": "Достигнут порог предупреждения.",
   "notify.upToDate.title": "У вас всё свежее",
   "notify.upToDate.body": "Запущена v{version} — последний релиз.",
+  "notify.updateAvailable.title": "Доступно обновление",
+  "notify.updateAvailable.body": "Вышла v{version} — {behind}. Нажмите, чтобы обновить.",
+  "notify.updateInstallFailed.title": "Не удалось обновить",
+  "notify.updateInstallFailed.body": "Открываю страницу релиза для ручной загрузки.",
   "notify.updateFailed.title": "Проверка обновлений не удалась",
   "notify.updateFailed.body": "Не удалось связаться с GitHub."
 }

@@ -67,7 +67,11 @@
   "badge.syncing": "sinkron.",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Versi baru tersedia — klik untuk membuka halaman rilis v{version} di GitHub.",
+  "update.tooltip.install": "v{version} tersedia ({behind}). Klik untuk memperbarui.",
+  "update.behind.one": "tertinggal 1 versi",
+  "update.behind.many": "tertinggal {n} versi",
+  "update.progress": "Memperbarui… {pct}%",
+  "update.restarting": "Memulai ulang…",
 
   "refresh.debounced": "Baru disegarkan — coba lagi dalam {sec}d",
   "refresh.title": "Segarkan",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Cek sekarang",
   "settings.checking": "Mengecek…",
   "settings.updateStatus.neverChecked": "Belum pernah dicek.",
-  "settings.updateStatus.available": "v{version} tersedia — lihat tautan di header untuk mengunduh.",
+  "settings.updateStatus.availableBehind": "v{version} tersedia — Anda {behind}.",
+  "settings.updateNow": "Perbarui sekarang",
+  "settings.releaseNotes": "Catatan rilis",
   "settings.updateStatus.latest": "Anda di versi terbaru (v{version}).",
 
   "settings.section.about": "Tentang",
@@ -214,6 +220,10 @@
   "notify.warn": "Ambang peringatan tercapai.",
   "notify.upToDate.title": "Anda terbaru",
   "notify.upToDate.body": "Menjalankan v{version} — rilis terbaru.",
+  "notify.updateAvailable.title": "Pembaruan tersedia",
+  "notify.updateAvailable.body": "v{version} sudah rilis — Anda {behind}. Klik untuk memperbarui.",
+  "notify.updateInstallFailed.title": "Pembaruan gagal",
+  "notify.updateInstallFailed.body": "Membuka halaman rilis agar Anda bisa mengunduhnya secara manual.",
   "notify.updateFailed.title": "Pengecekan pembaruan gagal",
   "notify.updateFailed.body": "Tak bisa menjangkau GitHub."
 }

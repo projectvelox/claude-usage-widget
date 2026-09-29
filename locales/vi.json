@@ -67,7 +67,11 @@
   "badge.syncing": "đồng bộ",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Có bản phát hành mới — nhấp để mở trang phát hành v{version} trên GitHub.",
+  "update.tooltip.install": "Đã có v{version} ({behind}). Nhấn để cập nhật.",
+  "update.behind.one": "chậm 1 phiên bản",
+  "update.behind.many": "chậm {n} phiên bản",
+  "update.progress": "Đang cập nhật… {pct}%",
+  "update.restarting": "Đang khởi động lại…",
 
   "refresh.debounced": "Vừa làm mới — thử lại sau {sec}s",
   "refresh.title": "Làm mới",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Kiểm tra ngay",
   "settings.checking": "Đang kiểm tra…",
   "settings.updateStatus.neverChecked": "Chưa kiểm tra.",
-  "settings.updateStatus.available": "v{version} có sẵn — xem liên kết ở đầu mục để tải.",
+  "settings.updateStatus.availableBehind": "Đã có v{version} — bạn đang {behind}.",
+  "settings.updateNow": "Cập nhật ngay",
+  "settings.releaseNotes": "Ghi chú phát hành",
   "settings.updateStatus.latest": "Bạn đang ở bản mới nhất (v{version}).",
 
   "settings.section.about": "Giới thiệu",
@@ -214,6 +220,10 @@
   "notify.warn": "Đã chạm ngưỡng cảnh báo.",
   "notify.upToDate.title": "Bạn đã cập nhật",
   "notify.upToDate.body": "Đang chạy v{version} — bản mới nhất.",
+  "notify.updateAvailable.title": "Có bản cập nhật",
+  "notify.updateAvailable.body": "v{version} đã ra mắt — bạn đang {behind}. Nhấn để cập nhật.",
+  "notify.updateInstallFailed.title": "Cập nhật thất bại",
+  "notify.updateInstallFailed.body": "Đang mở trang phát hành để bạn tải về thủ công.",
   "notify.updateFailed.title": "Kiểm tra cập nhật thất bại",
   "notify.updateFailed.body": "Không thể kết nối GitHub."
 }

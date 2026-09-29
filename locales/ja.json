@@ -67,7 +67,11 @@
   "badge.syncing": "同期中",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "新バージョンあり — クリックで v{version} のGitHubリリースページを開きます。",
+  "update.tooltip.install": "v{version} が利用可能です（{behind}）。クリックで更新。",
+  "update.behind.one": "1 バージョン遅れ",
+  "update.behind.many": "{n} バージョン遅れ",
+  "update.progress": "更新中… {pct}%",
+  "update.restarting": "再起動中…",
 
   "refresh.debounced": "更新したばかり — {sec}秒後に再試行してください",
   "refresh.title": "更新",
@@ -167,7 +171,9 @@
   "settings.checkNow": "今すぐ確認",
   "settings.checking": "確認中…",
   "settings.updateStatus.neverChecked": "未確認。",
-  "settings.updateStatus.available": "v{version} が利用可能 — ヘッダーのリンクからダウンロード。",
+  "settings.updateStatus.availableBehind": "v{version} が利用可能です — 現在 {behind}。",
+  "settings.updateNow": "今すぐ更新",
+  "settings.releaseNotes": "リリースノート",
   "settings.updateStatus.latest": "最新バージョン (v{version}) です。",
 
   "settings.section.about": "情報",
@@ -214,6 +220,10 @@
   "notify.warn": "警告しきい値に達しました。",
   "notify.upToDate.title": "最新です",
   "notify.upToDate.body": "v{version} を実行中 — 最新リリースです。",
+  "notify.updateAvailable.title": "アップデートがあります",
+  "notify.updateAvailable.body": "v{version} が公開されました — 現在 {behind}。クリックで更新。",
+  "notify.updateInstallFailed.title": "更新に失敗しました",
+  "notify.updateInstallFailed.body": "手動でダウンロードできるようリリースページを開きます。",
   "notify.updateFailed.title": "アップデート確認失敗",
   "notify.updateFailed.body": "GitHubに到達できませんでした。"
 }

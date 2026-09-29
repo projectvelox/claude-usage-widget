@@ -543,16 +543,36 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
+function behindText(n) {
+  return n === 1 ? t('update.behind.one') : t('update.behind.many', { n });
+}
+
 // Shown only when the update checker has reported a newer release. Clicking
-// opens the GitHub release page in the user's default browser — we don't
-// auto-download because the portable EXE intentionally doesn't self-rewrite.
+// asks main to download and install it in place (see src/selfUpdate.js);
+// while that runs the link turns into a progress readout.
+let updateInfo = null;
+let updateProgress = { phase: 'idle', percent: 0 };
 function renderUpdate(info) {
+  if (info !== undefined) updateInfo = info;
   if (!updateLink) return;
-  if (!info || !info.available) { updateLink.hidden = true; updateLink.removeAttribute('href'); return; }
+  if (!updateInfo || !updateInfo.available) { updateLink.hidden = true; return; }
   updateLink.hidden = false;
-  updateLink.textContent = t('update.available', { version: info.latestVersion });
-  updateLink.title = t('update.tooltip', { version: info.latestVersion });
-  updateLink.dataset.url = info.releaseUrl || '';
+  const { phase, percent } = updateProgress;
+  if (phase === 'downloading') {
+    updateLink.textContent = t('update.progress', { pct: percent });
+  } else if (phase === 'restarting') {
+    updateLink.textContent = t('update.restarting');
+  } else {
+    updateLink.textContent = t('update.available', { version: updateInfo.latestVersion });
+  }
+  updateLink.title = t('update.tooltip.install', {
+    version: updateInfo.latestVersion,
+    behind: behindText(updateInfo.behind || 1),
+  });
+}
+function renderUpdateProgress(p) {
+  if (p) updateProgress = p;
+  renderUpdate();
 }
 
 async function init() {
@@ -565,6 +585,7 @@ async function init() {
   // covers the JS-rendered rows (limits, footer, graph head, etc.).
   window.i18n.onChange(() => {
     if (lastData) render({ data: lastData, stale: !!lastError, error: lastError });
+    renderUpdate();
   });
 
   const cfg = await window.api.getConfig();
@@ -590,10 +611,11 @@ async function init() {
   const cached = await window.api.getUpdate?.();
   renderUpdate(cached);
   window.api.onUpdate?.(renderUpdate);
+  window.api.getUpdateProgress?.().then(renderUpdateProgress);
+  window.api.onUpdateProgress?.(renderUpdateProgress);
   updateLink?.addEventListener('click', (e) => {
     e.preventDefault();
-    const url = updateLink.dataset.url;
-    if (url) window.api.openExternal?.(url);
+    window.api.installUpdate?.();
   });
 
   // Claw'd: click to hop (or wake him up grumpy if paused), wave on reset.
