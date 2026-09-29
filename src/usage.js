@@ -206,6 +206,14 @@ function normalize(raw, meta = {}) {
     // would just be confusing noise.
     if (value.is_enabled === false) continue;
     if (value.enabled === false) continue;
+    // The API also returns codenamed buckets (e.g. `nimbus_quill`) that
+    // carry a utilization of 0 but no reset time and no dollar limit —
+    // placeholders for features not live on this account. Drop unknown
+    // ids that have nothing to show; known ids always render.
+    const resetsAt = value.resets_at || value.resetsAt || value.reset_at || null;
+    const limitDollars = pickNumber(value.limit_dollars, value.limitDollars);
+    const isKnown = KNOWN_IDS.has(canonicalKey) || !!scopeDisplayName;
+    if (!isKnown && !resetsAt && limitDollars == null) continue;
     // Only reserve the seen slot AFTER the row has cleared every validity
     // check. Otherwise a null-utilization `extra_usage` row (which is what
     // the API returns when the user hasn't touched credits yet) would claim
@@ -223,15 +231,14 @@ function normalize(raw, meta = {}) {
     // that hasn't used Fable yet) would fingerprint identically to `spend`
     // at 0% and get deduped away. Candidates are pushed top-level-first,
     // so the richer original row wins and the slimmer dup is suppressed.
-    const resetsAtFp = value.resets_at || value.resetsAt || value.reset_at || '';
-    const fp = `${resetsAtFp}|${Math.round(utilization)}|${scopeDisplayName}`;
+    const fp = `${resetsAt || ''}|${Math.round(utilization)}|${scopeDisplayName}`;
     if (seenFingerprint.has(fp)) continue;
     seenFingerprint.add(fp);
     const limit = {
       id: canonicalKey,
       label: scopeDisplayName ? `Weekly · ${scopeDisplayName}` : prettyLabel(canonicalKey),
       utilization: clamp(utilization, 0, 100),
-      resetsAt: value.resets_at || value.resetsAt || value.reset_at || null,
+      resetsAt,
       windowMs: WINDOW_MS[canonicalKey] || (key === 'weekly_scoped' ? 7 * 24 * 60 * 60 * 1000 : null),
     };
     if (scopeDisplayName) limit.scopeModel = scopeDisplayName;
@@ -241,7 +248,12 @@ function normalize(raw, meta = {}) {
     //   cents (10000 = "$100.00"). Currency in `value.currency`.
     //   New `spend`: nested `used.amount_minor` / `limit.amount_minor`
     //   with an explicit `exponent` (usually 2). Currency on each side.
-    // Read either. Cents division is baked into the exponent path.
+    //   Codenamed buckets (e.g. `iguana_necktie`): flat `used_dollars` /
+    //   `limit_dollars`, already in whole currency units.
+    // Read any of them. Cents division is baked into the exponent path.
+    const usedDollars = pickNumber(value.used_dollars, value.usedDollars);
+    if (usedDollars != null) limit.usedCredits = usedDollars;
+    if (limitDollars != null) limit.monthlyLimit = limitDollars;
     const usedCentsRaw = pickNumber(value.used_credits, value.usedCredits);
     const limitCentsRaw = pickNumber(value.monthly_limit, value.monthlyLimit);
     if (usedCentsRaw != null) limit.usedCredits = usedCentsRaw / 100;
@@ -279,18 +291,20 @@ function pickNumber(...values) {
 
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
+const KNOWN_LABELS = {
+  five_hour: 'Current session',
+  seven_day: 'Weekly · all models',
+  seven_day_sonnet: 'Weekly · Sonnet',
+  seven_day_opus: 'Weekly · Opus',
+  seven_day_cowork: 'Weekly · Cowork',
+  cowork: 'Cowork',
+  routines: 'Daily routines',
+  extra_usage: 'Extra usage',
+};
+const KNOWN_IDS = new Set([...Object.keys(KNOWN_LABELS), ...Object.keys(WINDOW_MS)]);
+
 function prettyLabel(key) {
-  const map = {
-    five_hour: 'Current session',
-    seven_day: 'Weekly · all models',
-    seven_day_sonnet: 'Weekly · Sonnet',
-    seven_day_opus: 'Weekly · Opus',
-    seven_day_cowork: 'Weekly · Cowork',
-    cowork: 'Cowork',
-    routines: 'Daily routines',
-    extra_usage: 'Extra usage',
-  };
-  if (map[key]) return map[key];
+  if (KNOWN_LABELS[key]) return KNOWN_LABELS[key];
   return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
