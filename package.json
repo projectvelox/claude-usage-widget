@@ -28,13 +28,14 @@
   "author": "Joshua Ricarder Oducado",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^39.8.5",
-    "electron-builder": "^25.1.8",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
     "gifenc": "^1.0.3"
   },
   "overrides": {
-    "tar": ">=7.5.11",
-    "form-data": ">=4.0.6"
+    "tar": ">=7.5.21",
+    "form-data": ">=4.0.6",
+    "js-yaml": "^4.3.2"
   },
   "auto-changelog": {
     "template": "keepachangelog",
