@@ -16,6 +16,8 @@ const INTERVALS = {
 
 const MANUAL_DEBOUNCE_MS = 10_000;
 const RESET_ALIGN_WINDOW_MS = 30_000;
+const RATE_LIMIT_BASE_MS = 60_000;
+const MAX_BACKOFF_MS = 30 * 60_000;
 
 class Poller {
   constructor({ onUpdate, onError, onReset, getActivityState }) {
@@ -61,17 +63,28 @@ class Poller {
       this.consecutiveErrors += 1;
       this.stale = true;
       this.onError(err, { lastData: this.lastData });
-      let delay;
-      if (err.code === 'RATE_LIMITED') delay = err.retryAfter * 1000;
-      else if (err.code === 'AUTH_EXPIRED') delay = 5 * 60_000;
-      else if (err.code === 'NO_CREDS') delay = 15_000;
-      // First failure retries quickly (8s) so a user who just signed in sees
-      // the widget pick up almost immediately. Subsequent failures back off
-      // exponentially up to 30 min, same ceiling as before.
-      else if (this.consecutiveErrors === 1) delay = 8_000;
-      else delay = Math.min(15_000 * 2 ** Math.min(this.consecutiveErrors - 1, 7), 30 * 60_000);
-      this.schedule(delay);
+      this.schedule(this.errorDelay(err));
     }
+  }
+
+  errorDelay(err) {
+    const n = this.consecutiveErrors;
+    // The usage endpoint answers 429 with `retry-after: 0` (or no header).
+    // Trusting that literally re-polled every second, which kept the account
+    // throttled indefinitely. Back off exponentially from 60s (up to 30 min)
+    // and only honor Retry-After when it asks for a longer wait.
+    if (err.code === 'RATE_LIMITED') {
+      const backoff = Math.min(RATE_LIMIT_BASE_MS * 2 ** Math.min(n - 1, 5), MAX_BACKOFF_MS);
+      const retryAfterMs = Number.isFinite(err.retryAfter) ? err.retryAfter * 1000 : 0;
+      return Math.max(backoff, retryAfterMs);
+    }
+    if (err.code === 'AUTH_EXPIRED') return 5 * 60_000;
+    if (err.code === 'NO_CREDS') return 15_000;
+    // First failure retries quickly (8s) so a user who just signed in sees
+    // the widget pick up almost immediately. Subsequent failures back off
+    // exponentially up to 30 min, same ceiling as before.
+    if (n === 1) return 8_000;
+    return Math.min(15_000 * 2 ** Math.min(n - 1, 7), MAX_BACKOFF_MS);
   }
 
   detectResets(prev, curr) {

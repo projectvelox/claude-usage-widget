@@ -116,3 +116,34 @@ test('manualRefresh is debounced within the 10s window', async () => {
   assert.equal(second.debounced, true);
   assert.ok(second.waitMs > 0 && second.waitMs <= 10_000, `waitMs out of range: ${second.waitMs}`);
 });
+
+test('errorDelay never hot-loops on 429 with retry-after 0 or missing', () => {
+  const { poller } = makePoller();
+  const rl = (retryAfter) => Object.assign(new Error('Rate limited'), { code: 'RATE_LIMITED', retryAfter });
+  poller.consecutiveErrors = 1;
+  assert.equal(poller.errorDelay(rl(0)), 60_000);
+  assert.equal(poller.errorDelay(rl(NaN)), 60_000);
+  assert.equal(poller.errorDelay(rl(undefined)), 60_000);
+});
+
+test('errorDelay backs off exponentially on repeated 429s, capped at 30 min', () => {
+  const { poller } = makePoller();
+  const err = Object.assign(new Error('Rate limited'), { code: 'RATE_LIMITED', retryAfter: 0 });
+  const delays = [1, 2, 3, 4, 5, 6, 7, 20].map((n) => { poller.consecutiveErrors = n; return poller.errorDelay(err); });
+  assert.deepEqual(delays, [60_000, 120_000, 240_000, 480_000, 960_000, 1_800_000, 1_800_000, 1_800_000]);
+});
+
+test('errorDelay honors a Retry-After longer than the backoff', () => {
+  const { poller } = makePoller();
+  poller.consecutiveErrors = 1;
+  const err = Object.assign(new Error('Rate limited'), { code: 'RATE_LIMITED', retryAfter: 300 });
+  assert.equal(poller.errorDelay(err), 300_000);
+});
+
+test('errorDelay keeps the quick first retry for generic errors', () => {
+  const { poller } = makePoller();
+  poller.consecutiveErrors = 1;
+  assert.equal(poller.errorDelay(new Error('boom')), 8_000);
+  poller.consecutiveErrors = 2;
+  assert.equal(poller.errorDelay(new Error('boom')), 30_000);
+});
