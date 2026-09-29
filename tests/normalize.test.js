@@ -304,3 +304,28 @@ test('normalize does not attach credit-pool fields to limits that lack them', ()
   assert.equal('monthlyLimit' in fh, false);
   assert.equal('currency' in fh, false);
 });
+
+test('drops unknown codenamed buckets with no reset time and no dollar limit', () => {
+  const out = normalize({
+    five_hour: { utilization: 4, resets_at: '2026-09-29T20:00:00Z' },
+    nimbus_quill: { utilization: 0, resets_at: null, limit_dollars: null, used_dollars: null },
+  });
+  assert.deepEqual(out.limits.map((l) => l.id), ['five_hour']);
+});
+
+test('keeps unknown buckets that carry a reset time or a dollar limit, with dollar amounts', () => {
+  const out = normalize({
+    iguana_necktie: { utilization: 0, resets_at: '2026-11-05T07:59:00+00:00', limit_dollars: 250, used_dollars: 12.5 },
+    tangelo: { utilization: 10, resets_at: '2026-10-01T00:00:00Z' },
+  });
+  const ig = out.limits.find((l) => l.id === 'iguana_necktie');
+  assert.equal(ig.label, 'Iguana Necktie');
+  assert.equal(ig.monthlyLimit, 250);
+  assert.equal(ig.usedCredits, 12.5);
+  assert.ok(out.limits.find((l) => l.id === 'tangelo'));
+});
+
+test('known ids still render without a reset time', () => {
+  const out = normalize({ extra_usage: { utilization: 0, is_enabled: true, monthly_limit: 10000, used_credits: 0 } });
+  assert.deepEqual(out.limits.map((l) => l.id), ['extra_usage']);
+});
