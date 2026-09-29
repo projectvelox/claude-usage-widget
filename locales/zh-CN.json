@@ -67,7 +67,11 @@
   "badge.syncing": "同步中",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "新版本可用 — 点击打开 v{version} 的 GitHub 发布页面。",
+  "update.tooltip.install": "v{version} 可用（{behind}）。点击更新。",
+  "update.behind.one": "落后 1 个版本",
+  "update.behind.many": "落后 {n} 个版本",
+  "update.progress": "正在更新… {pct}%",
+  "update.restarting": "正在重启…",
 
   "refresh.debounced": "刚刚刷新过 — 请在 {sec}s 后重试",
   "refresh.title": "刷新",
@@ -167,7 +171,9 @@
   "settings.checkNow": "立即检查",
   "settings.checking": "检查中…",
   "settings.updateStatus.neverChecked": "尚未检查。",
-  "settings.updateStatus.available": "v{version} 可用 — 通过标题栏链接下载。",
+  "settings.updateStatus.availableBehind": "v{version} 可用 — 当前{behind}。",
+  "settings.updateNow": "立即更新",
+  "settings.releaseNotes": "发行说明",
   "settings.updateStatus.latest": "你已是最新版本 (v{version})。",
 
   "settings.section.about": "关于",
@@ -214,6 +220,10 @@
   "notify.warn": "已达警告阈值。",
   "notify.upToDate.title": "已是最新",
   "notify.upToDate.body": "正在运行 v{version} — 最新版本。",
+  "notify.updateAvailable.title": "有可用更新",
+  "notify.updateAvailable.body": "v{version} 已发布 — 当前{behind}。点击更新。",
+  "notify.updateInstallFailed.title": "更新失败",
+  "notify.updateInstallFailed.body": "正在打开发布页面，以便手动下载。",
   "notify.updateFailed.title": "更新检查失败",
   "notify.updateFailed.body": "无法连接 GitHub。"
 }

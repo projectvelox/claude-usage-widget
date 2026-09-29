@@ -114,6 +114,16 @@
     },
     "appImage": {
       "artifactName": "ClaudeUsageWidget-${version}-${arch}.AppImage"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "projectvelox",
+        "repo": "claude-usage-widget"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
   }
 }

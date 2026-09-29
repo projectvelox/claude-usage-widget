@@ -67,7 +67,11 @@
   "badge.syncing": "sincronizando",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Nueva versión disponible — haz clic para abrir la página de la versión v{version} en GitHub.",
+  "update.tooltip.install": "v{version} está disponible ({behind}). Haz clic para actualizar.",
+  "update.behind.one": "1 versión por detrás",
+  "update.behind.many": "{n} versiones por detrás",
+  "update.progress": "Actualizando… {pct}%",
+  "update.restarting": "Reiniciando…",
 
   "refresh.debounced": "Acabas de actualizar — vuelve a intentarlo en {sec}s",
   "refresh.title": "Actualizar",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Comprobar ahora",
   "settings.checking": "Comprobando…",
   "settings.updateStatus.neverChecked": "Nunca comprobado.",
-  "settings.updateStatus.available": "v{version} disponible — usa el enlace de la cabecera para descargar.",
+  "settings.updateStatus.availableBehind": "v{version} está disponible: vas {behind}.",
+  "settings.updateNow": "Actualizar ahora",
+  "settings.releaseNotes": "Notas de la versión",
   "settings.updateStatus.latest": "Estás en la última versión (v{version}).",
 
   "settings.section.about": "Acerca de",
@@ -214,6 +220,10 @@
   "notify.warn": "Umbral de aviso alcanzado.",
   "notify.upToDate.title": "Estás al día",
   "notify.upToDate.body": "Ejecutando v{version} — la versión más reciente.",
+  "notify.updateAvailable.title": "Actualización disponible",
+  "notify.updateAvailable.body": "Ya salió v{version}: vas {behind}. Haz clic para actualizar.",
+  "notify.updateInstallFailed.title": "Error al actualizar",
+  "notify.updateInstallFailed.body": "Se abrirá la página de la versión para descargarla manualmente.",
   "notify.updateFailed.title": "Falló la comprobación de actualización",
   "notify.updateFailed.body": "No se pudo contactar con GitHub."
 }

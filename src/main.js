@@ -7,6 +7,7 @@ const { Poller } = require('./poller');
 const { History } = require('./history');
 const icon = require('./icon');
 const { checkForUpdate, CHECK_INTERVAL_MS } = require('./updater');
+const selfUpdate = require('./selfUpdate');
 const { isOnAnyDisplay } = require('./geom');
 const { makeT, bundleFor } = require('./i18n');
 
@@ -26,6 +27,8 @@ let activityState = 'active';
 let notifiedFor = new Set();
 let lastUpdateInfo = null;
 let updateTimer = null;
+// { phase: 'idle' | 'downloading' | 'restarting' | 'error', percent }
+let updateProgress = { phase: 'idle', percent: 0 };
 let alwaysOnTopTicker = null;
 
 // "Is this rect on any currently-connected display?" — used to detect a
@@ -314,8 +317,8 @@ function rebuildTrayMenu() {
         ? t('tray.getUpdate', { latest: lastUpdateInfo.latestVersion, current: app.getVersion() })
         : t('tray.checkUpdate'),
       click: () => {
-        if (lastUpdateInfo?.available && lastUpdateInfo.releaseUrl) {
-          shell.openExternal(lastUpdateInfo.releaseUrl);
+        if (lastUpdateInfo?.available) {
+          startUpdate();
         } else {
           runUpdateCheck({ manual: true });
         }
@@ -383,9 +386,11 @@ function checkNotifications(usage) {
   }
 }
 
-function notify(title, body) {
+function notify(title, body, onClick) {
   if (!Notification.isSupported()) return;
-  new Notification({ title, body, silent: false }).show();
+  const n = new Notification({ title, body, silent: false });
+  if (onClick) n.on('click', onClick);
+  n.show();
 }
 
 async function confirmEnableClickThrough() {
@@ -424,9 +429,36 @@ function runResetHook(reset) {
   }
 }
 
-// Pings GitHub Releases once a day to see if a newer tag exists. The renderer
-// shows a discreet "v0.2.11 available" link in the footer when one does — no
-// auto-download, since the portable EXE intentionally doesn't self-rewrite.
+function behindText(n) {
+  return n === 1 ? t('update.behind.one') : t('update.behind.many', { n });
+}
+
+// Downloads and installs the pending update (see src/selfUpdate.js). Progress
+// is broadcast so the widget link, settings panel and tray all reflect it.
+async function startUpdate() {
+  if (!lastUpdateInfo?.available) return;
+  if (updateProgress.phase === 'downloading' || updateProgress.phase === 'restarting') return;
+  const setProgress = (percent, phase = 'downloading') => {
+    updateProgress = { phase, percent };
+    broadcast('update:progress', updateProgress);
+  };
+  setProgress(0);
+  try {
+    await selfUpdate.installUpdate(lastUpdateInfo, setProgress);
+    // installUpdate returns without quitting only when it fell back to
+    // opening the release page (dev run / macOS).
+    if (updateProgress.phase !== 'restarting') setProgress(0, 'idle');
+  } catch (e) {
+    console.error('Update install failed:', e);
+    setProgress(0, 'error');
+    notify(t('notify.updateInstallFailed.title'), t('notify.updateInstallFailed.body'));
+    shell.openExternal(lastUpdateInfo.releaseUrl);
+  }
+}
+
+// Checks GitHub Releases once a day. When a newer version exists, the widget
+// header, tray menu and settings panel offer "Update", and a notification
+// fires once per new version so users in pill / tray-only mode see it too.
 async function runUpdateCheck({ manual = false } = {}) {
   if (!cfg.checkForUpdates && !manual) return;
   try {
@@ -436,6 +468,15 @@ async function runUpdateCheck({ manual = false } = {}) {
     rebuildTrayMenu();
     if (manual && info && !info.available) {
       notify(t('notify.upToDate.title'), t('notify.upToDate.body', { version: app.getVersion() }));
+    }
+    if (info?.available && (manual || cfg.lastNotifiedUpdate !== info.latestVersion)) {
+      notify(
+        t('notify.updateAvailable.title'),
+        t('notify.updateAvailable.body', { version: info.latestVersion, behind: behindText(info.behind) }),
+        () => startUpdate(),
+      );
+      cfg.lastNotifiedUpdate = info.latestVersion;
+      config.save(cfg);
     }
   } catch (e) {
     // Network blips and 403 rate-limits are expected; surface nothing.
@@ -471,6 +512,8 @@ function updateActivityState() {
 }
 
 app.whenReady().then(() => {
+  // If an older portable EXE launched us as its update, remove it.
+  selfUpdate.cleanupReplacedPortable();
   cfg = config.load();
   nativeTheme.themeSource = cfg.theme;
   t = makeT(cfg.language || 'en');
@@ -580,6 +623,8 @@ app.whenReady().then(() => {
   });
   ipcMain.handle('update:get', () => lastUpdateInfo);
   ipcMain.handle('update:check', () => runUpdateCheck({ manual: true }));
+  ipcMain.handle('update:install', () => startUpdate());
+  ipcMain.handle('update:progress', () => updateProgress);
   ipcMain.handle('i18n:get', () => bundleFor(cfg.language || 'en'));
 });
 

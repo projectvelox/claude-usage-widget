@@ -67,7 +67,11 @@
   "badge.syncing": "synchr.",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Dostępna nowa wersja — kliknij, aby otworzyć stronę wydania v{version} na GitHub.",
+  "update.tooltip.install": "Dostępna jest v{version} ({behind}). Kliknij, aby zaktualizować.",
+  "update.behind.one": "1 wersja do tyłu",
+  "update.behind.many": "wersje do tyłu: {n}",
+  "update.progress": "Aktualizowanie… {pct}%",
+  "update.restarting": "Ponowne uruchamianie…",
 
   "refresh.debounced": "Właśnie odświeżono — spróbuj za {sec}s",
   "refresh.title": "Odśwież",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Sprawdź teraz",
   "settings.checking": "Sprawdzanie…",
   "settings.updateStatus.neverChecked": "Nigdy nie sprawdzano.",
-  "settings.updateStatus.available": "v{version} dostępna — link w nagłówku do pobrania.",
+  "settings.updateStatus.availableBehind": "Dostępna jest v{version} — {behind}.",
+  "settings.updateNow": "Aktualizuj teraz",
+  "settings.releaseNotes": "Informacje o wydaniu",
   "settings.updateStatus.latest": "Masz najnowszą wersję (v{version}).",
 
   "settings.section.about": "O programie",
@@ -214,6 +220,10 @@
   "notify.warn": "Osiągnięto próg ostrzeżenia.",
   "notify.upToDate.title": "Wszystko aktualne",
   "notify.upToDate.body": "Działa v{version} — najnowsze wydanie.",
+  "notify.updateAvailable.title": "Dostępna aktualizacja",
+  "notify.updateAvailable.body": "Wyszła v{version} — {behind}. Kliknij, aby zaktualizować.",
+  "notify.updateInstallFailed.title": "Aktualizacja nie powiodła się",
+  "notify.updateInstallFailed.body": "Otwieram stronę wydania, aby można było pobrać ręcznie.",
   "notify.updateFailed.title": "Sprawdzanie aktualizacji nie powiodło się",
   "notify.updateFailed.body": "Nie można połączyć się z GitHub."
 }

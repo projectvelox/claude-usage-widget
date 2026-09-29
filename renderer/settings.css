@@ -188,6 +188,11 @@ button.danger:hover { background: rgba(229, 72, 77, 0.12); }
    chosen font so the whole panel previews it. */
 button, select, input[type="number"] { font-family: inherit; }
 
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.primary:hover { filter: brightness(1.08); background: var(--accent); }
+button:disabled { opacity: 0.6; cursor: default; }
+.update-status { margin: 8px 0 0; }
+
 .font-status { margin: 2px 0 6px; }
 .font-status.missing { color: var(--danger); }
 

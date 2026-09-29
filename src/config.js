@@ -60,6 +60,7 @@ const DEFAULTS = {
   openAtLogin: false,
   openMinimized: false,
   checkForUpdates: true,
+  lastNotifiedUpdate: null,    // version we last showed the "update available" notification for
 
   // Tray icon
   trayIconStyle: 'bars', // bars | battery | gauge | minimal | dynamic

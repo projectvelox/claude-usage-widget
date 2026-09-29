@@ -81,8 +81,12 @@ jobs:
         with:
           draft: false
           generate_release_notes: true
+          # latest.yml + blockmap feed the in-app updater (electron-updater)
+          # for installer users; portable users are verified via SHA256SUMS.
           files: |
             dist/*.exe
+            dist/*.exe.blockmap
+            dist/latest.yml
             dist/SHA256SUMS.txt
           fail_on_unmatched_files: true
           body: |
@@ -96,6 +100,8 @@ jobs:
             - **`ClaudeUsageWidget-${{ steps.version.outputs.version }}-x86_64.AppImage`** — Linux x86_64. `chmod +x` and double-click to run.
 
             Verify with `SHA256SUMS.txt` (Windows) or `SHA256SUMS-linux.txt` (Linux).
+
+            **Already installed?** From v0.2.36 on, the widget updates itself: click the ↑ link in the header, **Update now** in Settings → Updates, or the tray menu item.
 
             > **First-launch note for Windows:** the EXE is unsigned, so SmartScreen will show "Windows protected your PC." Click **More info → Run anyway**. We're applying for free OSS code signing; until that lands, this is a one-time click per machine.
             >
@@ -172,6 +178,7 @@ jobs:
           draft: false
           files: |
             dist/*.AppImage
+            dist/latest-linux.yml
             dist/SHA256SUMS-linux.txt
           fail_on_unmatched_files: true
 

@@ -111,13 +111,42 @@ function populateLanguageSelect() {
   }
 }
 
+let updateInfo = null;
+let updateProgress = { phase: 'idle', percent: 0 };
+
+function behindText(n) {
+  return n === 1 ? t('update.behind.one') : t('update.behind.many', { n });
+}
+
 function renderUpdateStatus(info) {
+  if (info !== undefined) updateInfo = info;
   const status = $('updateStatus');
+  const install = $('installUpdate');
+  const notes = $('releaseNotes');
   if (!status) return;
-  if (!info) { status.textContent = t('settings.updateStatus.neverChecked'); return; }
-  if (info.available) status.textContent = t('settings.updateStatus.available', { version: info.latestVersion });
-  else if (info.latestVersion) status.textContent = t('settings.updateStatus.latest', { version: info.latestVersion });
-  else status.textContent = '';
+  const available = !!updateInfo?.available;
+  if (install) {
+    install.hidden = !available;
+    install.disabled = updateProgress.phase === 'downloading' || updateProgress.phase === 'restarting';
+  }
+  if (notes) notes.hidden = !available;
+  if (updateProgress.phase === 'downloading') { status.textContent = t('update.progress', { pct: updateProgress.percent }); return; }
+  if (updateProgress.phase === 'restarting') { status.textContent = t('update.restarting'); return; }
+  if (!updateInfo) { status.textContent = t('settings.updateStatus.neverChecked'); return; }
+  if (available) {
+    status.textContent = t('settings.updateStatus.availableBehind', {
+      version: updateInfo.latestVersion, behind: behindText(updateInfo.behind || 1),
+    });
+  } else if (updateInfo.latestVersion) {
+    status.textContent = t('settings.updateStatus.latest', { version: updateInfo.latestVersion });
+  } else {
+    status.textContent = '';
+  }
+}
+
+function renderUpdateProgress(p) {
+  if (p) updateProgress = p;
+  renderUpdateStatus();
 }
 
 // On macOS Claude Code stores the OAuth token in the login Keychain, not in
@@ -241,6 +270,12 @@ async function init() {
   if (checkBtn && status) {
     window.api.getUpdate?.().then(renderUpdateStatus);
     window.api.onUpdate?.(renderUpdateStatus);
+    window.api.getUpdateProgress?.().then(renderUpdateProgress);
+    window.api.onUpdateProgress?.(renderUpdateProgress);
+    $('installUpdate')?.addEventListener('click', () => window.api.installUpdate?.());
+    $('releaseNotes')?.addEventListener('click', () => {
+      if (updateInfo?.releaseUrl) window.api.openExternal(updateInfo.releaseUrl);
+    });
     checkBtn.addEventListener('click', async () => {
       checkBtn.disabled = true;
       status.textContent = t('settings.checking');

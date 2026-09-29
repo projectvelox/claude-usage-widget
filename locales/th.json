@@ -67,7 +67,11 @@
   "badge.syncing": "กำลังซิงค์",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "มีเวอร์ชันใหม่ให้ใช้งาน — คลิกเพื่อเปิดหน้าเวอร์ชัน v{version} ใน GitHub",
+  "update.tooltip.install": "มี v{version} แล้ว ({behind}) คลิกเพื่ออัปเดต",
+  "update.behind.one": "ตามหลัง 1 เวอร์ชัน",
+  "update.behind.many": "ตามหลัง {n} เวอร์ชัน",
+  "update.progress": "กำลังอัปเดต… {pct}%",
+  "update.restarting": "กำลังรีสตาร์ต…",
 
   "refresh.debounced": "เพิ่งรีเฟรชแล้ว — ลองอีกครั้งใน {sec} วินาที",
   "refresh.title": "รีเฟรช",
@@ -167,7 +171,9 @@
   "settings.checkNow": "ตรวจตอนนี้",
   "settings.checking": "กำลังตรวจ…",
   "settings.updateStatus.neverChecked": "ไม่เคยตรวจเลย",
-  "settings.updateStatus.available": "v{version} พร้อมใช้งาน — ใช้ลิงก์ส่วนหัวเพื่อดาวน์โหลด",
+  "settings.updateStatus.availableBehind": "มี v{version} แล้ว — คุณ{behind}",
+  "settings.updateNow": "อัปเดตเลย",
+  "settings.releaseNotes": "บันทึกประจำรุ่น",
   "settings.updateStatus.latest": "คุณใช้เวอร์ชันล่าสุดแล้ว (v{version})",
 
   "settings.section.about": "เกี่ยวกับ",
@@ -214,6 +220,10 @@
   "notify.warn": "ถึงเกณฑ์เตือนแล้ว",
   "notify.upToDate.title": "คุณอัปเดตแล้ว",
   "notify.upToDate.body": "กำลังรัน v{version} — เป็นเวอร์ชันล่าสุดแล้ว",
+  "notify.updateAvailable.title": "มีอัปเดตใหม่",
+  "notify.updateAvailable.body": "v{version} ออกแล้ว — คุณ{behind} คลิกเพื่ออัปเดต",
+  "notify.updateInstallFailed.title": "อัปเดตไม่สำเร็จ",
+  "notify.updateInstallFailed.body": "กำลังเปิดหน้ารุ่นเพื่อให้คุณดาวน์โหลดเอง",
   "notify.updateFailed.title": "การตรวจหาอัปเดตล้มเหลว",
   "notify.updateFailed.body": "ไม่สามารถติดต่อ GitHub ได้"
 }

@@ -67,7 +67,11 @@
   "badge.syncing": "eşit.",
 
   "update.available": "↑ v{version}",
-  "update.tooltip": "Yeni sürüm var — v{version} GitHub yayın sayfasını açmak için tıklayın.",
+  "update.tooltip.install": "v{version} mevcut ({behind}). Güncellemek için tıklayın.",
+  "update.behind.one": "1 sürüm geride",
+  "update.behind.many": "{n} sürüm geride",
+  "update.progress": "Güncelleniyor… %{pct}",
+  "update.restarting": "Yeniden başlatılıyor…",
 
   "refresh.debounced": "Az önce yenilendi — {sec}sn sonra tekrar deneyin",
   "refresh.title": "Yenile",
@@ -167,7 +171,9 @@
   "settings.checkNow": "Şimdi kontrol et",
   "settings.checking": "Denetleniyor…",
   "settings.updateStatus.neverChecked": "Henüz denetlenmedi.",
-  "settings.updateStatus.available": "v{version} mevcut — indirmek için başlıktaki bağlantıya bakın.",
+  "settings.updateStatus.availableBehind": "v{version} mevcut — {behind}.",
+  "settings.updateNow": "Şimdi güncelle",
+  "settings.releaseNotes": "Sürüm notları",
   "settings.updateStatus.latest": "En son sürümdesiniz (v{version}).",
 
   "settings.section.about": "Hakkında",
@@ -214,6 +220,10 @@
   "notify.warn": "Uyarı eşiğine ulaşıldı.",
   "notify.upToDate.title": "Güncelsiniz",
   "notify.upToDate.body": "v{version} çalışıyor — en son sürüm.",
+  "notify.updateAvailable.title": "Güncelleme mevcut",
+  "notify.updateAvailable.body": "v{version} çıktı — {behind}. Güncellemek için tıklayın.",
+  "notify.updateInstallFailed.title": "Güncelleme başarısız",
+  "notify.updateInstallFailed.body": "Elle indirebilmeniz için sürüm sayfası açılıyor.",
   "notify.updateFailed.title": "Güncelleme denetlemesi başarısız",
   "notify.updateFailed.body": "GitHub'a ulaşılamadı."
 }
