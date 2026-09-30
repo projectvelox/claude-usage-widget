@@ -234,14 +234,18 @@ function normalize(raw, meta = {}) {
     const fp = `${resetsAt || ''}|${Math.round(utilization)}|${scopeDisplayName}`;
     if (seenFingerprint.has(fp)) continue;
     seenFingerprint.add(fp);
+    // Unknown codenamed buckets with a dollar cap (e.g. `iguana_necktie`) are
+    // credit allowances; label them "Credits" rather than the codename.
+    const isCredits = !isKnown && limitDollars != null;
     const limit = {
       id: canonicalKey,
-      label: scopeDisplayName ? `Weekly · ${scopeDisplayName}` : prettyLabel(canonicalKey),
+      label: scopeDisplayName ? `Weekly · ${scopeDisplayName}` : (isCredits ? 'Credits' : prettyLabel(canonicalKey)),
       utilization: clamp(utilization, 0, 100),
       resetsAt,
       windowMs: WINDOW_MS[canonicalKey] || (key === 'weekly_scoped' ? 7 * 24 * 60 * 60 * 1000 : null),
     };
     if (scopeDisplayName) limit.scopeModel = scopeDisplayName;
+    if (isCredits) limit.credits = true;
     // Credit-pool limits expose dollar amounts alongside the percentage.
     // Two shapes coexist right now:
     //   Legacy `extra_usage`: flat `used_credits` / `monthly_limit` in

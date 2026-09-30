@@ -6,7 +6,7 @@
 
 **An always-on-top floating widget that shows your claude.ai plan usage in real time, on Windows.** Built specifically around the OAuth token Claude Code already keeps on your machine, so it cannot be broken by Cloudflare changes that take down cookie-scraping trackers.
 
-➡ **[Download the latest portable .exe](../../releases/latest)** — ~88 MB, single file, no install. Tested on Windows 11.
+➡ **[Download the latest portable .exe](../../releases/latest)** — ~100 MB, single file, no install. Tested on Windows 11. After that, the widget updates itself.
 
 > First-launch note: the EXE is unsigned (we have applied for free open-source code signing through the [SignPath Foundation](https://signpath.org/) — once accepted, future releases will be signed by SignPath Foundation's certificate at no cost). SmartScreen will say "Windows protected your PC." Click **More info → Run anyway**. One-time click per machine.
 
@@ -26,16 +26,17 @@
 The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 
 - Current session (5-hour rolling window)
-- Weekly · all models / Sonnet / Opus / Cowork / **Fable** / any other model-scoped weekly limit Anthropic ships — the widget picks these up automatically from the API's new scoped-limit shape and labels them "Weekly · &lt;model&gt;" in whichever of the 13 UI languages you're using
+- Weekly · all models / Sonnet / Opus / Cowork / **Fable** / any other model-scoped weekly limit Anthropic ships — the widget picks these up automatically from the API's new scoped-limit shape and labels them "Weekly · &lt;model&gt;" in whichever of the 15 UI languages you're using
 - Extra usage credits if your plan has a credit pool — with the dollar amount used and the monthly cap (e.g. `$225 of $5,000 used`), not just the percentage
-- Reset countdowns per limit
+- Other dollar allowances on your account (e.g. promotional credits), shown as **Credits** with the amount used and the cap (`$0.00 of $250.00 used`). The API names these with internal codenames; the widget labels them for you and hides empty placeholder buckets
+- Reset countdowns per limit, plus a hover tooltip on each bar (`Resets in 2h 14m`) that works even with the countdown row hidden
 - A **pace marker** on each bar — a vertical line that turns red when you're burning faster than the timer
 - An optional 7-day SVG history graph for any limit you pick
 - Threshold notifications and shell hooks that fire when a limit resets
 - A **pill / minimal mode** that collapses the widget to a tiny ~156×44 capsule showing just the worst-utilized limit %, ideal for non-developers who want ambient awareness without giving up screen real estate
 - **Claw'd**, an animated Clawd crab mascot that reacts to your usage state — happy at low use, thinking at warn, mind-blown at critical, sleeping when rate-limited, celebrating when a quota resets, waving when you click. Pet artwork by [@abderrahimghazali](https://github.com/abderrahimghazali/clawd-pet) (MIT).
-- **In-app update check** — once a day the widget pings GitHub Releases and surfaces a small `↑ v0.2.X` link in the footer when a newer build is out, so you never run a stale version without knowing
-- **13-language UI** — English (default), Portuguese (Brazil), Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian. Switch in Settings → Language. See [Translations](#translations) below for credits and how to refine machine-assisted languages.
+- **In-app updates** — once a day the widget checks GitHub Releases. When a new version is out it tells you how far behind you are ("v0.2.40 is available — you're 3 versions behind") in the header, tray menu, Settings and a one-time notification, and installs it in one click. No trip to GitHub. See [Updating](#updating).
+- **15-language UI** — English (default), Portuguese (Brazil), Thai, Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian. Switch in Settings → Language. See [Translations](#translations) below for credits and how to refine machine-assisted languages.
 
 ## How it's different
 
@@ -47,7 +48,8 @@ The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 | OAuth Bearer auth (Cloudflare-immune) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Always-on-top floating widget | ✅ | ❌ tray | ✅ | ❌ tray | ❌ menu bar | ❌ menu bar |
 | 7-day history graph | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
-| Multiple tray icon styles | 4 + dynamic | 1 | 1 | 1 | 1 | 6 |
+| Multiple tray icon styles | 5 + dynamic | 1 | 1 | 1 | 1 | 6 |
+| One-click in-app updates | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Dynamic tray icon (reflects live state) | ✅ | ❌ | ❌ | ❌ | ❌ | partial |
 | Per-quota reset shell hooks | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Configurable warn + critical thresholds with per-state colors | ✅ | partial | ✅ | ❌ | ✅ | ✅ |
@@ -85,9 +87,11 @@ You need [Claude Code](https://claude.com/claude-code) installed and logged in e
 
 ### Windows — download the EXE
 
-1. Download the latest **portable .exe** from [Releases](../../releases/latest).
+1. Download the latest **portable .exe** (single file, no install) or **setup.exe** (installs per-user to `%LOCALAPPDATA%`) from [Releases](../../releases/latest).
 2. Double-click it. SmartScreen → **More info → Run anyway**.
 3. Right-click the tray icon for options, or click the cog inside the widget for the full settings panel.
+
+That's the only manual download: from then on the widget updates itself (see [Updating](#updating)).
 
 ### Linux — download the AppImage (tester build)
 
@@ -126,6 +130,26 @@ After the first run, you can use whichever pattern you prefer for re-launching:
 - Windows: double-click the portable `.exe`, or `npm start` from the cloned dir.
 
 To make it auto-launch with your OS: open the widget, click the settings cog → **Startup → Start with [OS]**.
+
+### Updating
+
+From **v0.2.36** on, updates happen inside the app. Once a day the widget checks GitHub Releases. When a newer version exists:
+
+- The header shows **↑ v0.2.X**. Its tooltip says how many versions behind you are.
+- A notification fires once per new version, so you see it even in pill or tray-only mode.
+- **Settings → Updates** shows the same status, with **Update now** and **Release notes** buttons.
+- The tray menu gets a **Get v0.2.X** item.
+
+Any of them installs the update:
+
+| You're running | What happens |
+|---|---|
+| Installer (`setup.exe`) | Downloads the new installer, installs silently, restarts the widget. |
+| Portable `.exe` | Downloads the new portable next to the current one, verifies it against the release's `SHA256SUMS.txt`, starts it, and deletes the old file once it has closed. |
+| Linux AppImage | Downloads the new AppImage and restarts into it. |
+| Built from source / macOS | Opens the release page. |
+
+If anything goes wrong mid-update, the widget tells you and opens the release page instead. Turn the daily check off under **Settings → Updates**. Versions before v0.2.36 need one manual download to get onto the self-updating track.
 
 ### For developers
 
@@ -205,7 +229,8 @@ Plus: always-on-top, optional click-through (let clicks pass through the widget)
 - **Accent color:** pick any hex — recolors the bars, dots, and gauge.
 - **Opacity:** 40 – 100 % so the widget can sit unobtrusively over other windows.
 - **Corner radius:** 0 – 28 px (sharp corners to fully rounded).
-- **Font scale:** 85 – 160 %, plus optional custom font family.
+- **Font scale:** 85 – 160 %.
+- **Font family:** a few presets, or **Custom** — type the name of any font installed on your system (with autocomplete). The panel confirms it's installed, and falls back to the default font if it isn't. Applies to the widget and the settings panel.
 - **Background blur:** toggle the glass-blur backdrop on systems where it's expensive.
 
 ### Tray icon
@@ -214,13 +239,14 @@ Plus: always-on-top, optional click-through (let clicks pass through the widget)
   <img src="assets/trays.png" width="720" alt="Five tray icon styles side by side: Bars (three stacked bars), Battery (fill level), Gauge (circular progress), Minimal (solid dot), and Dynamic (gauge tinted by live severity)." />
 </p>
 
-Five styles, all redraw live as your usage changes:
+Six styles, all redraw live as your usage changes:
 
 - **Bars** — three stacked bars, abstract but on-brand.
 - **Battery** — fill level mirrors your worst utilization, just like a phone battery.
 - **Gauge** — circular progress arc.
 - **Minimal** — solid colored dot, severity-tinted.
 - **Dynamic** — picks the right representation automatically and colors it by the live worst-limit severity.
+- **Percentage text** — the live worst-limit % drawn right in the tray, next to the clock.
 
 ### History graph
 
@@ -268,7 +294,7 @@ Claw'd is animated using pet artwork from [`clawd-pet`](https://github.com/abder
 
 #### Interactions
 
-- **Click him while he's sleeping** and you get a random grumpy speech bubble (`"5 more minutes…"`, `"Hmph."`, `"Rude."`, etc.) instead of a wave. Localized in all 13 UI languages.
+- **Click him while he's sleeping** and you get a random grumpy speech bubble (`"5 more minutes…"`, `"Hmph."`, `"Rude."`, etc.) instead of a wave. Localized in all 15 UI languages.
 - **Click him any other time** and he waves for 1.5 seconds before going back to his usual pacing.
 - **Watch him celebrate** when a quota window resets — he does a 3-second victory dance.
 
@@ -315,6 +341,10 @@ If the token expires:
 
 The token is sent only to `https://api.anthropic.com/api/oauth/usage` — Anthropic's official endpoint, and nothing else. See [SECURITY.md](SECURITY.md) for the full statement.
 
+The only other network traffic is the update check and download: GitHub's public Releases API and this repo's release files, with no credentials attached. Turn it off under **Settings → Updates**.
+
+If Anthropic rate-limits the usage endpoint, the widget backs off (1 min, then 2, 4… up to 30 min) instead of retrying, so it never keeps your account throttled.
+
 ## File layout
 
 ```
@@ -326,7 +356,8 @@ src/
   history.js    Append-only sample store, 7-day trim
   config.js     Persisted settings + deep merge
   icon.js       Pure-Node PNG encoder + 4 tray icon styles + dynamic gauge
-  updater.js    Daily check against GitHub Releases, semver compare, footer badge feed
+  updater.js    Daily check against GitHub Releases, semver compare, "N versions behind" count
+  selfUpdate.js Installs an accepted update (electron-updater for installer/AppImage, verified swap for portable)
   geom.js       Pure rect-overlap helpers for rescuing the widget when a monitor disconnects
 renderer/
   widget.html / .css / .js     Always-on-top floating widget + SVG history graph
@@ -337,7 +368,8 @@ assets/
   claw-d-states.html           Self-contained Claw'd mood preview (open in any browser)
 tests/
   normalize.test.js   Snapshot tests against the live response shape
-  updater.test.js     Semver parsing + comparison for the GitHub Releases check
+  updater.test.js     Semver compare, versions-behind count, SHA256SUMS lookup
+  poller.test.js      Polling intervals, reset detection, rate-limit backoff
   geom.test.js        Display-rect overlap math (monitor disconnect rescue)
 scripts/
   launch.js             Strips ELECTRON_RUN_AS_NODE before spawning the GUI
@@ -353,7 +385,7 @@ scripts/
   capture-mascot-preview.js  Headless Electron capture → assets/claw-d.png + per-mood frames
   build-og-image.js     Headless Electron capture → assets/og-image.png (social card)
 .github/
-  workflows/release.yml        Builds the portable EXE on tag push
+  workflows/release.yml        On tag push: builds portable + installer EXEs and the Linux AppImage, publishes them with update metadata (latest.yml)
   ISSUE_TEMPLATE/              Bug + feature templates
 ```
 
@@ -362,7 +394,7 @@ scripts/
 - Multi-account / multi-org switcher (cross-cutting top demand)
 - Codex usage alongside Claude (Usage4Claude has this, we want it)
 - Burn-down projection line on the history graph ("at this rate, you hit 100% by Thu 6 pm")
-- Mac and Linux builds in the same CI workflow
+- macOS build in the same CI workflow (Windows and Linux already ship from it)
 - Signed Windows binary via [SignPath OSS](https://signpath.io/)
 - `winget install` distribution
 
@@ -370,7 +402,7 @@ See [open issues](../../issues) for the current state.
 
 ## Translations
 
-The widget ships with 13 languages. English is canonical and hand-written; **Portuguese (Brazil)** was contributed by [@Ian03](https://github.com/Ian03/claude-usage-widget), whose fork seeded the i18n architecture and the first translation. The remaining 11 (Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian) are **machine-assisted** — marked with a `*` in the language picker — and will benefit from native-speaker refinement.
+The widget ships with 15 languages. English is canonical and hand-written; **Portuguese (Brazil)** was contributed by [@Ian03](https://github.com/Ian03/claude-usage-widget), whose fork seeded the i18n architecture and the first translation, and **Thai** by [@sugus888](https://github.com/sugus888) (human-verified). The remaining 12 (Spanish, French, German, Italian, Japanese, Simplified Chinese, Korean, Russian, Polish, Turkish, Vietnamese, Indonesian) are **machine-assisted** — marked with a `*` in the language picker — and will benefit from native-speaker refinement.
 
 If something reads awkwardly in your language:
 

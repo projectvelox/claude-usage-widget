@@ -319,7 +319,7 @@ test('keeps unknown buckets that carry a reset time or a dollar limit, with doll
     tangelo: { utilization: 10, resets_at: '2026-10-01T00:00:00Z' },
   });
   const ig = out.limits.find((l) => l.id === 'iguana_necktie');
-  assert.equal(ig.label, 'Iguana Necktie');
+  assert.equal(ig.label, 'Credits');
   assert.equal(ig.monthlyLimit, 250);
   assert.equal(ig.usedCredits, 12.5);
   assert.ok(out.limits.find((l) => l.id === 'tangelo'));
@@ -328,4 +328,17 @@ test('keeps unknown buckets that carry a reset time or a dollar limit, with doll
 test('known ids still render without a reset time', () => {
   const out = normalize({ extra_usage: { utilization: 0, is_enabled: true, monthly_limit: 10000, used_credits: 0 } });
   assert.deepEqual(out.limits.map((l) => l.id), ['extra_usage']);
+});
+
+test('unknown dollar-capped buckets are labeled Credits and flagged', () => {
+  const out = normalize({
+    iguana_necktie: { utilization: 0, resets_at: '2026-11-05T07:59:00+00:00', limit_dollars: 250, used_dollars: 0 },
+    tangelo: { utilization: 10, resets_at: '2026-10-01T00:00:00Z' },
+  });
+  const credits = out.limits.find((l) => l.id === 'iguana_necktie');
+  assert.equal(credits.label, 'Credits');
+  assert.equal(credits.credits, true);
+  const other = out.limits.find((l) => l.id === 'tangelo');
+  assert.equal(other.label, 'Tangelo');
+  assert.equal(other.credits, undefined);
 });
