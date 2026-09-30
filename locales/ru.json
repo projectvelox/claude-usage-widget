@@ -84,6 +84,7 @@
   "limit.cowork": "Cowork",
   "limit.routines": "Ежедневные процедуры",
   "limit.extra_usage": "Доп. использование",
+  "limit.credits": "Кредиты",
   "limit.weeklyScoped": "Неделя · {model}",
 
   "settings.title": "Claude Usage Widget",

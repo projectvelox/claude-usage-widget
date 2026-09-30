@@ -84,6 +84,7 @@
   "limit.cowork": "Cowork",
   "limit.routines": "Routine giornaliere",
   "limit.extra_usage": "Utilizzo extra",
+  "limit.credits": "Crediti",
   "limit.weeklyScoped": "Settimanale · {model}",
 
   "settings.title": "Claude Usage Widget",

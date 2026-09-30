@@ -5,6 +5,9 @@ node_modules/
 dist*/
 out/
 build/
+# Local portable/installer builds, versioned per release (e.g. cuwbuild-0236/)
+cuwbuild*/
+tmpcuw*/
 
 # Capture script output (regenerable via `npm run mascot-preview`)
 assets/mascot-preview/

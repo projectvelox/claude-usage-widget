@@ -177,6 +177,11 @@ function localizedLimitLabel(limit) {
     const scoped = t('limit.weeklyScoped', { model: limit.scopeModel });
     if (scoped && scoped !== 'limit.weeklyScoped') return scoped;
   }
+  // Codenamed dollar allowances the API doesn't name for us.
+  if (limit.credits) {
+    const credits = t('limit.credits');
+    if (credits && credits !== 'limit.credits') return credits;
+  }
   const key = `limit.${limit.id}`;
   const translated = t(key);
   // t() returns the key itself when neither the active locale nor the
