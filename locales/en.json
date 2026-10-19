@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Show stale-data badge",
   "settings.showMascot": "Show Claw'd (the crab mascot)",
 
+  "settings.section.limits": "Limits",
+  "settings.limits.desc": "Turn off a limit to hide it from the widget, pill, tray icon and notifications.",
+  "settings.limits.empty": "Your limits appear here after the first refresh.",
+
   "settings.section.look": "Look",
   "settings.theme": "Theme",
   "settings.theme.system": "Follow system",

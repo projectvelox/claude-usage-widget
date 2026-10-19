@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "오래된 데이터 배지 표시",
   "settings.showMascot": "Claw'd(게 마스코트) 표시",
 
+  "settings.section.limits": "한도",
+  "settings.limits.desc": "한도를 끄면 위젯, 알약, 트레이 아이콘, 알림에서 숨겨집니다.",
+  "settings.limits.empty": "첫 조회 후 여기에 한도가 표시됩니다.",
+
   "settings.section.look": "모양",
   "settings.theme": "테마",
   "settings.theme.system": "시스템 따름",

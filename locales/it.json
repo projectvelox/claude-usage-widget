@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Mostra badge dati obsoleti",
   "settings.showMascot": "Mostra Claw'd (il granchio mascotte)",
 
+  "settings.section.limits": "Limiti",
+  "settings.limits.desc": "Disattiva un limite per nasconderlo dal widget, dalla pillola, dall'icona della barra e dalle notifiche.",
+  "settings.limits.empty": "I tuoi limiti appariranno qui dopo la prima richiesta.",
+
   "settings.section.look": "Aspetto",
   "settings.theme": "Tema",
   "settings.theme.system": "Segui sistema",

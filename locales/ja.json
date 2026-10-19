@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "古いデータバッジを表示",
   "settings.showMascot": "Claw'd（カニのマスコット）を表示",
 
+  "settings.section.limits": "制限",
+  "settings.limits.desc": "オフにした制限は、ウィジェット・ピル・トレイアイコン・通知に表示されなくなります。",
+  "settings.limits.empty": "初回取得後、ここに制限が表示されます。",
+
   "settings.section.look": "見た目",
   "settings.theme": "テーマ",
   "settings.theme.system": "システムに従う",

@@ -31,6 +31,9 @@ const DEFAULTS = {
   showStaleIndicator: true,
   historyLimitId: 'seven_day', // which series to plot
   showMascot: true,            // Claw'd walks along the widget bottom
+  // Limit ids the user unticked in Settings → Limits. Hidden limits don't
+  // render and don't drive the pill, tray icon, mascot mood or notifications.
+  hiddenLimits: [],
 
   // Theme
   theme: 'system',

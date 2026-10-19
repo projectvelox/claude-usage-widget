@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Eski veri rozetini göster",
   "settings.showMascot": "Claw'd'i göster (yengeç maskotu)",
 
+  "settings.section.limits": "Sınırlar",
+  "settings.limits.desc": "Bir sınırı widget, hap, tepsi simgesi ve bildirimlerden gizlemek için kapatın.",
+  "settings.limits.empty": "Sınırlarınız ilk getirmeden sonra burada görünür.",
+
   "settings.section.look": "Görünüm",
   "settings.theme": "Tema",
   "settings.theme.system": "Sistemi izle",

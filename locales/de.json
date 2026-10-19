@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Veraltet-Anzeige anzeigen",
   "settings.showMascot": "Claw'd anzeigen (das Krabben-Maskottchen)",
 
+  "settings.section.limits": "Limits",
+  "settings.limits.desc": "Schalte ein Limit aus, um es im Widget, in der Pille, im Taskleisten-Icon und in Benachrichtigungen auszublenden.",
+  "settings.limits.empty": "Deine Limits erscheinen hier nach der ersten Abfrage.",
+
   "settings.section.look": "Aussehen",
   "settings.theme": "Design",
   "settings.theme.system": "System folgen",

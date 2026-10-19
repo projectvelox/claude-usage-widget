@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "แสดงตัวบ่งชี้ข้อมูลเก่า",
   "settings.showMascot": "แสดง Claw'd (ปูมาสคอต)",
 
+  "settings.section.limits": "ขีดจำกัด",
+  "settings.limits.desc": "ปิดขีดจำกัดเพื่อซ่อนจากวิดเจ็ต เม็ด ไอคอนถาดระบบ และการแจ้งเตือน",
+  "settings.limits.empty": "ขีดจำกัดของคุณจะแสดงที่นี่หลังจากคำขอครั้งแรก",
+
   "settings.section.look": "ลักษณะ",
   "settings.theme": "ธีม",
   "settings.theme.system": "ตามระบบ",

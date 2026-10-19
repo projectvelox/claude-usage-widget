@@ -29,6 +29,7 @@ The same bars as **Settings → Usage** on claude.ai, plus things they don't:
 - Weekly · all models / Sonnet / Opus / Cowork / **Fable** / any other model-scoped weekly limit Anthropic ships — the widget picks these up automatically from the API's new scoped-limit shape and labels them "Weekly · &lt;model&gt;" in whichever of the 15 UI languages you're using
 - Extra usage credits if your plan has a credit pool — with the dollar amount used and the monthly cap (e.g. `$225 of $5,000 used`), not just the percentage
 - Other dollar allowances on your account (e.g. promotional credits), shown as **Credits** with the amount used and the cap (`$0.00 of $250.00 used`). The API names these with internal codenames; the widget labels them for you and hides empty placeholder buckets
+- **Hide any limit** in Settings → Limits — e.g. a promotional credit grant you've used up. A hidden limit also stops counting toward the pill, tray icon, Claw'd's mood and notifications, so a spent grant doesn't keep everything red
 - Reset countdowns per limit, plus a hover tooltip on each bar (`Resets in 2h 14m`) that works even with the countdown row hidden
 - A **pace marker** on each bar — a vertical line that turns red when you're burning faster than the timer
 - An optional 7-day SVG history graph for any limit you pick

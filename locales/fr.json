@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Afficher le badge de données obsolètes",
   "settings.showMascot": "Afficher Claw'd (le crabe mascotte)",
 
+  "settings.section.limits": "Limites",
+  "settings.limits.desc": "Désactivez une limite pour la masquer du widget, de la pastille, de l'icône de la barre et des notifications.",
+  "settings.limits.empty": "Vos limites apparaîtront ici après la première requête.",
+
   "settings.section.look": "Apparence",
   "settings.theme": "Thème",
   "settings.theme.system": "Suivre le système",

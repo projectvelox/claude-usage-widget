@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Hiện huy hiệu dữ liệu cũ",
   "settings.showMascot": "Hiện Claw'd (linh vật cua)",
 
+  "settings.section.limits": "Giới hạn",
+  "settings.limits.desc": "Tắt một giới hạn để ẩn nó khỏi widget, viên, biểu tượng khay và thông báo.",
+  "settings.limits.empty": "Các giới hạn của bạn sẽ hiển thị ở đây sau lần lấy đầu tiên.",
+
   "settings.section.look": "Giao diện",
   "settings.theme": "Chủ đề",
   "settings.theme.system": "Theo hệ thống",

@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Mostrar indicador de datos antiguos",
   "settings.showMascot": "Mostrar a Claw'd (el cangrejo mascota)",
 
+  "settings.section.limits": "Límites",
+  "settings.limits.desc": "Desactiva un límite para ocultarlo del widget, la píldora, el icono de la bandeja y las notificaciones.",
+  "settings.limits.empty": "Tus límites aparecerán aquí después de la primera consulta.",
+
   "settings.section.look": "Apariencia",
   "settings.theme": "Tema",
   "settings.theme.system": "Seguir sistema",
