@@ -168,26 +168,16 @@ const tLang = () => (window.i18n ? window.i18n.lang() : 'en');
 // and even those round-trip fine — kept explicit here for clarity.
 function bcp47(code) { return code === 'zh-CN' ? 'zh-Hans-CN' : code; }
 
-function localizedLimitLabel(limit) {
-  if (!limit) return '';
-  // Scoped weekly limits (e.g. "Fable", future model-specific quotas) come
-  // through with a `scopeModel` field so the label can localize as
-  // "Weekly · <model>" without needing a per-model key in every locale file.
-  if (limit.scopeModel) {
-    const scoped = t('limit.weeklyScoped', { model: limit.scopeModel });
-    if (scoped && scoped !== 'limit.weeklyScoped') return scoped;
-  }
-  // Codenamed dollar allowances the API doesn't name for us.
-  if (limit.credits) {
-    const credits = t('limit.credits');
-    if (credits && credits !== 'limit.credits') return credits;
-  }
-  const key = `limit.${limit.id}`;
-  const translated = t(key);
-  // t() returns the key itself when neither the active locale nor the
-  // English fallback has the entry. Detect that and fall back to whatever
-  // label the server / normalizer assigned for unknown limit ids.
-  return translated && translated !== key ? translated : (limit.label || limit.id || '');
+const localizedLimitLabel = (limit) => window.i18n.limitLabel(limit);
+
+// Limits the user unticked in Settings → Limits are dropped before anything
+// renders, so they also stop driving the status dot, pill and mascot mood.
+function visibleLimits(data) {
+  const limits = Array.isArray(data?.limits) ? data.limits : [];
+  const hidden = currentCfg?.hiddenLimits;
+  if (!Array.isArray(hidden) || hidden.length === 0) return limits;
+  const set = new Set(hidden);
+  return limits.filter((l) => !set.has(l.id));
 }
 
 function fmtMoney(limit) {
@@ -280,7 +270,7 @@ function render(payload) {
   let worstSeverity = 'ok';
 
   limitsEl.innerHTML = '';
-  for (const limit of data.limits) {
+  for (const limit of visibleLimits(data)) {
     const pct = limit.utilization;
     const sev = severity(pct, cfg);
     if (sev === 'critical') worstSeverity = 'critical';
@@ -426,30 +416,30 @@ function errorBadgeFor(error) {
 let pillCycleTimer = null;
 let pillCycleIndex = 0;
 function pickPillLimit(data, cfg) {
-  if (!data || !Array.isArray(data.limits) || data.limits.length === 0) return null;
+  const limits = visibleLimits(data);
+  if (limits.length === 0) return null;
   const mode = cfg?.pillDisplayMode || 'worst';
   if (mode === 'specific') {
     const id = cfg?.pillDisplayLimitId || 'seven_day';
-    const match = data.limits.find((l) => l.id === id);
+    const match = limits.find((l) => l.id === id);
     if (match) return match;
     // Requested id isn't in this response (e.g. asked for seven_day_opus but
-    // the account doesn't have it). Fall back to the worst limit instead of
-    // rendering an empty pill.
+    // the account doesn't have it, or the user hid it). Fall back to the
+    // worst limit instead of rendering an empty pill.
   }
   if (mode === 'cycle') {
-    return data.limits[pillCycleIndex % data.limits.length];
+    return limits[pillCycleIndex % limits.length];
   }
-  return data.limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
+  return limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
 }
 function renderPill(data, stale, worstSeverity) {
-  if (!data || !data.limits || data.limits.length === 0) {
+  const shown = pickPillLimit(data, currentCfg);
+  if (!shown) {
     pillPct.textContent = '—';
     pillLabel.textContent = '';
     pillDot.className = `pill-dot ${stale ? 'stale' : ''}`;
     return;
   }
-  const shown = pickPillLimit(data, currentCfg);
-  if (!shown) return;
   pillPct.textContent = `${Math.round(shown.utilization)}%`;
   pillLabel.textContent = shortLabel(shown);
   // The pill label is text-overflow:ellipsis on narrow pills. Surface the full

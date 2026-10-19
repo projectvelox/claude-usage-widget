@@ -105,6 +105,10 @@
   "settings.showStaleIndicator": "Mostrar selo de dados desatualizados",
   "settings.showMascot": "Mostrar Claw'd (o caranguejo mascote)",
 
+  "settings.section.limits": "Limites",
+  "settings.limits.desc": "Desative um limite para ocultá-lo do widget, da pílula, do ícone da bandeja e das notificações.",
+  "settings.limits.empty": "Seus limites aparecerão aqui após a primeira atualização.",
+
   "settings.section.look": "Aparência",
   "settings.theme": "Tema",
   "settings.theme.system": "Seguir sistema",

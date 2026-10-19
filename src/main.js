@@ -10,6 +10,7 @@ const { checkForUpdate, CHECK_INTERVAL_MS } = require('./updater');
 const selfUpdate = require('./selfUpdate');
 const { isOnAnyDisplay } = require('./geom');
 const { makeT, bundleFor } = require('./i18n');
+const { withoutHidden } = require('./usage');
 
 // Single t() bound to the current language. Rebuilt whenever the user switches
 // languages so tray/dialog/notification text refreshes without a relaunch.
@@ -204,12 +205,19 @@ function createSettings() {
   settingsWindow.on('closed', () => { settingsWindow = null; });
 }
 
+// lastUsage keeps every limit so the settings panel can list hidden ones;
+// everything user-facing in main (tray icon, notifications) reads this view.
+function visibleUsage(usage) {
+  return withoutHidden(usage, cfg.hiddenLimits);
+}
+
 function worstLimitContext() {
   // Drives the live fill/tint for battery, gauge, minimal, and dynamic.
   // Returns null when there's no data yet — callers should fall back to a
   // sensible default fill so the icon doesn't render as a hollow outline.
-  if (!lastUsage || !Array.isArray(lastUsage.limits) || lastUsage.limits.length === 0) return null;
-  const worst = lastUsage.limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
+  const usage = visibleUsage(lastUsage);
+  if (!usage || !Array.isArray(usage.limits) || usage.limits.length === 0) return null;
+  const worst = usage.limits.reduce((a, b) => (a.utilization > b.utilization ? a : b));
   const pct = worst.utilization;
   const severity = (() => {
     if (pct >= cfg.thresholds.critical) return cfg.colors.critical;
@@ -235,8 +243,8 @@ function makeTrayIconImage() {
   else if (style === 'battery' || style === 'gauge' || style === 'text') { opts.pct = 0; }
   let canvas32, canvas64;
   if (style === 'dynamic') {
-    canvas32 = icon.drawDynamic(32, lastUsage, cfg);
-    canvas64 = icon.drawDynamic(64, lastUsage, cfg);
+    canvas32 = icon.drawDynamic(32, visibleUsage(lastUsage), cfg);
+    canvas64 = icon.drawDynamic(64, visibleUsage(lastUsage), cfg);
   } else {
     canvas32 = icon.draw(style, 32, opts);
     canvas64 = icon.draw(style, 64, opts);
@@ -535,7 +543,7 @@ app.whenReady().then(() => {
       history.add(data);
       if (cfg.trayIconStyle !== 'bars') refreshTrayIcon();
       broadcast('usage:update', { data, stale: false, cfg, history: history.samples });
-      checkNotifications(data);
+      checkNotifications(visibleUsage(data));
     },
     onError: (err, { lastData }) => {
       lastError = { code: err.code || 'ERROR', message: err.message };
@@ -570,10 +578,12 @@ app.whenReady().then(() => {
     }
     const oldStyle = cfg.trayIconStyle;
     const oldAccent = cfg.accentColor;
+    const oldHidden = JSON.stringify(cfg.hiddenLimits);
     cfg = deepMerge(cfg, patch);
     config.save(cfg);
     applyConfig();
-    if (cfg.trayIconStyle !== oldStyle || cfg.accentColor !== oldAccent) refreshTrayIcon();
+    if (cfg.trayIconStyle !== oldStyle || cfg.accentColor !== oldAccent
+        || JSON.stringify(cfg.hiddenLimits) !== oldHidden) refreshTrayIcon();
     broadcast('config:changed', cfg);
     return cfg;
   });

@@ -208,6 +208,60 @@ async function loadInstalledFonts() {
   }));
 }
 
+// Settings → Limits: one checkbox per limit in the latest response, built
+// from live data because the set varies by account (scoped weekly models,
+// codenamed credit buckets). Unchecked ids are saved to cfg.hiddenLimits.
+let usageLimits = [];
+function renderLimitToggles() {
+  const wrap = $('limitToggles');
+  const empty = $('limitTogglesEmpty');
+  if (!wrap || !cfg) return;
+  // Rebuild only when the set of limits changes; otherwise update in place
+  // so polls and config echoes don't steal keyboard focus from a checkbox.
+  const ids = usageLimits.map((l) => l.id).join('|');
+  if (wrap.dataset.ids !== ids) {
+    wrap.dataset.ids = ids;
+    wrap.replaceChildren(...usageLimits.map((limit) => {
+      const row = document.createElement('div');
+      row.className = 'row toggle';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = `showLimit_${limit.id}`;
+      input.dataset.limitId = limit.id;
+      input.addEventListener('change', saveHiddenLimits);
+      const label = document.createElement('label');
+      label.htmlFor = input.id;
+      row.append(label, input);
+      return row;
+    }));
+  }
+  const hidden = new Set(cfg.hiddenLimits || []);
+  usageLimits.forEach((limit, i) => {
+    const row = wrap.children[i];
+    row.querySelector('label').textContent = window.i18n.limitLabel(limit);
+    row.querySelector('input').checked = !hidden.has(limit.id);
+  });
+  if (empty) empty.hidden = usageLimits.length > 0;
+}
+
+// Read the hidden set off the checkboxes rather than toggling cfg, so two
+// quick clicks can't race each other's config round-trip.
+async function saveHiddenLimits() {
+  const listed = new Set(usageLimits.map((l) => l.id));
+  // Keep ids hidden earlier that aren't in this response, so a limit that
+  // drops out for a poll doesn't come back unhidden.
+  const hidden = (cfg.hiddenLimits || []).filter((id) => !listed.has(id));
+  for (const input of $('limitToggles').querySelectorAll('input[type=checkbox]')) {
+    if (!input.checked) hidden.push(input.dataset.limitId);
+  }
+  cfg = await window.api.updateConfig({ hiddenLimits: hidden });
+}
+
+function setUsageLimits(data) {
+  usageLimits = Array.isArray(data?.limits) ? data.limits : [];
+  renderLimitToggles();
+}
+
 function applyPlatformCopy() {
   if (window.api?.platform !== 'darwin') return;
   const desc = $('aboutDesc');
@@ -229,6 +283,7 @@ async function init() {
     window.api.getUpdate?.().then(renderUpdateStatus);
     applyPlatformCopy();
     applyCustomFontUi();
+    renderLimitToggles();
   });
 
   cfg = await window.api.getConfig();
@@ -236,6 +291,9 @@ async function init() {
   applyPillRowVisibility();
   applyCustomFontUi();
   applySettingsFont();
+  const last = await window.api.getLastUsage();
+  setUsageLimits(last?.data);
+  window.api.onUsage(({ data }) => setUsageLimits(data));
   for (const b of BINDINGS) {
     const el = $(b.id);
     if (!el) continue;
@@ -263,6 +321,9 @@ async function init() {
     applyPillRowVisibility();
     applyCustomFontUi();
     applySettingsFont();
+    // Every save also broadcasts i18n:changed just before this event, and
+    // that re-render ran against the old cfg. Re-sync now that cfg is current.
+    renderLimitToggles();
   });
 
   const checkBtn = $('checkUpdateNow');

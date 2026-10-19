@@ -286,6 +286,15 @@ function normalize(raw, meta = {}) {
   };
 }
 
+// Drops the limits the user hid in Settings → Limits. Returns a shallow copy
+// so the full response (which the settings panel lists from) is untouched.
+function withoutHidden(usage, hiddenIds) {
+  if (!usage || !Array.isArray(usage.limits)) return usage;
+  if (!Array.isArray(hiddenIds) || hiddenIds.length === 0) return usage;
+  const hidden = new Set(hiddenIds);
+  return { ...usage, limits: usage.limits.filter((l) => !hidden.has(l.id)) };
+}
+
 function pickNumber(...values) {
   for (const v of values) {
     if (typeof v === 'number' && !Number.isNaN(v)) return v;
@@ -312,4 +321,4 @@ function prettyLabel(key) {
   return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-module.exports = { fetchUsage, readToken, readKeychainCreds, normalize, CREDS_PATH, WINDOW_MS };
+module.exports = { fetchUsage, readToken, readKeychainCreds, normalize, withoutHidden, CREDS_PATH, WINDOW_MS };

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { normalize } = require('../src/usage');
+const { normalize, withoutHidden } = require('../src/usage');
 
 // Synthetic fixture modeled on the live `/api/oauth/usage` response shape.
 // Field set and null placeholders mirror what Anthropic actually returns;
@@ -341,4 +341,17 @@ test('unknown dollar-capped buckets are labeled Credits and flagged', () => {
   const other = out.limits.find((l) => l.id === 'tangelo');
   assert.equal(other.label, 'Tangelo');
   assert.equal(other.credits, undefined);
+});
+
+test('withoutHidden drops hidden limit ids without mutating the response', () => {
+  const out = normalize({
+    five_hour: { utilization: 2, resets_at: '2026-10-19T12:00:00Z' },
+    iguana_necktie: { utilization: 100, resets_at: '2026-11-05T07:59:00+00:00', limit_dollars: 250, used_dollars: 250.13 },
+  });
+  const shown = withoutHidden(out, ['iguana_necktie']);
+  assert.deepEqual(shown.limits.map((l) => l.id), ['five_hour']);
+  assert.equal(out.limits.length, 2);
+  assert.equal(withoutHidden(out, []), out);
+  assert.equal(withoutHidden(out, undefined), out);
+  assert.equal(withoutHidden(null, ['five_hour']), null);
 });

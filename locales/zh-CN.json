@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "显示数据过期徽章",
   "settings.showMascot": "显示 Claw'd（螃蟹吉祥物）",
 
+  "settings.section.limits": "限制",
+  "settings.limits.desc": "关闭某个限制后，它将不再显示在小组件、药丸、托盘图标和通知中。",
+  "settings.limits.empty": "首次获取后，你的限制会显示在这里。",
+
   "settings.section.look": "外观",
   "settings.theme": "主题",
   "settings.theme.system": "跟随系统",

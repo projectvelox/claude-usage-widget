@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Pokaż odznakę nieaktualnych danych",
   "settings.showMascot": "Pokaż Claw'd (maskotka krab)",
 
+  "settings.section.limits": "Limity",
+  "settings.limits.desc": "Wyłącz limit, aby ukryć go w widżecie, pigułce, ikonie zasobnika i powiadomieniach.",
+  "settings.limits.empty": "Twoje limity pojawią się tutaj po pierwszym pobraniu.",
+
   "settings.section.look": "Wygląd",
   "settings.theme": "Motyw",
   "settings.theme.system": "Zgodny z systemem",

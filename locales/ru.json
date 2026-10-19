@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Показывать значок устаревших данных",
   "settings.showMascot": "Показывать Claw'd (краб-маскот)",
 
+  "settings.section.limits": "Лимиты",
+  "settings.limits.desc": "Отключите лимит, чтобы скрыть его из виджета, пилюли, значка трея и уведомлений.",
+  "settings.limits.empty": "Ваши лимиты появятся здесь после первой выборки.",
+
   "settings.section.look": "Внешний вид",
   "settings.theme": "Тема",
   "settings.theme.system": "Как в системе",

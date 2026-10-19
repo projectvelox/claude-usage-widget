@@ -104,6 +104,10 @@
   "settings.showStaleIndicator": "Tampilkan lencana data basi",
   "settings.showMascot": "Tampilkan Claw'd (maskot kepiting)",
 
+  "settings.section.limits": "Batas",
+  "settings.limits.desc": "Matikan batas untuk menyembunyikannya dari widget, pil, ikon tray, dan notifikasi.",
+  "settings.limits.empty": "Batas Anda akan muncul di sini setelah pengambilan pertama.",
+
   "settings.section.look": "Tampilan",
   "settings.theme": "Tema",
   "settings.theme.system": "Ikuti sistem",

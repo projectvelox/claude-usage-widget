@@ -23,6 +23,30 @@
     return format(value, params);
   }
 
+  // Display name for a usage limit. Shared by the widget rows and the
+  // settings panel's Limits list so both name a limit the same way.
+  function limitLabel(limit) {
+    if (!limit) return '';
+    // Scoped weekly limits (e.g. "Fable", future model-specific quotas) come
+    // through with a `scopeModel` field so the label can localize as
+    // "Weekly · <model>" without needing a per-model key in every locale file.
+    if (limit.scopeModel) {
+      const scoped = t('limit.weeklyScoped', { model: limit.scopeModel });
+      if (scoped && scoped !== 'limit.weeklyScoped') return scoped;
+    }
+    // Codenamed dollar allowances the API doesn't name for us.
+    if (limit.credits) {
+      const credits = t('limit.credits');
+      if (credits && credits !== 'limit.credits') return credits;
+    }
+    const key = `limit.${limit.id}`;
+    const translated = t(key);
+    // t() returns the key itself when neither the active locale nor the
+    // English fallback has the entry. Detect that and fall back to whatever
+    // label the server / normalizer assigned for unknown limit ids.
+    return translated && translated !== key ? translated : (limit.label || limit.id || '');
+  }
+
   function lang() { return STATE.bundle?.lang || 'en'; }
   function available() { return STATE.bundle?.available || []; }
 
@@ -93,5 +117,5 @@
 
   function onChange(cb) { STATE.listeners.add(cb); }
 
-  window.i18n = { t, lang, available, applyDom, renderRichInto, init, onChange };
+  window.i18n = { t, lang, available, applyDom, renderRichInto, init, onChange, limitLabel };
 })();
