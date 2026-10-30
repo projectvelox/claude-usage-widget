@@ -28,7 +28,7 @@
   "author": "Joshua Ricarder Oducado",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^44.4.5",
+    "electron": "^44.9.1",
     "electron-builder": "^26.15.3",
     "gifenc": "^1.0.3"
   },
